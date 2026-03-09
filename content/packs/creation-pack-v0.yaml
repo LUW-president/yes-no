@@ -21,3 +21,8 @@ questions:
     text: "Would you like to create a film?"
     yes: artifact_film
     no: end
+
+  - id: q_other
+    text: "Would you like to explore another creative format?"
+    yes: artifact_idea
+    no: end
