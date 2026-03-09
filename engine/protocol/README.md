@@ -1,12 +1,20 @@
 # engine/protocol
 
-## Module purpose
-Define the canonical interaction event contract.
+## Purpose
+Provide the foundational YES/NO event contract and validation layer.
 
-## Scope
-Event shapes, lifecycle semantics, and validation boundaries.
+## Event lifecycle
+1. `question.presented`
+2. `answer.recorded`
+3. `artifact.proposed`
+4. `artifact.accepted` or `artifact.rejected`
+5. `session.closed`
 
-## Responsibilities
-- Define protocol event schema
-- Version protocol changes
-- Keep backward compatibility rules
+## Integration direction
+- Question engine reads protocol events to choose the next deterministic question.
+- Memory engine consumes protocol events to update confidence/profile state.
+
+## Current state
+- Strict event typing
+- Runtime validation
+- In-memory event store for protocol testing
