@@ -1,12 +1,16 @@
 # engine/question-engine
 
-## Module purpose
-Select and sequence the next question.
+## Role of deterministic engine
+The engine selects the next node in a YES/NO flow using fixed rules from a YAML content pack.
 
-## Scope
-Deterministic branching and progression logic.
+## Relation to protocol events
+- `question.presented` identifies current question.
+- `answer.recorded` provides yes/no decision.
+- Resolver maps decision to next question, artifact trigger, or session end.
 
-## Responsibilities
-- Determine next question id
-- Enforce one-question-at-a-time flow
-- Apply pack branching rules
+## How packs control flows
+Each question node defines `yes` and `no` transitions.
+Transitions can point to:
+- another question id
+- `end`
+- `artifact_*` trigger
