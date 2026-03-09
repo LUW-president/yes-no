@@ -1,12 +1,11 @@
 # engine/memory-engine
 
-## Module purpose
-Maintain profile confidence from binary interactions.
+## Purpose
+Compute deterministic preference confidence signals from protocol events.
 
-## Scope
-State updates, confidence scoring, recency weighting.
+## Relationship to protocol events
+- Ingests `question.presented`, `answer.recorded`, and artifact events.
+- Updates numeric user signals with bounded deterministic deltas.
 
-## Responsibilities
-- Record response-derived preferences
-- Update confidence scores
-- Expose profile state to question engine
+## Influence on question selection
+The question engine can read signal strengths to prioritize which question branch should be surfaced next.
