@@ -1,0 +1,16 @@
+{
+  "name": "yes-no",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:protocol": "tsx engine/protocol/__tests__/protocol.test.ts",
+    "test:question": "tsx engine/question-engine/__tests__/questionEngine.test.ts",
+    "test:memory": "tsx engine/memory-engine/__tests__/memoryEngine.test.ts",
+    "test:orchestrator": "tsx engine/session-orchestrator/__tests__/sessionOrchestrator.test.ts",
+    "test:cli": "tsx apps/cli-runner/__tests__/cliRunner.test.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}
