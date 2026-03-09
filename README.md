@@ -1,16 +1,5 @@
 # YES/NO
 
-YES/NO is an AI product built on radical simplicity: the AI asks one question at a time, and the user answers only **YES** or **NO**.
+YES/NO is an AI product built on radical simplicity: the system asks one question at a time, the user responds only YES or NO, and the experience progressively discovers intent for creative guidance without a traditional prompt interface.
 
-## Core Principle
-> "Innovation is saying no to a thousand things."
-
-## Current Stage
-- Repository initialized
-- Product skeleton created
-- Docs and issue structure in place
-
-## Next
-1. Define protocol v0
-2. Implement question engine v0
-3. Build black-screen mobile reference app
+See [PRINCIPLES.md](./PRINCIPLES.md) and [docs/vision/product-thesis.md](./docs/vision/product-thesis.md).

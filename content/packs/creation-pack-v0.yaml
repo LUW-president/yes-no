@@ -1,0 +1,23 @@
+pack_id: creation_v0
+version: 0.1
+
+questions:
+  - id: q_create
+    text: "Would you like to create something?"
+    yes: q_art
+    no: end
+
+  - id: q_art
+    text: "Would you like to create an art project?"
+    yes: q_image
+    no: q_other
+
+  - id: q_image
+    text: "Would you like it to be an image?"
+    yes: artifact_image
+    no: q_film
+
+  - id: q_film
+    text: "Would you like to create a film?"
+    yes: artifact_film
+    no: end
