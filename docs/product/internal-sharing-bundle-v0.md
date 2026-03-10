@@ -1,56 +1,70 @@
 # Internal Sharing Bundle v0 — YES/NO
 
-## purpose
-Create a curated internal sharing bundle that points reviewers to the exact YES/NO materials needed for a clean first review.
+## Purpose
+This document is the curated internal sharing bundle for YES/NO.
+Its purpose is to guide a reviewer through the minimum set of materials needed for a clean first review.
 
-## intended audience
+## Intended Audience
 - internal team members
 - design collaborators
 - technical collaborators
 - early partners
-- early investors (limited/internal preview)
+- early investors
 
-## included documents
+## Included Documents
 - `docs/product/product-one-pager-v0.md`
 - `docs/product/product-deck-outline-v0.md`
 - `docs/product/prototype-package-v0.md`
 - `docs/product/prototype-walkthrough-script-v0.md`
 - `docs/product/internal-review-checklist-v0.md`
 - `docs/product/milestone-roadmap-v1.md`
-- `ops/runbooks/prototype-demo-runbook-v0.md`
 - `docs/specs/native-mobile-ui-spec-v0.md`
 - `docs/specs/gesture-input-spec-v0.md`
 - `docs/specs/interaction-timing-spec-v0.md`
+- `ops/runbooks/prototype-demo-runbook-v0.md`
 
-## recommended reading order
+## Recommended Reading Order
 1. Product one-pager
-2. Prototype package
-3. Prototype walkthrough script
-4. Prototype demo runbook
-5. Internal review checklist
-6. Milestone roadmap
-7. Supporting specs (UI, gesture, timing)
+2. Product deck outline
+3. Prototype package
+4. Native mobile UI spec
+5. Gesture input spec
+6. Interaction timing spec
+7. Prototype walkthrough script
+8. Prototype demo runbook
+9. Internal review checklist
+10. Milestone roadmap
 
-## runnable demo commands
-- `npm run bridge:dev`
-- `npm run prototype:native`
-- `yesno demo`
-- `yesno status`
+## Runnable Demo Commands
+- `yesno run` — runs the interactive CLI session flow.
+- `yesno harness` — runs the deterministic UX harness flow.
+- `yesno demo` — runs the baseline deterministic demo path.
+- `yesno status` — prints baseline/component/test status snapshot.
+- `npm run prototype:native` — runs the native-style prototype loop.
 
-## demo presentation assets
-- visual references: `docs/specs/assets/`
-- spoken script: `docs/product/prototype-walkthrough-script-v0.md`
-- operator runbook: `ops/runbooks/prototype-demo-runbook-v0.md`
+## Demo Presentation Assets
+- `docs/specs/assets/`
+- `prototype/native-mobile/`
+- `docs/product/prototype-walkthrough-script-v0.md`
 
-## prototype limitations
-- prototype-only implementation
+Visual assets are directional and non-binding; the prototype is the current working baseline.
+
+## Prototype Limitations
+- prototype only
 - no production deployment
-- no real gesture recognition yet (stub path only)
-- no notification system
-- local/internal usage focus
+- no real gesture recognition yet
+- no notification system yet
+- local/internal usage only
+- minimal native-style implementation
 
-## review checklist reference
-Use: `docs/product/internal-review-checklist-v0.md`
+## Review Checklist Reference
+Use `docs/product/internal-review-checklist-v0.md` before broader sharing.
 
-## milestone roadmap reference
-Use: `docs/product/milestone-roadmap-v1.md`
+## Milestone Roadmap Reference
+Use `docs/product/milestone-roadmap-v1.md` as the current roadmap after the internal baseline.
+
+## Constraints
+- documentation only
+- concise and easy to follow
+- aligned with current repository state
+- no speculative features beyond current roadmap
