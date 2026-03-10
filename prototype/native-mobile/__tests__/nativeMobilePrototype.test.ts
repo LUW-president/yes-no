@@ -56,8 +56,9 @@ async function runDeterministicPass() {
 await runDeterministicPass();
 await runDeterministicPass();
 
-// rendering order markers
+// rendering order markers + feedback
 assert(renderQuestionScreen('Q').includes('YES/NO'), 'question header missing');
+assert(renderQuestionScreen('Q', 'GESTURE RECOGNIZED: YES').includes('GESTURE RECOGNIZED: YES'), 'gesture message missing');
 assert(renderArtifactScreen('film').includes('ARTIFACT'), 'artifact marker missing');
 assert(renderCompletionScreen().includes('SESSION COMPLETE'), 'completion marker missing');
 
@@ -67,7 +68,7 @@ assert(tapNo() === 'no', 'tapNo failed');
 assert(normalizeTap('y') === 'yes' && normalizeTap('n') === 'no', 'tap normalization failed');
 assert(normalizeTap('bad') === null, 'invalid input should be null');
 
-// gesture stubs
+// gesture paths (real recognition-backed)
 assert(circleGesture() === 'yes', 'circle should map yes');
 assert(crossGesture() === 'no', 'cross should map no');
 

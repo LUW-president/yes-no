@@ -1,5 +1,5 @@
-export function renderQuestionScreen(questionText: string): string {
-  return [
+export function renderQuestionScreen(questionText: string, gestureMessage?: string): string {
+  const lines = [
     '--------------------------------',
     'YES/NO',
     '--------------------------------',
@@ -7,5 +7,11 @@ export function renderQuestionScreen(questionText: string): string {
     questionText,
     '',
     '[ YES ] [ NO ]',
-  ].join('\n');
+  ];
+
+  if (gestureMessage) {
+    lines.push('', gestureMessage);
+  }
+
+  return lines.join('\n');
 }
