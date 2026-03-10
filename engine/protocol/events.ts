@@ -2,6 +2,8 @@ import { EventType, ProtocolEvent } from './types';
 
 const VALID_EVENT_TYPES: EventType[] = [
   'question.presented',
+  'answer.submitted',
+  'session.updated',
   'answer.recorded',
   'artifact.proposed',
   'artifact.accepted',
@@ -35,6 +37,28 @@ export function validateEvent(event: unknown): asserts event is ProtocolEvent {
     case 'question.presented':
       if (!e.question_id || !e.question_text || !e.channel) {
         throw new Error('Invalid question.presented event');
+      }
+      break;
+
+    case 'answer.submitted':
+      if (!e.question_id) throw new Error('Invalid answer.submitted event: missing question_id');
+      if (e.answer !== 'yes' && e.answer !== 'no') {
+        throw new Error('Invalid answer.submitted event: answer must be yes|no');
+      }
+      if (!['gesture', 'tap', 'voice'].includes(e.input_mode)) {
+        throw new Error('Invalid answer.submitted event: invalid input_mode');
+      }
+      if (typeof e.latency_ms !== 'number') {
+        throw new Error('Invalid answer.submitted event: latency_ms must be number');
+      }
+      break;
+
+    case 'session.updated':
+      if (!['question', 'artifact', 'completed'].includes(e.stage)) {
+        throw new Error('Invalid session.updated event: invalid stage');
+      }
+      if (typeof e.answered_count !== 'number') {
+        throw new Error('Invalid session.updated event: answered_count must be number');
       }
       break;
 
