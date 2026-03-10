@@ -41,6 +41,7 @@ Core Engines
 - `yesno demo` — run the deterministic no-input demo session
 - `yesno status` — print the internal status dashboard (baseline/components/commands/tests)
 - `yesno trace --session <session_id> | --demo` — print deterministic protocol event trace for debugging
+- `yesno confidence --session <session_id>` — print deterministic confidence timeline (prototype, non-production)
 
 ## CURRENT BASELINE
 - core engine architecture complete
