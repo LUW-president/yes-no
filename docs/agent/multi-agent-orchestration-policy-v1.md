@@ -7,13 +7,15 @@
 - Stability Agent
 - ORBIS Agent
 - Discovery Agent
+- Build Agent
 
 ## 1) Invocation rules
 - Architecture Agent: boundary checks, layer integrity, drift detection
 - Documentation Agent: coherence, references, readability, consistency
 - Stability Agent: command/run reliability, test-surface health
 - ORBIS Agent: spatial research and exploratory concept cycles
-- Discovery Agent: cross-cycle signal synthesis and prototype-candidate extraction
+- Discovery Agent
+- Build Agent: cross-cycle signal synthesis and prototype-candidate extraction
 
 ## 2) Parallel vs sequential analysis
 - Parallel: independent audits across architecture/docs/stability/research domains
@@ -39,3 +41,6 @@ All cycle outputs should include:
 - agents produce analysis/proposals only unless explicitly authorized otherwise
 - Noah validates scope, applies gates, and manages PR workflow
 - no direct agent-driven runtime modification without explicit approval
+
+## Reference pipeline
+Strategic Intelligence -> Architecture -> Build -> Stability -> Documentation -> Noah
