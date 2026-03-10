@@ -1,4 +1,4 @@
-export type Command = 'run' | 'harness' | 'demo';
+export type Command = 'run' | 'harness' | 'demo' | 'status';
 
 export type DispatchResult =
   | { kind: 'ok'; command: Command }
@@ -12,6 +12,7 @@ export function usageMessage(): string {
     'yesno run',
     'yesno harness',
     'yesno demo',
+    'yesno status',
   ].join('\n');
 }
 
@@ -40,6 +41,14 @@ export async function dispatchCommand(cmd: string, args: string[] = []): Promise
       if (typeof mod.demoCommand === 'function') await mod.demoCommand();
     }
     return { kind: 'ok', command: 'demo' };
+  }
+
+  if (cmd === 'status') {
+    if (!noExec) {
+      const mod = await import('../../ops/dashboard/statusDashboard');
+      if (typeof mod.runStatusDashboard === 'function') mod.runStatusDashboard();
+    }
+    return { kind: 'ok', command: 'status' };
   }
 
   return { kind: 'usage', message: usageMessage() };
