@@ -15,7 +15,9 @@
     "yesno:demo": "tsx apps/cli/yesno.ts demo",
     "test:demo": "tsx apps/demo/__tests__/demoScript.test.ts",
     "bridge:dev": "tsx bridge/reference-app/server.ts",
-    "test:bridge": "tsx bridge/reference-app/__tests__/referenceBridge.test.ts"
+    "test:bridge": "tsx bridge/reference-app/__tests__/referenceBridge.test.ts",
+    "test:adapters:mobile": "tsx adapters/mobile/__tests__/mobileAdapter.test.ts",
+    "test:adapters:web": "tsx adapters/web/__tests__/webAdapter.test.ts"
   },
   "devDependencies": {
     "tsx": "^4.19.2",
