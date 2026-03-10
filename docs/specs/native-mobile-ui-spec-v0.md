@@ -95,3 +95,13 @@ Mobile UI → Mobile Adapter → Bridge → Session Orchestrator → Engines
 - no UI frameworks referenced
 - must remain platform-neutral
 - must preserve product philosophy
+
+## Visual Reference Mocks (Non-Binding)
+These references capture intended tone and interaction simplicity for v0 native mobile direction.
+
+- `docs/specs/assets/native-mobile-ui-reference-1.jpg`
+- `docs/specs/assets/native-mobile-ui-reference-2.jpg`
+
+Notes:
+- references are directional, not pixel-spec locked
+- product philosophy constraints in this spec remain authoritative
