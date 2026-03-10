@@ -21,26 +21,54 @@ export type BridgeStateResponse = {
   signals?: Record<string, number>;
 };
 
+async function safeJson(res: Response) {
+  try {
+    return await res.json();
+  } catch {
+    return {} as any;
+  }
+}
+
 export class NativeBridgeClient {
   constructor(private baseUrl: string = DEFAULT_BASE_URL) {}
 
   async startSession(user_id: string, pack_id: string): Promise<BridgeStartResponse> {
-    const res = await fetch(`${this.baseUrl}/session/start`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id, pack_id }),
-    });
-    const data = await res.json();
+    let res: Response;
+    try {
+      res = await fetch(`${this.baseUrl}/session/start`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id, pack_id }),
+      });
+    } catch {
+      throw new Error('Bridge error: unable to start session (bridge unreachable)');
+    }
+
+    const data = await safeJson(res);
+    if (!res.ok || !data?.session_id) {
+      throw new Error('Bridge error: failed to start session');
+    }
+
     return { session_id: data.session_id, question: data.question };
   }
 
   async submitAnswer(session_id: string, answer: YesNo): Promise<BridgeAnswerResponse> {
-    const res = await fetch(`${this.baseUrl}/session/answer`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ session_id, answer }),
-    });
-    const data = await res.json();
+    let res: Response;
+    try {
+      res = await fetch(`${this.baseUrl}/session/answer`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id, answer }),
+      });
+    } catch {
+      throw new Error('Bridge error: failed to submit answer (bridge unreachable)');
+    }
+
+    const data = await safeJson(res);
+    if (!res.ok) {
+      throw new Error('Bridge error: failed to submit answer');
+    }
+
     return {
       session_id,
       next_question: data.next_question,
@@ -50,8 +78,18 @@ export class NativeBridgeClient {
   }
 
   async getSessionState(session_id: string): Promise<BridgeStateResponse> {
-    const res = await fetch(`${this.baseUrl}/session/${encodeURIComponent(session_id)}`);
-    const data = await res.json();
+    let res: Response;
+    try {
+      res = await fetch(`${this.baseUrl}/session/${encodeURIComponent(session_id)}`);
+    } catch {
+      throw new Error('Bridge error: unable to read session state (bridge unreachable)');
+    }
+
+    const data = await safeJson(res);
+    if (!res.ok || !data?.session_id) {
+      throw new Error('Bridge error: failed to read session state');
+    }
+
     return {
       session_id: data.session_id,
       status: data.status,
