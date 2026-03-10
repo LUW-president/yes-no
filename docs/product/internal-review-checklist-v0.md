@@ -1,50 +1,63 @@
 # Internal Review Checklist v0 — YES/NO
 
-## purpose
-Provide a simple internal checklist for reviewing the YES/NO prototype package before sharing it with collaborators, partners, or early investors.
+## Purpose
+This checklist is used to review the YES/NO prototype package before any internal or limited external sharing.
 
-## review scope
-Review covers:
-- product narrative clarity
-- prototype execution readiness
-- documentation completeness and consistency
-- demo readiness and deterministic flow
-- limitation transparency
+## Review Scope
+Materials covered by this review:
+- product one-pager
+- product deck outline
+- prototype package
+- prototype walkthrough script
+- prototype demo runbook
+- native mobile prototype
+- key specs (UI, gesture, timing)
+- milestone roadmap
 
-## product narrative checks
-- [ ] One-sentence thesis is clear and consistent across docs
-- [ ] Core concept is preserved: one question, binary input, minimal interface
-- [ ] “The questions are the product.” is reflected in narrative docs
-- [ ] Current milestone and roadmap positioning are coherent
+## Product Narrative Checks
+- [ ] Product thesis is clear and consistent.
+- [ ] Problem/solution framing is coherent.
+- [ ] Interaction model is understandable.
+- [ ] Platform vision is aligned with the current prototype.
+- [ ] Narrative does not overstate the product.
 
-## prototype readiness checks
-- [ ] Native prototype materials are present (`prototype/native-mobile/`)
-- [ ] Prototype command(s) are documented and runnable
-- [ ] Session lifecycle path is deterministic and reproducible
-- [ ] Artifact path expectations are clearly documented
+## Prototype Readiness Checks
+- [ ] Prototype runs successfully.
+- [ ] Native-style screens appear in expected order.
+- [ ] Artifact path works.
+- [ ] Completion flow works.
+- [ ] No unexpected runtime issues appear during demo.
 
-## documentation completeness checks
-- [ ] Prototype package doc is up to date
-- [ ] One-pager and deck outline reflect current baseline
-- [ ] Specs (UI, gesture, timing, prototype plan) are linked and discoverable
-- [ ] Runbook + walkthrough references are present and current
+## Documentation Completeness Checks
+- [ ] Key documents exist.
+- [ ] Links are valid.
+- [ ] README is current.
+- [ ] Runbooks are current.
+- [ ] Prototype package references are correct.
 
-## demo readiness checks
-- [ ] Demo startup sequence is explicit and tested
-- [ ] Canonical answer path is documented (YES/YES/NO -> artifact)
-- [ ] Expected screens are listed in correct order
-- [ ] Presenter script is concise and aligned to prototype behavior
+## Demo Readiness Checks
+- [ ] Walkthrough script is usable.
+- [ ] Demo flow is repeatable.
+- [ ] Commands are documented.
+- [ ] Presenter can explain the artifact reveal.
+- [ ] Presenter can explain current limitations clearly.
 
-## limitation clarity checks
-- [ ] Prototype-only status is explicit
-- [ ] No production deployment claim appears
-- [ ] Gesture implementation status is accurately labeled (stub/non-production)
-- [ ] Local/internal usage constraints are clearly stated
+## Limitation Clarity Checks
+- [ ] Prototype status is explicit.
+- [ ] No production claims are implied.
+- [ ] Gesture recognition is correctly described as not yet real.
+- [ ] Current implementation limits are communicated honestly.
 
-## approval recommendation format
-Use this format for internal sign-off:
-- **Recommendation:** APPROVE / HOLD
-- **Summary:** 1–3 sentence rationale
-- **Blocking Issues:** bullet list (or `None`)
-- **Required Fixes Before Share:** bullet list (or `None`)
-- **Reviewer:** name + date
+## Approval Recommendation Format
+APPROVED FOR INTERNAL SHARING  
+or  
+NEEDS REVISION BEFORE SHARING
+
+NOTES  
+<short observations>
+
+## Constraints
+- documentation only
+- checklist must be concise and practical
+- reflect actual current repository state
+- no speculative features beyond roadmap
