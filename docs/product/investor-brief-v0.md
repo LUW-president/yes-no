@@ -1,68 +1,83 @@
 # Investor Brief v0 — YES/NO
 
-## purpose
-Provide a concise investor-facing brief for YES/NO based on the current product thesis, prototype baseline, and long-term platform vision.
+## Purpose
+This document is a concise investor-facing brief for YES/NO.
 
-## company / project name
-- Company: The Navy Blue Hub
-- Project: YES/NO
+## Company / Project Name
+The Navy Blue Hub  
+Project: YES/NO
 
-## one-sentence thesis
-YES/NO is a radically simple AI interface where the system asks one question at a time and the user responds only YES or NO.
+## One-Sentence Thesis
+YES/NO is a radically simple AI interface where the system asks questions and the user answers only YES or NO, turning prompt-heavy interaction into guided binary decisions.
 
-## problem
-Current AI interfaces create friction:
-- prompt writing is difficult
-- blank-page syndrome is common
-- feature-heavy interfaces overwhelm users
-- interactions often feel mechanical rather than guided
+## Problem
+Current AI interfaces create friction for most users:
+- current AI products depend on prompting
+- most users do not know what to ask
+- blank-page syndrome blocks creativity and action
+- current interfaces are often overloaded and cognitively heavy
 
-## solution
-YES/NO replaces prompt-heavy workflows with a guided binary interaction model:
-- the system asks focused questions
-- users answer YES/NO only
-- structured decisions drive outcomes with less cognitive overhead
-
-## interaction model
+## Solution
+YES/NO replaces prompt complexity with a guided binary flow:
 - one question at a time
-- binary input only (YES / NO)
-- black-screen minimal visual language
-- gesture-ready model (circle/cross mapping)
-- calm pacing and intentional silence
+- binary interaction only
+- minimal black-screen interface
+- calm pacing
+- guided discovery toward outcomes such as ideas, scripts, and creative directions
 
-## current prototype baseline
-- deterministic core engines (protocol/question/memory)
-- session orchestrator
-- bridge + adapters (mobile/web)
-- native-style prototype implementation
-- walkthrough script + runbook for repeatable demos
+## Interaction Model
+- AI asks the questions
+- user answers YES or NO
+- future gesture model:
+  - circle = yes
+  - cross = no
+- the system narrows intent through binary choices
+- the questions are the product
 
-## why now
-- AI capability has advanced faster than interface quality
-- users need clarity over control-surface complexity
-- mobile interaction trends favor simple, direct decision loops
+## Current Prototype Baseline
+Current implemented baseline includes:
+- protocol engine implemented
+- question engine implemented
+- memory engine implemented
+- session orchestrator implemented
+- bridge API implemented
+- mobile and web adapters implemented
+- native-style prototype implemented
+- product and demo documentation available
 
-## roadmap snapshot
-1. Native mobile prototype refinement
-2. Real gesture recognition implementation
-3. First public demo build
-4. Developer SDK concept
-5. Platform expansion
+## Why Now
+- AI capability is advancing quickly
+- interface design is lagging behind model capability
+- mobile users increasingly expect simpler, more intuitive interactions
+- YES/NO proposes a new interaction layer, not just another AI feature set
 
-## long-term platform vision
-YES/NO evolves into a platform for binary-guided intelligence:
-- reusable question engines
-- profile-informed decision flows
-- developer-facing integration patterns
-- multi-surface YES/NO-native applications
+## Roadmap Snapshot
+- native mobile prototype refinement
+- real gesture recognition
+- first public demo build
+- SDK / platform concept
+- platform expansion
 
-## current limitations
+## Long-Term Platform Vision
+YES/NO is not only an app. The long-term direction includes:
+- reusable question engine
+- user decision profile layer
+- developer-facing SDK concepts
+- YES/NO-native applications built on the same interaction model
+
+## Current Limitations
 - prototype stage only
 - no production deployment
-- gesture recognition not production-ready yet
-- local/internal demo orientation
+- no real gesture recognition yet
+- no notification system yet
+- local/internal prototype usage only
 
-## next step / ask
-- align on investor-facing narrative
-- run controlled live demos with selected reviewers
-- gather feedback for milestone prioritization and prototype refinement
+## Next Step / Ask
+The immediate next step is to refine the native mobile prototype and validate the YES/NO interaction model with controlled internal and early external reviews.
+
+## Constraints
+- documentation only
+- concise and investor-readable
+- aligned with current repository state
+- no speculative claims beyond roadmap
+- do not overstate readiness
