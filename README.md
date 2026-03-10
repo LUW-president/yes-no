@@ -1,15 +1,71 @@
 # YES/NO
 
-YES/NO is an AI product built on radical simplicity: the system asks one question at a time, the user responds only YES or NO, and the experience progressively discovers intent for creative guidance without a traditional prompt interface.
+## project overview
+YES/NO is a deterministic AI interaction system built around one core rule: the system asks questions, and users respond with only YES or NO.
 
-See [PRINCIPLES.md](./PRINCIPLES.md) and [docs/vision/product-thesis.md](./docs/vision/product-thesis.md).
+## core concept
+- one question at a time
+- binary interaction only (YES / NO)
+- no prompt-writing interface
+- calm, minimal experience where timing and silence matter
 
-## Release & Runbooks
-- Release baseline: `docs/releases/release-baseline-v0.md`
-- Local demo runbook: `ops/runbooks/local-demo-runbook.md`
-- Test baseline runbook: `ops/runbooks/test-baseline-runbook.md`
+## architecture overview
+User Interface  
+↓  
+Mobile Adapter / Web Adapter  
+↓  
+Reference Bridge  
+↓  
+Session Orchestrator  
+↓  
+Core Engines:
+- protocol
+- question engine
+- memory engine
 
-## Ops Control Layer
-- `docs/ops/AGENT_DIRECTIVE.md`
-- `docs/ops/PROJECT_STATE.md`
-- `docs/ops/AGENT_LOOP.md`
+## repository structure
+- `engine/` — protocol, question, memory, orchestrator
+- `apps/` — CLI runner, UX harness, demo, mobile/web reference apps
+- `bridge/reference-app/` — minimal HTTP bridge API
+- `adapters/` — mobile and web bridge clients
+- `ops/` — dashboard + runbooks
+- `docs/specs/` — product/UX/system specs
+- `docs/product/` — product narrative documents
+- `docs/releases/` — release baseline docs
+- `docs/ops/` — durable agent operating control layer
+
+## how to run the system
+Core:
+- `yesno run`
+- `yesno harness`
+- `yesno demo`
+- `yesno status`
+
+Equivalent scripts:
+- `npm run yesno:run`
+- `npm run yesno:harness`
+- `npm run yesno:demo`
+- `npm run yesno:status`
+
+Supporting services and reference apps:
+- `npm run bridge:dev`
+- `npm run mobile:reference`
+- `npm run web:reference`
+
+## current baseline
+Internal v0 baseline is complete with deterministic engine, CLI surfaces, bridge/adapters, reference apps, status dashboard, and full passing module test matrix.
+
+## product documents
+- `docs/product/product-one-pager-v0.md`
+- `docs/product/product-deck-outline-v0.md`
+- `docs/specs/native-mobile-ui-spec-v0.md`
+- `docs/specs/gesture-input-spec-v0.md`
+- `docs/specs/interaction-timing-spec-v0.md`
+- `docs/specs/native-mobile-prototype-plan-v0.md`
+
+## contribution guidelines
+- preserve core philosophy (binary, minimal, deterministic)
+- keep changes phase-scoped and documented
+- run full baseline tests before merge
+- avoid introducing complexity without explicit approval
+- follow ops control docs in `docs/ops/`
