@@ -1,56 +1,73 @@
 # External Share Readiness v0 — YES/NO
 
-## purpose
-Define the minimum readiness conditions that must be true before YES/NO materials are shared beyond the internal review circle.
+## Purpose
+This document defines the minimum readiness threshold for sharing YES/NO materials outside the internal review circle.
 
-## current internal status
-- internal baseline and prototype documentation are in place
-- native-style prototype is runnable in local/internal mode
-- demo script and runbook are available for repeatable presentations
-- current status remains prototype-stage, not production-ready
+## Current Internal Status
+Current project status:
+- internal documentation baseline complete
+- internal prototype baseline available
+- internal walkthrough and runbooks available
+- internal sharing bundle available
+- investor brief available
+- product remains in prototype stage
 
-## minimum materials required for external sharing
-Required package:
+## Minimum Materials Required for External Sharing
+The following materials must be prepared and current:
 - product one-pager
-- product deck outline
 - investor brief
-- prototype package document
+- prototype package
 - prototype walkthrough script
 - prototype demo runbook
-- internal review checklist (completed)
-- milestone roadmap snapshot
+- internal sharing bundle
+- current milestone roadmap
+- clear limitation statement
 
-## product narrative readiness
-Must be true:
-- thesis is consistent across one-pager, deck outline, and investor brief
-- problem/solution framing is coherent and non-hyped
-- roadmap is clearly separated from current capability
+## Product Narrative Readiness
+Must be true before external sharing:
+- product thesis is clear
+- problem / solution framing is coherent
+- interaction model is understandable
+- prototype is not overstated
+- platform vision is framed as roadmap, not current product reality
 
-## prototype readiness
-Must be true:
-- prototype runs reliably in local demo environment
-- expected question -> artifact -> completion path is reproducible
-- bridge and command flow are documented and validated
+## Prototype Readiness
+Must be true before external sharing:
+- prototype runs reliably
+- deterministic demo path works
+- expected screens appear in correct order
+- no blocking runtime issues appear during demo
+- internal team can explain what is real vs. specified
 
-## demo readiness
-Must be true:
-- presenter can run canonical demo flow end-to-end
-- walkthrough script is followed consistently
-- demo commands are validated before each session
+## Demo Readiness
+Must be true before external sharing:
+- walkthrough script is usable
+- demo runbook is current
+- runnable commands are verified
+- presenter can execute the demo end-to-end without improvising core flow
 
-## limitation disclosure requirements
-Must be explicitly disclosed in external share materials:
-- prototype-only status
+## Limitation Disclosure Requirements
+External sharing must always disclose:
+- prototype only
 - no production deployment
 - no real gesture recognition yet
 - no notification system yet
-- local/internal demo constraints
+- local/internal baseline
+- roadmap features are not yet shipped
 
-## approval threshold
-External sharing should proceed only when:
-- internal review checklist status = approved
-- narrative + prototype + demo readiness all pass
-- limitation disclosures are present and explicit
+## Approval Threshold
+APPROVED FOR LIMITED EXTERNAL SHARING  
+or  
+NOT READY FOR EXTERNAL SHARING
 
-## recommended next action
-Run one final internal dry-run using the runbook + walkthrough script, complete checklist sign-off, then share controlled external brief/demo to selected reviewers.
+NOTES  
+<short rationale>
+
+## Recommended Next Action
+Refine the native mobile prototype and validate the demo flow internally before broader external sharing.
+
+## Constraints
+- documentation only
+- concise and decision-oriented
+- aligned with current repository state
+- no speculative claims beyond roadmap
