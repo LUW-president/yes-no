@@ -1,63 +1,85 @@
 # Prototype Demo Runbook v0
 
-## purpose
-Provide a clear, repeatable runbook for demonstrating the native mobile prototype consistently across internal sessions.
+## Purpose
+This runbook defines how to demonstrate the native mobile prototype consistently.
 
-## prerequisites
-- repository cloned and dependencies installed (`npm install`)
-- local bridge service available
-- prototype branch/build synced with main baseline
-- terminal access for running bridge and prototype commands
+The goal is to ensure anyone on the project can run and present the prototype using the same flow.
 
-## startup sequence
-1. start bridge service:
-   - `npm run bridge:dev`
-2. in a new terminal, start native prototype:
+## Prerequisites
+- repository is up to date
+- dependencies installed
+- bridge available if required
+- full test suite passing
+- prototype commands available
+
+## Startup Sequence
+1. Update repository and install dependencies if needed.
+   - `git pull`
+   - `npm install`
+2. Confirm baseline commands are available.
+   - `npm run yesno:demo`
    - `npm run prototype:native`
-3. verify first question screen renders before beginning demo narration
+3. Start bridge service (required for prototype session lifecycle).
+   - `npm run bridge:dev`
+4. Launch the native prototype in a separate terminal.
+   - `npm run prototype:native`
+5. Verify the first question screen appears before starting the demo narrative.
 
-## demo flow
-1. introduce YES/NO interaction principle (binary only)
-2. answer first question using tap-style input (`yes`/`no`)
-3. continue one-question-at-a-time progression
-4. trigger artifact path intentionally
-5. demonstrate artifact decision prompt
-6. complete session and show completion state
+## Demo Flow
+Canonical baseline path:
+1. start session
+2. first question appears
+3. answer YES
+4. next question appears
+5. answer YES
+6. next question appears
+7. answer NO
+8. artifact proposal appears
+9. accept artifact
+10. completion screen appears
 
-## expected screens
-- Question Screen
-  - header: `YES/NO`
-  - current question text
-  - actions: `[ YES ] [ NO ]`
-- Artifact Screen
-  - `ARTIFACT`
-  - artifact type
-  - prompt: `Accept this artifact?`
-- Completion Screen
-  - `SESSION COMPLETE`
-  - optional continuation prompt
+## Expected Screens
+Expected screen order:
+1. Question Screen
+2. Question Screen
+3. Question Screen
+4. Artifact Screen
+5. Completion Screen
 
-## expected artifact path
-Recommended deterministic path during demo:
-- answer sequence should reach artifact proposal (`artifact_*`)
-- artifact screen appears with accept/reject prompt
-- continue to completion after decision input
+## Expected Artifact Path
+Baseline demo target path:
+- `artifact_film`
 
-## completion flow
-- show terminal completion screen
-- briefly restate outcome: full session lifecycle executed successfully
-- if needed, restart prototype for next viewer/demo pass
+This path comes from the deterministic `creation_v0` pack.
 
-## troubleshooting notes
-- if bridge is not running: restart with `npm run bridge:dev`
-- if prototype stalls: restart prototype process and begin new session
-- if unexpected state appears: verify latest main sync and rerun test suite
-- if input not recognized: use explicit `yes`/`no` fallback (tap simulation)
+## Completion Flow
+At the end of the demo:
+- completion screen appears
+- optional restart prompt is visible if implemented
+- demo is successful when full lifecycle completes without manual fixes
 
-## success criteria
-Demo is successful when:
-- startup completes without runtime errors
-- question screen appears and accepts binary input
-- artifact path is reached and displayed
-- completion screen is reached
-- flow remains deterministic and aligned with prototype scope
+## Troubleshooting Notes
+- bridge not reachable:
+  - restart bridge with `npm run bridge:dev`
+- session not starting:
+  - verify bridge is running and retry prototype launch
+- invalid command usage:
+  - rerun with exact commands in Startup Sequence
+- unexpected screen order:
+  - restart prototype and follow canonical answer path
+- failing tests before demo:
+  - run full test suite and resolve failures first
+
+## Success Criteria
+Demo is successful if:
+- session starts cleanly
+- question flow progresses deterministically
+- artifact screen appears
+- completion screen appears
+- no runtime errors occur
+
+## Constraints
+- documentation only
+- reflect actual prototype behavior only
+- no speculative flows
+- keep the runbook practical and concise
