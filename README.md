@@ -67,3 +67,6 @@ Core Engines
 - documentation-only update
 - keep README concise
 - reflect actual repo state only
+
+## Exploratory Concepts
+- `docs/concepts/README.md`
