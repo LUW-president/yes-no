@@ -1,61 +1,128 @@
-# native-mobile-prototype-plan-v0
+# Native Mobile Prototype Plan v0
 
-## purpose
-Define the first runnable native mobile prototype that demonstrates the YES/NO interaction model using the existing engine, bridge, and mobile adapter.
+## Purpose
+This document defines the first working mobile prototype of the YES/NO experience.
 
-## prototype scope
-- single-user local prototype flow
-- one-question-at-a-time binary interaction
-- artifact proposal and completion states
-- bridge-backed session control via adapter
+The prototype must demonstrate:
+- one-question interaction
+- YES / NO binary responses
+- gesture and tap input
+- integration with the existing system (bridge + adapters + orchestrator)
 
-## minimal screen architecture
-- Question Screen
-- Artifact Proposal Screen
-- Session Complete Screen
-- optional transient fallback state for delayed responses
+## Prototype Scope
+Included:
+- black-screen question interface
+- YES / NO interaction
+- tap input
+- placeholder gesture input layer
+- artifact proposal screen
+- session completion screen
+- connection to bridge API
 
-## gesture and tap input support
-- tap YES/NO supported in prototype baseline
-- gesture circle/cross can be included as experimental input path
-- all inputs normalize strictly to `yes` / `no`
+Not included:
+- account system
+- push notifications
+- production persistence
+- analytics
+- onboarding flows
+- design polish
 
-## bridge communication model
-- prototype UI communicates only through mobile adapter
-- mobile adapter communicates with bridge endpoints:
-  - `POST /session/start`
-  - `POST /session/answer`
-  - `GET /session/:session_id`
-- no direct engine calls from UI layer
+## Minimal Screen Architecture
+1. Question Screen  
+Displays the question and YES / NO interaction zones.
 
-## session lifecycle in prototype
-1. start session (`creation_v0`)
-2. render current question
-3. capture yes/no input
-4. submit answer through adapter
-5. render next question or artifact
-6. render completion state
+2. Artifact Screen  
+Displays artifact proposal and accept/reject prompt.
 
-## artifact display model
-- show artifact type in dedicated artifact state view
-- present binary accept/reject action pattern for prototype continuity
-- preserve minimal black-screen visual language
+3. Session Complete Screen  
+Displays session completion message.
 
-## prototype success criteria
-- deterministic question progression
-- reliable yes/no input normalization
-- stable bridge communication for full session
-- artifact state reachable and renderable
-- completion state reachable without errors
+No additional screens.
 
-## limitations of prototype
-- not production mobile app
-- minimal visual design and no advanced transitions
-- limited persistence/recovery behavior
-- no full gesture recognition guarantees in v0 plan
+## Input Model
+Supported inputs:
 
-## next iteration milestones
-- stabilize native interaction latency
-- formalize gesture recognition implementation
-- add artifact decision persistence
-- add lightweight telemetry for session diagnostics
+Tap YES / NO (required)
+
+Gesture input (optional prototype stub):
+- Circle → YES
+- Cross → NO
+
+Gesture recognition can be simulated in the prototype.
+
+## Bridge Communication Model
+Request flow:
+
+Mobile Prototype  
+↓  
+Mobile Adapter  
+↓  
+Reference Bridge  
+↓  
+Session Orchestrator  
+↓  
+Engines
+
+Endpoints used:
+- POST /session/start
+- POST /session/answer
+- GET /session/:session_id
+
+## Session Lifecycle
+Prototype session flow:
+
+Start Session  
+↓  
+Display Question  
+↓  
+User Input (YES / NO)  
+↓  
+Send Answer  
+↓  
+Receive Next State
+
+Possible states:
+- Next Question
+- Artifact Proposed
+- Session Complete
+
+## Artifact Display Model
+When artifact is proposed, display:
+
+ARTIFACT  
+<artifact type>
+
+Prompt:
+
+Accept this artifact?
+
+YES / NO
+
+## Prototype Success Criteria
+The prototype is successful if:
+- a session can start
+- questions display correctly
+- YES / NO input works
+- session progresses correctly
+- artifact proposals display
+- session completes
+
+## Limitations
+- no real gesture recognition yet
+- console bridge environment
+- minimal UI styling
+- no production backend
+- local testing only
+
+## Next Iteration Milestones
+- SwiftUI native implementation
+- gesture recognition engine
+- real mobile UI design pass
+- notification system
+- persistent user profile
+
+## Constraints
+- specification only
+- no mobile SDKs referenced
+- platform-neutral language
+- preserve product philosophy
