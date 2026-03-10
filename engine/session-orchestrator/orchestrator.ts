@@ -23,9 +23,7 @@ function nowIso() {
 }
 
 function countRecordedAnswers(session_id: string): number {
-  return eventStore
-    .getSessionEvents(session_id)
-    .filter((e) => e.event_type === 'answer.recorded' || e.event_type === 'answer.submitted').length;
+  return eventStore.getSessionEvents(session_id).filter((e) => e.event_type === 'answer.recorded').length;
 }
 
 function loadPackById(pack_id: string): LoadedPack {
@@ -228,8 +226,12 @@ export function __getProfile(user_id: string): UserProfile {
   return p;
 }
 
-export function __getSessionEventStream(session_id: string): ProtocolStreamEvent[] {
+export function getSessionEventStream(session_id: string): ProtocolStreamEvent[] {
   return eventStore.getSessionEvents(session_id);
+}
+
+export function __getSessionEventStream(session_id: string): ProtocolStreamEvent[] {
+  return getSessionEventStream(session_id);
 }
 
 export function __resetForTests(): void {

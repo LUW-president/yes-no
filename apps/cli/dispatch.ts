@@ -1,4 +1,4 @@
-export type Command = 'run' | 'harness' | 'demo' | 'status';
+export type Command = 'run' | 'harness' | 'demo' | 'status' | 'trace';
 
 export type DispatchResult =
   | { kind: 'ok'; command: Command }
@@ -13,6 +13,7 @@ export function usageMessage(): string {
     'yesno harness',
     'yesno demo',
     'yesno status',
+    'yesno trace --session <session_id> | --demo',
   ].join('\n');
 }
 
@@ -49,6 +50,14 @@ export async function dispatchCommand(cmd: string, args: string[] = []): Promise
       if (typeof mod.runStatusDashboard === 'function') mod.runStatusDashboard();
     }
     return { kind: 'ok', command: 'status' };
+  }
+
+  if (cmd === 'trace') {
+    if (!noExec) {
+      const mod = await import('./trace');
+      if (typeof mod.traceCommand === 'function') await mod.traceCommand(args);
+    }
+    return { kind: 'ok', command: 'trace' };
   }
 
   return { kind: 'usage', message: usageMessage() };

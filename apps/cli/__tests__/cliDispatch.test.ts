@@ -9,6 +9,7 @@ async function main() {
   assert(invalid.kind === 'usage', 'unknown command should return usage');
   assert(usageMessage().includes('YES/NO CLI'), 'usage message missing header');
   assert(usageMessage().includes('yesno status'), 'usage missing status command');
+  assert(usageMessage().includes('yesno trace'), 'usage missing trace command');
 
   const runMapped = await dispatchCommand('run', ['--test-noexec']);
   assert(runMapped.kind === 'ok' && runMapped.command === 'run', 'run dispatch mapping failed');
@@ -21,6 +22,9 @@ async function main() {
 
   const statusMapped = await dispatchCommand('status', ['--test-noexec']);
   assert(statusMapped.kind === 'ok' && statusMapped.command === 'status', 'status dispatch mapping failed');
+
+  const traceMapped = await dispatchCommand('trace', ['--test-noexec']);
+  assert(traceMapped.kind === 'ok' && traceMapped.command === 'trace', 'trace dispatch mapping failed');
 
   console.log('cli dispatch tests passed');
 }

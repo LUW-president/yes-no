@@ -12,6 +12,7 @@
     "yesno:run": "tsx apps/cli/yesno.ts run",
     "yesno:harness": "tsx apps/cli/yesno.ts harness",
     "test:cli-dispatch": "tsx apps/cli/__tests__/cliDispatch.test.ts",
+    "test:trace": "tsx apps/cli/__tests__/traceCommand.test.ts",
     "yesno:demo": "tsx apps/cli/yesno.ts demo",
     "test:demo": "tsx apps/demo/__tests__/demoScript.test.ts",
     "bridge:dev": "tsx bridge/reference-app/server.ts",
