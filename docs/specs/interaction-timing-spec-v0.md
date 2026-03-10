@@ -1,44 +1,99 @@
-# interaction-timing-spec-v0
+# Interaction Timing Specification v0
 
-## purpose
-Define temporal behavior for the YES/NO experience, including pacing between questions, gesture recognition timing, artifact reveal timing, and intentional silence intervals.
+## Purpose
+Timing is a core UX component of the YES/NO system.
 
-## timing philosophy
-- timing must reinforce calm, focus, and clarity
-- pacing should feel deliberate, not rushed
-- temporal consistency supports trust and usability
+The goal is to create a rhythm that feels thoughtful and deliberate rather than fast and reactive.
 
-## question pacing model
-- show one question at a time
-- after each answer, apply a short transition pause before next state
-- maintain consistent pacing rhythm across session steps
+## Timing Philosophy
+Guiding principles:
+- slower is better than rushed
+- silence is intentional
+- one interaction at a time
+- avoid rapid-fire questions
+- the system should feel reflective
 
-## gesture recognition timing window
-- begin recognition immediately on touch/gesture start
-- allow a bounded capture window for circle/cross completion
-- resolve quickly once confidence threshold is reached
-- if unresolved within window, fail gracefully to fallback input
+## Question Pacing Model
+Baseline rule:
 
-## artifact reveal timing
-- after artifact-triggering answer, apply brief reveal delay
-- then present artifact state card clearly
-- avoid abrupt flashing transitions
+Answer received → short pause → next question appears.
 
-## session completion timing
-- after terminal transition, show completion state with short settle delay
-- keep completion screen visible long enough for acknowledgement
+Recommended timing:
+- gesture recognition: immediate
+- reflection pause: ~600ms
+- next question render: after pause
 
-## silence as UX element
-- silence is intentional between states and after key transitions
-- avoid excessive audio/visual interruptions
-- preserve contemplative rhythm aligned with product philosophy
+Total pacing target:
+~600–900ms between interactions.
 
-## fallback timing behavior
-- on gesture timeout/failure, immediately expose tap YES/NO fallback
-- fallback should not introduce long dead periods
-- recovery timing should preserve session flow continuity
+## Gesture Recognition Window
+Circle / Cross gesture detection window:
+- Minimum: 200ms
+- Maximum: 2000ms
 
-## integration with orchestrator
-- timing layer wraps UI interaction around orchestrator transitions
-- no change to orchestrator decision logic
-- outputs still normalize strictly to yes/no before submission
+Gestures outside this window are rejected and require retry.
+
+## Artifact Reveal Timing
+When artifact is proposed:
+
+Sequence:
+1. Answer accepted
+2. Pause
+3. Artifact title appears
+4. Pause
+5. Artifact prompt appears
+
+Suggested timing:
+- Pause 1: 600ms
+- Pause 2: 400ms
+
+## Session Completion Timing
+When session completes:
+
+Sequence:
+1. Final answer received
+2. Pause
+3. “SESSION COMPLETE” appears
+
+Pause suggestion:
+~800ms before completion message.
+
+## Silence as UX Element
+Silent pauses are intentional and should never be replaced with loading indicators or animations.
+
+- No progress bars.
+- No spinning loaders.
+
+Silence communicates reflection.
+
+## Fallback Timing
+If network or engine delay exceeds expected timing:
+
+UI should wait silently up to:
+- 3 seconds
+
+If exceeded, display minimal fallback message:
+- “Thinking…”
+
+## Engine Integration
+Timing flow:
+
+User Gesture  
+↓  
+Mobile UI  
+↓  
+Adapter  
+↓  
+Bridge  
+↓  
+Session Orchestrator  
+↓  
+Next Question
+
+Timing delays occur only in the UI layer.
+
+## Constraints
+- specification only
+- no implementation code
+- platform-neutral timing rules
+- preserve product philosophy
