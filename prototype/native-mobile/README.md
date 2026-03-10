@@ -1,27 +1,37 @@
-# Native Mobile Prototype v0
+# Native Mobile Prototype v0 (Refined)
 
 ## Purpose
-First runnable native-style prototype for YES/NO interaction flow using existing bridge contracts.
+Runnable native-style prototype for YES/NO demos with improved transition consistency and lightweight bridge error handling.
+
+## Intended demo usage
+Use this prototype for controlled internal and limited external walkthroughs of the canonical flow:
+- question progression
+- artifact proposal (`artifact_film` path)
+- completion state
 
 ## Files
-- `app.ts` — prototype entrypoint and lifecycle loop
-- `session.ts` — session state transitions
-- `bridge/client.ts` — minimal bridge API client
-- `screens/*` — question/artifact/completion renderers
-- `input/tapInput.ts` — tap normalization (`yes`/`no`)
-- `input/gestureStub.ts` — gesture stubs (`circle`/`cross`)
-- `__tests__/nativeMobilePrototype.test.ts` — deterministic lifecycle tests
+- `app.ts` — prototype lifecycle driver and input loop
+- `session.ts` — deterministic state transitions
+- `bridge/client.ts` — bridge API client with minimal defensive errors
+- `screens/*` — stable question/artifact/completion screen rendering
+- `input/tapInput.ts` — strict tap normalization (`yes`/`no`)
+- `input/gestureStub.ts` — non-production gesture stub mappings
+- `__tests__/nativeMobilePrototype.test.ts` — deterministic lifecycle and failure-path tests
 
 ## Run locally
 ```bash
+npm run bridge:dev
 npm run prototype:native
 ```
 
-## Prototype limitations
-- no real gesture recognition (stub only)
-- no UI framework/native runtime yet
-- no notifications/account system
-- local/dev bridge environment only
+## Refined behavior
+- clearer screen distinction across transitions
+- stable one-question-at-a-time rendering
+- predictable invalid-input handling
+- explicit bridge failure messages for start/answer/state issues
 
-## Relation to future native app
-This prototype locks interaction/state behavior before full native implementation.
+## Limitations (still in place)
+- no real gesture recognition (stub only)
+- no notifications/account system
+- no production persistence/deployment
+- local/internal demo environment orientation

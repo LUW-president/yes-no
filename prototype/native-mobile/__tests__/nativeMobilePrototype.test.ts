@@ -1,4 +1,4 @@
-import { tapYes, tapNo } from '../input/tapInput';
+import { tapYes, tapNo, normalizeTap } from '../input/tapInput';
 import { circleGesture, crossGesture } from '../input/gestureStub';
 import { renderQuestionScreen } from '../screens/questionScreen';
 import { renderArtifactScreen } from '../screens/artifactScreen';
@@ -25,32 +25,70 @@ class MockClient {
   }
 }
 
-// session starts
-const session = new NativeMobileSession(new MockClient() as any);
-const s0 = await session.start('u', 'creation_v0');
-assert(s0.mode === 'question', 'should start on question');
+class FailingStartClient extends MockClient {
+  async startSession() {
+    throw new Error('Bridge error: unable to start session (bridge unreachable)');
+  }
+}
 
-// question screen renders
-assert(renderQuestionScreen('Q').includes('YES/NO'), 'question screen header missing');
+class FailingAnswerClient extends MockClient {
+  async submitAnswer() {
+    throw new Error('Bridge error: failed to submit answer');
+  }
+}
 
-// tap input
+async function runDeterministicPass() {
+  const session = new NativeMobileSession(new MockClient() as any);
+  const s0 = await session.start('u', 'creation_v0');
+  assert(s0.mode === 'question', 'should start on question');
+
+  const s1 = await session.answer('yes');
+  assert(s1.mode === 'question', 'should advance question');
+
+  const s2 = await session.answer('yes');
+  assert(s2.mode === 'artifact' && s2.artifact === 'artifact_film', 'artifact path should be stable');
+
+  const s3 = await session.answer('no');
+  assert(s3.mode === 'completion', 'should reach completion');
+}
+
+// repeated deterministic runs
+await runDeterministicPass();
+await runDeterministicPass();
+
+// rendering order markers
+assert(renderQuestionScreen('Q').includes('YES/NO'), 'question header missing');
+assert(renderArtifactScreen('film').includes('ARTIFACT'), 'artifact marker missing');
+assert(renderCompletionScreen().includes('SESSION COMPLETE'), 'completion marker missing');
+
+// input consistency
 assert(tapYes() === 'yes', 'tapYes failed');
 assert(tapNo() === 'no', 'tapNo failed');
+assert(normalizeTap('y') === 'yes' && normalizeTap('n') === 'no', 'tap normalization failed');
+assert(normalizeTap('bad') === null, 'invalid input should be null');
 
 // gesture stubs
 assert(circleGesture() === 'yes', 'circle should map yes');
 assert(crossGesture() === 'no', 'cross should map no');
 
-// progression
-const s1 = await session.answer('yes');
-assert(s1.mode === 'question', 'should advance to next question');
+// bridge failure paths handled at session layer (propagated clearly)
+const failingStart = new NativeMobileSession(new FailingStartClient() as any);
+let sawStartErr = false;
+try {
+  await failingStart.start('u', 'creation_v0');
+} catch (e: any) {
+  sawStartErr = String(e?.message || '').includes('unable to start session');
+}
+assert(sawStartErr, 'start failure should be surfaced clearly');
 
-const s2 = await session.answer('yes');
-assert(s2.mode === 'artifact', 'artifact screen should appear');
-assert(renderArtifactScreen('film').includes('ARTIFACT'), 'artifact screen render failed');
-
-const s3 = await session.answer('no');
-assert(s3.mode === 'completion', 'completion screen should appear');
-assert(renderCompletionScreen().includes('SESSION COMPLETE'), 'completion screen render failed');
+const failingAnswer = new NativeMobileSession(new FailingAnswerClient() as any);
+await failingAnswer.start('u', 'creation_v0');
+let sawAnswerErr = false;
+try {
+  await failingAnswer.answer('yes');
+} catch (e: any) {
+  sawAnswerErr = String(e?.message || '').includes('failed to submit answer');
+}
+assert(sawAnswerErr, 'answer failure should be surfaced clearly');
 
 console.log('native mobile prototype tests passed');

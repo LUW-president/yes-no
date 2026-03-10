@@ -1,5 +1,9 @@
 export function renderArtifactScreen(artifactType: string): string {
   return [
+    '--------------------------------',
+    'YES/NO',
+    '--------------------------------',
+    '',
     'ARTIFACT',
     artifactType,
     '',

@@ -8,9 +8,9 @@ import { renderCompletionScreen } from './screens/completionScreen';
 import { normalizeTap } from './input/tapInput';
 import { circleGesture, crossGesture } from './input/gestureStub';
 
-function render(state: Awaited<ReturnType<NativeMobileSession['start']>>) {
-  if (state.mode === 'question') return renderQuestionScreen(state.question);
-  if (state.mode === 'artifact') return renderArtifactScreen(state.artifact.replace('artifact_', ''));
+function render(state: { mode: string; question?: string; artifact?: string }) {
+  if (state.mode === 'question') return renderQuestionScreen(state.question || '');
+  if (state.mode === 'artifact') return renderArtifactScreen((state.artifact || '').replace('artifact_', ''));
   return renderCompletionScreen();
 }
 
@@ -21,29 +21,41 @@ function normalizeInput(raw: string): 'yes' | 'no' | null {
   return normalizeTap(v);
 }
 
+function promptLabel(stateMode: 'question' | 'artifact' | 'completion') {
+  return stateMode === 'artifact' ? 'artifact> ' : '> ';
+}
+
 export async function runNativePrototype() {
   const session = new NativeMobileSession();
   const rl = createInterface({ input, output });
 
   try {
-    let state = await session.start();
+    let state;
+    try {
+      state = await session.start();
+    } catch (e: any) {
+      console.error(e?.message || 'Failed to start prototype session');
+      return;
+    }
+
     console.log(render(state));
 
     while (state.mode !== 'completion') {
-      const raw = await rl.question('> ');
+      const raw = await rl.question(promptLabel(state.mode));
       const answer = normalizeInput(raw);
-      if (!answer) continue;
-      state = await session.answer(answer);
-      console.log(render(state as any));
-
-      if (state.mode === 'artifact') {
-        // For prototype continuity, ask for accept/reject and then continue lifecycle.
-        const artifactRaw = await rl.question('> ');
-        const artifactAnswer = normalizeInput(artifactRaw);
-        if (!artifactAnswer) continue;
-        state = await session.answer(artifactAnswer);
-        console.log(render(state as any));
+      if (!answer) {
+        console.log('Input not recognized. Use yes/no (or y/n). Gesture stubs: circle/cross.');
+        continue;
       }
+
+      try {
+        state = await session.answer(answer);
+      } catch (e: any) {
+        console.error(e?.message || 'Failed to continue session');
+        return;
+      }
+
+      console.log(render(state));
     }
   } finally {
     rl.close();
