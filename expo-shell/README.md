@@ -2,6 +2,8 @@
 
 Minimal Expo/React Native shell for YES/NO that sits on the existing bridge/session architecture.
 
+Current shell target: **Expo SDK 54** (compatible with current Expo Go).
+
 ## What this slice includes
 - launch/entry state
 - question screen (black screen + YES/NO taps)
