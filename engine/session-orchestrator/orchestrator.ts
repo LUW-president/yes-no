@@ -1,6 +1,6 @@
 import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { createEvent, InMemoryEventStore } from '../protocol';
+import { createEvent, InMemoryEventStore, ProtocolStreamEvent } from '../protocol';
 import { createEmptyProfile, updateProfileFromEvent, UserProfile } from '../memory-engine';
 import { loadPackFromPath } from '../question-engine/packLoader';
 import { resolveNextInPack } from '../question-engine/resolver';
@@ -20,6 +20,12 @@ function id(prefix: string) {
 
 function nowIso() {
   return new Date().toISOString();
+}
+
+function countRecordedAnswers(session_id: string): number {
+  return eventStore
+    .getSessionEvents(session_id)
+    .filter((e) => e.event_type === 'answer.recorded' || e.event_type === 'answer.submitted').length;
 }
 
 function loadPackById(pack_id: string): LoadedPack {
@@ -83,6 +89,19 @@ export function recordAnswer(session: SessionState, answer: 'yes' | 'no'): Recor
   if (!current) throw new Error(`Question not found in session pack: ${s.current_question_id}`);
 
   const ts = nowIso();
+  const submittedEvent = createEvent({
+    event_id: id('evt'),
+    event_type: 'answer.submitted',
+    timestamp: ts,
+    session_id: s.session_id,
+    user_id: s.user_id,
+    question_id: s.current_question_id,
+    answer,
+    input_mode: 'tap',
+    latency_ms: 0,
+  });
+  eventStore.appendEvent(submittedEvent);
+
   const answerEvent = createEvent({
     event_id: id('evt'),
     event_type: 'answer.recorded',
@@ -120,6 +139,17 @@ export function recordAnswer(session: SessionState, answer: 'yes' | 'no'): Recor
     });
     eventStore.appendEvent(qEvent);
 
+    const updatedEvent = createEvent({
+      event_id: id('evt'),
+      event_type: 'session.updated',
+      timestamp: nowIso(),
+      session_id: s.session_id,
+      user_id: s.user_id,
+      stage: 'question',
+      answered_count: countRecordedAnswers(s.session_id),
+    });
+    eventStore.appendEvent(updatedEvent);
+
     return { kind: 'question', session: s, question_text: next.text };
   }
 
@@ -146,6 +176,17 @@ export function recordAnswer(session: SessionState, answer: 'yes' | 'no'): Recor
     const p = profiles.get(s.user_id)!;
     profiles.set(s.user_id, updateProfileFromEvent(p, aEvent));
 
+    const updatedEvent = createEvent({
+      event_id: id('evt'),
+      event_type: 'session.updated',
+      timestamp: nowIso(),
+      session_id: s.session_id,
+      user_id: s.user_id,
+      stage: 'artifact',
+      answered_count: countRecordedAnswers(s.session_id),
+    });
+    eventStore.appendEvent(updatedEvent);
+
     return { kind: 'artifact', session: s, artifact_trigger: resolved.artifact_trigger };
   }
 
@@ -161,6 +202,17 @@ export function recordAnswer(session: SessionState, answer: 'yes' | 'no'): Recor
   });
   eventStore.appendEvent(closeEvent);
 
+  const updatedEvent = createEvent({
+    event_id: id('evt'),
+    event_type: 'session.updated',
+    timestamp: nowIso(),
+    session_id: s.session_id,
+    user_id: s.user_id,
+    stage: 'completed',
+    answered_count: countRecordedAnswers(s.session_id),
+  });
+  eventStore.appendEvent(updatedEvent);
+
   return { kind: 'end', session: s };
 }
 
@@ -174,6 +226,10 @@ export function __getProfile(user_id: string): UserProfile {
   const p = profiles.get(user_id);
   if (!p) throw new Error(`Profile not found: ${user_id}`);
   return p;
+}
+
+export function __getSessionEventStream(session_id: string): ProtocolStreamEvent[] {
+  return eventStore.getSessionEvents(session_id);
 }
 
 export function __resetForTests(): void {

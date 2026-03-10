@@ -1,4 +1,11 @@
-import { __getProfile, __resetForTests, getSessionState, recordAnswer, startSession } from '../orchestrator';
+import {
+  __getProfile,
+  __getSessionEventStream,
+  __resetForTests,
+  getSessionState,
+  recordAnswer,
+  startSession,
+} from '../orchestrator';
 
 function assert(cond: boolean, msg: string) {
   if (!cond) throw new Error(msg);
@@ -31,5 +38,12 @@ assert(getSessionState(started2.session.session_id).status === 'completed', 'ses
 const p = __getProfile('u_test');
 assert(p.event_count > 0, 'profile event_count should update');
 assert(p.signals.art_interest >= 0, 'profile should contain deterministic signal updates');
+
+// event stream integration checks for new protocol events
+const stream = __getSessionEventStream(started.session.session_id);
+assert(stream.length > 0, 'event stream should not be empty');
+assert(stream.every((e, i) => e.sequence === i + 1), 'event stream sequence must be monotonic');
+assert(stream.some((e) => e.event_type === 'answer.submitted'), 'answer.submitted should be emitted');
+assert(stream.some((e) => e.event_type === 'session.updated'), 'session.updated should be emitted');
 
 console.log('session orchestrator tests passed');
