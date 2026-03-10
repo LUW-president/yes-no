@@ -13,7 +13,9 @@
     "yesno:harness": "tsx apps/cli/yesno.ts harness",
     "test:cli-dispatch": "tsx apps/cli/__tests__/cliDispatch.test.ts",
     "yesno:demo": "tsx apps/cli/yesno.ts demo",
-    "test:demo": "tsx apps/demo/__tests__/demoScript.test.ts"
+    "test:demo": "tsx apps/demo/__tests__/demoScript.test.ts",
+    "bridge:dev": "tsx bridge/reference-app/server.ts",
+    "test:bridge": "tsx bridge/reference-app/__tests__/referenceBridge.test.ts"
   },
   "devDependencies": {
     "tsx": "^4.19.2",
