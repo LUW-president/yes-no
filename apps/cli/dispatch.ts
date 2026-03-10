@@ -1,4 +1,4 @@
-export type Command = 'run' | 'harness' | 'demo' | 'status' | 'trace' | 'confidence';
+export type Command = 'run' | 'harness' | 'demo' | 'status' | 'trace' | 'confidence' | 'explain';
 
 export type DispatchResult =
   | { kind: 'ok'; command: Command }
@@ -15,6 +15,7 @@ export function usageMessage(): string {
     'yesno status',
     'yesno trace --session <session_id> | --demo',
     'yesno confidence --session <session_id>',
+    'yesno explain --session <session_id>',
   ].join('\n');
 }
 
@@ -67,6 +68,14 @@ export async function dispatchCommand(cmd: string, args: string[] = []): Promise
       if (typeof mod.confidenceCommand === 'function') await mod.confidenceCommand(args);
     }
     return { kind: 'ok', command: 'confidence' };
+  }
+
+  if (cmd === 'explain') {
+    if (!noExec) {
+      const mod = await import('./explain');
+      if (typeof mod.explainCommand === 'function') await mod.explainCommand(args);
+    }
+    return { kind: 'ok', command: 'explain' };
   }
 
   return { kind: 'usage', message: usageMessage() };
