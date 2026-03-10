@@ -1,70 +1,86 @@
 # Milestone Roadmap v1 — YES/NO
 
-## current baseline summary
-- Internal baseline v0 is complete and merged.
-- Deterministic core stack is operational (protocol, question engine, memory engine, orchestrator).
-- Interface/control surfaces are in place (CLI, demo, status dashboard, bridge, adapters, mobile/web reference apps).
-- Product/UX foundation docs are established (native UI spec, gesture spec, timing spec, prototype plan).
+## Current Baseline Summary
+Current project baseline state:
+- core engine architecture complete
+- protocol, question engine, memory engine implemented
+- session orchestrator implemented
+- CLI runner and UX harness available
+- reference bridge implemented
+- mobile and web adapters implemented
+- mobile and web reference apps available
+- gesture input specification defined
+- interaction timing specification defined
+- native mobile prototype plan defined
+- documentation baseline complete
 
-## milestone 1: native mobile prototype
-Goal:
-- Deliver first runnable native mobile prototype demonstrating one-question YES/NO interaction.
+## Milestone 1: Native Mobile Prototype
+### Goal
+Build the first runnable mobile interface demonstrating the YES/NO interaction model.
 
-Scope highlights:
-- question screen, artifact screen, completion screen
-- tap YES/NO support
-- bridge + adapter integration path validated end-to-end
+### Deliverables
+- black-screen question interface
+- YES / NO interaction zones
+- bridge integration
+- working session lifecycle
 
-Exit criteria:
-- session start/progression/completion on mobile prototype flow
-- artifact state rendered reliably
+### Success criteria
+A user can complete a full YES/NO session on a mobile device.
 
-## milestone 2: gesture recognition implementation
-Goal:
-- Implement first production-ready gesture recognition path for circle (YES) and cross (NO).
+## Milestone 2: Gesture Recognition Implementation
+### Goal
+Add real gesture recognition to support circle and cross input.
 
-Scope highlights:
-- gesture detection window + tolerance implementation
-- mapping strictly to `yes`/`no`
-- fallback tap path preserved
+### Deliverables
+- circle gesture detection
+- cross gesture detection
+- gesture normalization to yes/no
+- gesture feedback visuals
 
-Exit criteria:
-- stable gesture-to-answer mapping under defined timing constraints
-- no additional signal types introduced
+### Success criteria
+Users can answer questions using gestures without buttons.
 
-## milestone 3: first public demo build
-Goal:
-- Package a stable demo build suitable for external showing.
+## Milestone 3: First Public Demo Build
+### Goal
+Prepare a demonstration build suitable for sharing with early collaborators.
 
-Scope highlights:
-- curated deterministic demo path
-- basic build/run documentation for external viewers
-- polished but minimal interaction visuals
+### Deliverables
+- stable mobile prototype
+- demonstration scenario
+- artifact generation examples
 
-Exit criteria:
-- reproducible demo execution without operator intervention
-- clear narrative from question flow to artifact/completion
+### Success criteria
+External users can experience the YES/NO interaction model.
 
-## milestone 4: developer SDK concept
-Goal:
-- Define and prototype a developer-facing YES/NO SDK concept.
+## Milestone 4: Developer SDK Concept
+### Goal
+Explore how external developers could build YES/NO-native applications.
 
-Scope highlights:
-- API surface concept for embedding question flows
-- adapter/bridge integration guidance
-- minimal sample integration patterns
+### Deliverables
+- conceptual SDK design
+- protocol exposure
+- example developer flow
 
-Exit criteria:
-- SDK concept doc + thin prototype proving embed model
+### Success criteria
+A developer can understand how to integrate with the YES/NO system.
 
-## milestone 5: platform expansion
-Goal:
-- Expand YES/NO from reference product to platform layer.
+## Milestone 5: Platform Expansion
+### Goal
+Expand YES/NO beyond a single application.
 
-Scope highlights:
-- multi-surface strategy (mobile/web and future modalities)
-- profile-aware decision flows
-- extensible application patterns built on binary interaction core
+### Possible directions
+- additional question packs
+- vertical applications
+- developer ecosystem
+- platform APIs
 
-Exit criteria:
-- validated roadmap for broader platform rollout with preserved philosophy
+## Roadmap Principles
+- preserve product simplicity
+- prioritize working prototypes
+- iterate through small milestones
+- protect the interaction philosophy
+
+## Constraints
+- documentation only
+- roadmap aligned with current repository state
+- avoid speculative features beyond platform vision
