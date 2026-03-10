@@ -1,71 +1,69 @@
 # YES/NO
 
-## project overview
-YES/NO is a deterministic AI interaction system built around one core rule: the system asks questions, and users respond with only YES or NO.
+## PROJECT OVERVIEW
+YES/NO is a radically simple AI interface where the system asks questions and the user answers only YES or NO. The goal is to replace complex prompts and menus with guided binary decisions.
 
-## core concept
+## CORE CONCEPT
 - one question at a time
-- binary interaction only (YES / NO)
-- no prompt-writing interface
-- calm, minimal experience where timing and silence matter
+- binary input only (YES / NO)
+- no prompt interface
+- minimal black-screen UI
+- calm pacing and intentional silence
 
-## architecture overview
+**“The questions are the product.”**
+
+## ARCHITECTURE OVERVIEW
 User Interface  
 ↓  
-Mobile Adapter / Web Adapter  
+Mobile / Web Adapters  
 ↓  
 Reference Bridge  
 ↓  
 Session Orchestrator  
 ↓  
-Core Engines:
-- protocol
+Core Engines
+
+- protocol engine
 - question engine
 - memory engine
 
-## repository structure
-- `engine/` — protocol, question, memory, orchestrator
-- `apps/` — CLI runner, UX harness, demo, mobile/web reference apps
-- `bridge/reference-app/` — minimal HTTP bridge API
-- `adapters/` — mobile and web bridge clients
-- `ops/` — dashboard + runbooks
-- `docs/specs/` — product/UX/system specs
-- `docs/product/` — product narrative documents
-- `docs/releases/` — release baseline docs
-- `docs/ops/` — durable agent operating control layer
+## REPOSITORY STRUCTURE
+- `docs/` – specifications and product documentation
+- `engine/` – core system engines
+- `apps/` – reference apps and CLI tools
+- `adapters/` – client adapters
+- `bridge/` – API bridge layer
+- `ops/` – operational tooling and runbooks
 
-## how to run the system
-Core:
-- `yesno run`
-- `yesno harness`
-- `yesno demo`
-- `yesno status`
+## HOW TO RUN THE SYSTEM
+- `yesno run` — run the interactive CLI session flow
+- `yesno harness` — run the UX harness for deterministic interaction validation
+- `yesno demo` — run the deterministic no-input demo session
+- `yesno status` — print the internal status dashboard (baseline/components/commands/tests)
 
-Equivalent scripts:
-- `npm run yesno:run`
-- `npm run yesno:harness`
-- `npm run yesno:demo`
-- `npm run yesno:status`
+## CURRENT BASELINE
+- core engine architecture complete
+- reference bridge implemented
+- mobile and web adapters available
+- reference apps implemented
+- gesture specification defined
+- interaction timing specification defined
+- mobile prototype plan defined
 
-Supporting services and reference apps:
-- `npm run bridge:dev`
-- `npm run mobile:reference`
-- `npm run web:reference`
-
-## current baseline
-Internal v0 baseline is complete with deterministic engine, CLI surfaces, bridge/adapters, reference apps, status dashboard, and full passing module test matrix.
-
-## product documents
+## PRODUCT DOCUMENTS
 - `docs/product/product-one-pager-v0.md`
 - `docs/product/product-deck-outline-v0.md`
 - `docs/specs/native-mobile-ui-spec-v0.md`
 - `docs/specs/gesture-input-spec-v0.md`
 - `docs/specs/interaction-timing-spec-v0.md`
-- `docs/specs/native-mobile-prototype-plan-v0.md`
 
-## contribution guidelines
-- preserve core philosophy (binary, minimal, deterministic)
-- keep changes phase-scoped and documented
-- run full baseline tests before merge
-- avoid introducing complexity without explicit approval
-- follow ops control docs in `docs/ops/`
+## CONTRIBUTION GUIDELINES
+- follow repository specs
+- keep the system simple
+- respect product philosophy
+- open issues before large architectural changes
+
+## CONSTRAINTS
+- documentation-only update
+- keep README concise
+- reflect actual repo state only
