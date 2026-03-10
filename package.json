@@ -8,10 +8,18 @@
     "test:memory": "tsx engine/memory-engine/__tests__/memoryEngine.test.ts",
     "test:orchestrator": "tsx engine/session-orchestrator/__tests__/sessionOrchestrator.test.ts",
     "test:cli": "tsx apps/cli-runner/__tests__/cliRunner.test.ts",
-    "test:ux": "tsx apps/ux-harness/__tests__/uxHarness.test.ts"
+    "test:ux": "tsx apps/ux-harness/__tests__/uxHarness.test.ts",
+    "yesno:run": "tsx apps/cli/yesno.ts run",
+    "yesno:harness": "tsx apps/cli/yesno.ts harness",
+    "test:cli-dispatch": "tsx apps/cli/__tests__/cliDispatch.test.ts",
+    "yesno:demo": "tsx apps/cli/yesno.ts demo",
+    "test:demo": "tsx apps/demo/__tests__/demoScript.test.ts"
   },
   "devDependencies": {
     "tsx": "^4.19.2",
     "typescript": "^5.6.3"
+  },
+  "bin": {
+    "yesno": "./apps/cli/yesno.ts"
   }
 }
