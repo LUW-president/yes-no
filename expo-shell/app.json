@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "yesno-expo-shell",
+    "slug": "yesno-expo-shell",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "assetBundlePatterns": ["**/*"]
+  }
+}
