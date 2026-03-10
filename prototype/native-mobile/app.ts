@@ -18,19 +18,9 @@ function render(state: UiState, gestureMessage?: string) {
 
 function normalizeInput(raw: string): { answer: 'yes' | 'no' | null; gestureMessage?: string } {
   const v = (raw || '').trim().toLowerCase();
-
-  if (v === 'circle' || v === 'c') {
-    return { answer: circleGesture(), gestureMessage: 'GESTURE RECOGNIZED: YES' };
-  }
-
-  if (v === 'cross' || v === 'x') {
-    return { answer: crossGesture(), gestureMessage: 'GESTURE RECOGNIZED: NO' };
-  }
-
-  if (v === 'gesture bad' || v === 'bad-gesture') {
-    return { answer: null, gestureMessage: 'GESTURE NOT RECOGNIZED' };
-  }
-
+  if (v === 'circle' || v === 'c') return { answer: circleGesture(), gestureMessage: 'GESTURE RECOGNIZED: YES' };
+  if (v === 'cross' || v === 'x') return { answer: crossGesture(), gestureMessage: 'GESTURE RECOGNIZED: NO' };
+  if (v === 'gesture bad' || v === 'bad-gesture') return { answer: null, gestureMessage: 'GESTURE NOT RECOGNIZED' };
   return { answer: normalizeTap(v) };
 }
 
@@ -41,6 +31,7 @@ function promptLabel(stateMode: 'question' | 'artifact' | 'completion') {
 export async function runNativePrototype() {
   const session = new NativeMobileSession();
   const rl = createInterface({ input, output });
+  let lastMessage = '';
 
   try {
     let state;
@@ -58,12 +49,13 @@ export async function runNativePrototype() {
       const parsed = normalizeInput(raw);
 
       if (!parsed.answer) {
-        if (parsed.gestureMessage) console.log(parsed.gestureMessage);
-        if (!parsed.gestureMessage) {
-          console.log('Input not recognized. Use yes/no (or y/n). Gesture inputs: circle/cross.');
-        }
+        const msg = parsed.gestureMessage || 'Input not recognized. Use yes/no (or y/n). Gesture inputs: circle/cross.';
+        if (msg !== lastMessage) console.log(msg);
+        lastMessage = msg;
         continue;
       }
+
+      lastMessage = '';
 
       try {
         state = await session.answer(parsed.answer);

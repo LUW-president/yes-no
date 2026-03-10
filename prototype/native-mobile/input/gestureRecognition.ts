@@ -26,6 +26,21 @@ function pathLength(stroke: Stroke) {
   return sum;
 }
 
+function centroid(points: Point[]) {
+  const n = points.length || 1;
+  const sx = points.reduce((s, p) => s + p.x, 0);
+  const sy = points.reduce((s, p) => s + p.y, 0);
+  return { x: sx / n, y: sy / n };
+}
+
+function radialVarianceScore(stroke: Stroke) {
+  const c = centroid(stroke);
+  const rs = stroke.map((p) => distance(p, c));
+  const mean = rs.reduce((s, r) => s + r, 0) / (rs.length || 1);
+  const varAbs = rs.reduce((s, r) => s + Math.abs(r - mean), 0) / (rs.length || 1);
+  return mean <= 1e-6 ? 1 : varAbs / mean;
+}
+
 function isCircle(strokes: StrokePath): boolean {
   if (strokes.length !== 1) return false;
   const stroke = strokes[0];
@@ -35,15 +50,19 @@ function isCircle(strokes: StrokePath): boolean {
   const end = stroke[stroke.length - 1];
   const b = bounds(stroke);
   const diag = Math.sqrt(b.width * b.width + b.height * b.height);
-  const closedLoop = distance(start, end) <= diag * 0.35;
+
+  const closedLoop = distance(start, end) <= diag * 0.45;
   const ratio = b.width / b.height;
-  const nearRound = ratio >= 0.6 && ratio <= 1.6;
+  const nearRound = ratio >= 0.5 && ratio <= 1.9;
 
   const length = pathLength(stroke);
-  const minPerimeterLike = 2.2 * ((b.width + b.height) / 2);
-  const enoughCurvature = length >= minPerimeterLike;
+  const perimeterLike = 2 * Math.PI * ((b.width + b.height) / 4);
+  const enoughCurvature = length >= perimeterLike * 0.75;
 
-  return closedLoop && nearRound && enoughCurvature;
+  const radialVar = radialVarianceScore(stroke);
+  const reasonablyCircular = radialVar <= 0.55;
+
+  return closedLoop && nearRound && enoughCurvature && reasonablyCircular;
 }
 
 function lineMeta(stroke: Stroke) {
@@ -51,31 +70,21 @@ function lineMeta(stroke: Stroke) {
   const last = stroke[stroke.length - 1];
   const dx = last.x - first.x;
   const dy = last.y - first.y;
-  const slopeSign = Math.sign(dx * dy); // + for /-like depending coord, - for \
+  const slopeSign = Math.sign(dx * dy);
   return { first, last, dx, dy, slopeSign };
 }
 
-function intersectsCenter(a: Stroke, b: Stroke): boolean {
-  const pts = [...a, ...b];
-  const bb = bounds(pts);
-  const cx = (bb.minX + bb.maxX) / 2;
-  const cy = (bb.minY + bb.maxY) / 2;
-
-  const am = lineMeta(a);
-  const bm = lineMeta(b);
-  const midA = { x: (am.first.x + am.last.x) / 2, y: (am.first.y + am.last.y) / 2 };
-  const midB = { x: (bm.first.x + bm.last.x) / 2, y: (bm.first.y + bm.last.y) / 2 };
-
-  const tol = Math.max(bb.width, bb.height) * 0.35;
-  return distance(midA, { x: cx, y: cy }) <= tol && distance(midB, { x: cx, y: cy }) <= tol;
+function strokeMid(stroke: Stroke) {
+  const m = lineMeta(stroke);
+  return { x: (m.first.x + m.last.x) / 2, y: (m.first.y + m.last.y) / 2 };
 }
 
 function isDiagonal(stroke: Stroke): boolean {
   if (stroke.length < 2) return false;
   const { dx, dy } = lineMeta(stroke);
-  if (Math.abs(dx) < 1e-6) return false;
+  if (Math.abs(dx) < 1e-6 || Math.abs(dy) < 1e-6) return false;
   const slopeAbs = Math.abs(dy / dx);
-  return slopeAbs >= 0.4 && slopeAbs <= 3.5;
+  return slopeAbs >= 0.35 && slopeAbs <= 4.0;
 }
 
 function isCross(strokes: StrokePath): boolean {
@@ -89,7 +98,19 @@ function isCross(strokes: StrokePath): boolean {
   const oppositeDiagonals = am.slopeSign !== 0 && bm.slopeSign !== 0 && am.slopeSign !== bm.slopeSign;
   if (!oppositeDiagonals) return false;
 
-  return intersectsCenter(a, b);
+  const all = [...a, ...b];
+  const bb = bounds(all);
+  const center = { x: (bb.minX + bb.maxX) / 2, y: (bb.minY + bb.maxY) / 2 };
+  const midA = strokeMid(a);
+  const midB = strokeMid(b);
+  const tol = Math.max(bb.width, bb.height) * 0.42;
+  const intersectsCenter = distance(midA, center) <= tol && distance(midB, center) <= tol;
+  if (!intersectsCenter) return false;
+
+  const minStrokeLen = Math.max(bb.width, bb.height) * 0.35;
+  if (pathLength(a) < minStrokeLen || pathLength(b) < minStrokeLen) return false;
+
+  return true;
 }
 
 export function recognizeGesture(strokes: StrokePath): YesNo | null {
