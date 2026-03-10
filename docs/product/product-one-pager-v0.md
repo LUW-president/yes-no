@@ -1,34 +1,56 @@
-# YES/NO — Product One-Pager v0
+# YES/NO  
+A radically simple AI interface built on binary decisions.
 
-## title
-YES/NO
+## One-Sentence Thesis
+YES/NO is an AI system where the AI asks questions and the user answers only YES or NO, turning complex prompts into guided decisions.
 
-## one-sentence thesis
-A radically simple AI product where the system asks one question at a time and users answer only YES or NO.
+## Problem
+Today’s AI interfaces create friction:
+- AI tools require complex prompting
+- users face blank-page syndrome
+- interfaces are overloaded with features
+- creativity and decision-making become difficult
 
-## problem
-AI interfaces are powerful but often hard to use: prompt writing is difficult, blank-page syndrome is common, and complex tools create cognitive overload.
+## Solution
+YES/NO replaces prompt complexity with guided binary flow:
+- the system asks the questions
+- the user answers with simple binary responses
+- questions guide the user toward outcomes such as ideas, scripts, or projects
+- the experience is minimal and calm
 
-## solution
-YES/NO replaces prompt-heavy interaction with a guided binary decision flow, reducing friction while preserving intelligence through structured questioning.
-
-## interaction model
+## Interaction Model
+Core interaction pattern:
 - one question at a time
-- binary answers only (YES / NO)
-- black-screen minimal interface
-- calm pacing and intentional silence
-- gesture-ready input model (circle/cross)
+- binary input only (YES / NO)
+- gesture support (circle = yes, cross = no)
+- black-screen minimal UI
+- deliberate pacing and silence
 
-## current baseline
-- deterministic core engines (protocol, question engine, memory engine)
+## Current Baseline
+Current implemented system includes:
+- protocol engine
+- question engine
+- memory engine
 - session orchestrator
-- bridge + adapters
-- mobile/web reference apps
-- status dashboard and ops directive layer
-- baseline test suites passing
+- CLI runner and UX harness
+- bridge API
+- mobile and web adapters
+- interaction timing spec
+- gesture spec
+- mobile prototype plan
 
-## next milestone
-Build the first runnable native mobile prototype demonstrating YES/NO interaction, artifact flow, and bridge-backed session lifecycle.
+## Next Milestone
+Native mobile prototype demonstrating the YES/NO interaction model.
 
-## platform vision
-YES/NO evolves into a multi-surface platform for decision-driven AI experiences with a consistent binary core across mobile, web, and future interaction modalities.
+## Platform Vision
+YES/NO evolves from a single app into a platform where:
+- developers can build YES/NO-native experiences
+- the question engine guides decision flows
+- user profiles learn from binary signals
+- new applications are built on the YES/NO interaction model
+
+## Constraints
+- must fit on one page
+- clear and concise
+- no slide formatting
+- aligned with current repo state
