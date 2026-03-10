@@ -21,7 +21,10 @@
     "mobile:reference": "tsx apps/mobile-reference/app.ts",
     "test:mobile-reference": "tsx apps/mobile-reference/__tests__/mobileReferenceApp.test.ts",
     "web:reference": "tsx apps/web-reference/app.ts",
-    "test:web-reference": "tsx apps/web-reference/__tests__/webReferenceApp.test.ts"
+    "test:web-reference": "tsx apps/web-reference/__tests__/webReferenceApp.test.ts",
+    "yesno:status": "tsx apps/cli/yesno.ts status",
+    "status:dashboard": "tsx ops/dashboard/statusDashboard.ts",
+    "test:status-dashboard": "tsx ops/dashboard/__tests__/statusDashboard.test.ts"
   },
   "devDependencies": {
     "tsx": "^4.19.2",
