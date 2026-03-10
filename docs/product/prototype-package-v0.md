@@ -1,43 +1,63 @@
 # Prototype Package v0 — YES/NO
 
-## purpose
-Create a single coherent package of current YES/NO prototype materials so internal stakeholders can review, run, and present the project consistently.
+## Purpose
+This document packages the current YES/NO prototype materials into one internal reference for review, discussion, and controlled sharing.
 
-## included materials
-- native mobile prototype implementation (`prototype/native-mobile/`)
-- prototype implementation spec (`docs/specs/native-mobile-prototype-implementation-v0.md`)
-- native mobile UI spec (`docs/specs/native-mobile-ui-spec-v0.md`)
-- gesture input spec (`docs/specs/gesture-input-spec-v0.md`)
-- interaction timing spec (`docs/specs/interaction-timing-spec-v0.md`)
+## Included Materials
+Core materials in this package:
+- Native mobile prototype: `prototype/native-mobile/`
+- Prototype demo runbook: `ops/runbooks/prototype-demo-runbook-v0.md`
+- Prototype walkthrough script: `docs/product/prototype-walkthrough-script-v0.md`
+- Product one-pager: `docs/product/product-one-pager-v0.md`
+- Product deck outline: `docs/product/product-deck-outline-v0.md`
+- Native mobile UI spec: `docs/specs/native-mobile-ui-spec-v0.md`
+- Gesture input spec: `docs/specs/gesture-input-spec-v0.md`
+- Interaction timing spec: `docs/specs/interaction-timing-spec-v0.md`
+- Release baseline: `docs/releases/release-baseline-v0.md`
+- Milestone roadmap: `docs/product/milestone-roadmap-v1.md`
 
-## demo assets
-- visual reference assets: `docs/specs/assets/`
-- deterministic path target: `artifact_film` from `creation_v0`
-- status snapshot via `yesno status`
+## Demo Assets
+Available visual/prototype assets:
+- `docs/specs/assets/`
+- native prototype source artifacts in `prototype/native-mobile/`
 
-## prototype commands
-- `npm run bridge:dev`
+Mock images are directional and non-binding.
+
+## Prototype Commands
+Primary commands relevant to this package:
+- `yesno run`
+- `yesno harness`
+- `yesno demo`
+- `yesno status`
 - `npm run prototype:native`
-- `npm run yesno:demo`
-- `npm run yesno:status`
-- `npm run test:prototype:native`
 
-## walkthrough script reference
+## Walkthrough Script Reference
 - `docs/product/prototype-walkthrough-script-v0.md`
 
-## runbook reference
+Use this as the preferred script for live internal presentations.
+
+## Runbook Reference
 - `ops/runbooks/prototype-demo-runbook-v0.md`
 
-## current limitations
-- prototype is minimal and non-production
-- no real gesture recognition (stub only)
-- no account/auth system
-- no notification layer
-- local environment oriented
+Use this as the operational guide for running prototype demos consistently.
 
-## recommended internal sharing flow
-1. Share this package doc as the index.
-2. Share the walkthrough script for presenter consistency.
-3. Share runbook for operator execution steps.
-4. Run live demo using canonical command sequence.
-5. Capture feedback tied to milestone roadmap v1.
+## Current Limitations
+- prototype only
+- no production deployment
+- no real gesture recognition yet
+- no notification system yet
+- minimal native-style implementation only
+- local/internal usage only
+
+## Recommended Internal Sharing Flow
+1. Read product one-pager
+2. Review prototype package
+3. Run prototype demo
+4. Use walkthrough script for presentation
+5. Review milestone roadmap for next steps
+
+## Constraints
+- documentation only
+- concise but complete
+- aligned with current repository state
+- no speculative features beyond current roadmap
