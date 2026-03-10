@@ -54,3 +54,10 @@ YES/NO evolves from a single app into a platform where:
 - clear and concise
 - no slide formatting
 - aligned with current repo state
+
+
+## Key Specifications
+- `docs/specs/native-mobile-ui-spec-v0.md`
+- `docs/specs/gesture-input-spec-v0.md`
+- `docs/specs/interaction-timing-spec-v0.md`
+- `docs/specs/native-mobile-prototype-plan-v0.md`
