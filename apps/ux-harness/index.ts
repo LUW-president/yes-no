@@ -1,10 +1,16 @@
 #!/usr/bin/env node
 import { runHarness } from './harness';
 
-function getArg(flag: string, fallback?: string): string | undefined {
-  const idx = process.argv.indexOf(flag);
-  if (idx >= 0 && process.argv[idx + 1]) return process.argv[idx + 1];
+function getArg(flag: string, argv: string[], fallback?: string): string | undefined {
+  const idx = argv.indexOf(flag);
+  if (idx >= 0 && argv[idx + 1]) return argv[idx + 1];
   return fallback;
+}
+
+export async function harnessCommand(argv = process.argv.slice(2)) {
+  const userId = getArg('--user', argv, 'local_user')!;
+  const packId = getArg('--pack', argv, 'creation_v0')!;
+  await runHarness({ userId, packId, interactive: true });
 }
 
 async function main() {
@@ -13,14 +19,12 @@ async function main() {
     console.log('Usage: yesno harness [--user <user_id>] [--pack <pack_id>]');
     process.exit(1);
   }
-
-  const userId = getArg('--user', 'local_user')!;
-  const packId = getArg('--pack', 'creation_v0')!;
-
-  await runHarness({ userId, packId, interactive: true });
+  await harnessCommand(process.argv.slice(3));
 }
 
-main().catch((err) => {
-  console.error(err.message || err);
-  process.exit(1);
-});
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((err) => {
+    console.error(err.message || err);
+    process.exit(1);
+  });
+}
