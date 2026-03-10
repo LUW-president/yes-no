@@ -8,17 +8,30 @@ import { renderCompletionScreen } from './screens/completionScreen';
 import { normalizeTap } from './input/tapInput';
 import { circleGesture, crossGesture } from './input/gestureStub';
 
-function render(state: { mode: string; question?: string; artifact?: string }) {
-  if (state.mode === 'question') return renderQuestionScreen(state.question || '');
+type UiState = { mode: string; question?: string; artifact?: string };
+
+function render(state: UiState, gestureMessage?: string) {
+  if (state.mode === 'question') return renderQuestionScreen(state.question || '', gestureMessage);
   if (state.mode === 'artifact') return renderArtifactScreen((state.artifact || '').replace('artifact_', ''));
   return renderCompletionScreen();
 }
 
-function normalizeInput(raw: string): 'yes' | 'no' | null {
+function normalizeInput(raw: string): { answer: 'yes' | 'no' | null; gestureMessage?: string } {
   const v = (raw || '').trim().toLowerCase();
-  if (v === 'circle' || v === 'c') return circleGesture();
-  if (v === 'cross' || v === 'x') return crossGesture();
-  return normalizeTap(v);
+
+  if (v === 'circle' || v === 'c') {
+    return { answer: circleGesture(), gestureMessage: 'GESTURE RECOGNIZED: YES' };
+  }
+
+  if (v === 'cross' || v === 'x') {
+    return { answer: crossGesture(), gestureMessage: 'GESTURE RECOGNIZED: NO' };
+  }
+
+  if (v === 'gesture bad' || v === 'bad-gesture') {
+    return { answer: null, gestureMessage: 'GESTURE NOT RECOGNIZED' };
+  }
+
+  return { answer: normalizeTap(v) };
 }
 
 function promptLabel(stateMode: 'question' | 'artifact' | 'completion') {
@@ -42,20 +55,24 @@ export async function runNativePrototype() {
 
     while (state.mode !== 'completion') {
       const raw = await rl.question(promptLabel(state.mode));
-      const answer = normalizeInput(raw);
-      if (!answer) {
-        console.log('Input not recognized. Use yes/no (or y/n). Gesture stubs: circle/cross.');
+      const parsed = normalizeInput(raw);
+
+      if (!parsed.answer) {
+        if (parsed.gestureMessage) console.log(parsed.gestureMessage);
+        if (!parsed.gestureMessage) {
+          console.log('Input not recognized. Use yes/no (or y/n). Gesture inputs: circle/cross.');
+        }
         continue;
       }
 
       try {
-        state = await session.answer(answer);
+        state = await session.answer(parsed.answer);
       } catch (e: any) {
         console.error(e?.message || 'Failed to continue session');
         return;
       }
 
-      console.log(render(state));
+      console.log(render(state, parsed.gestureMessage));
     }
   } finally {
     rl.close();

@@ -1,22 +1,26 @@
-# Native Mobile Prototype v0 (Refined)
+# Native Mobile Prototype v0 (Gesture Prototype Enabled)
 
 ## Purpose
-Runnable native-style prototype for YES/NO demos with improved transition consistency and lightweight bridge error handling.
+Runnable native-style YES/NO prototype with controlled gesture recognition prototype support (circle/cross), while preserving deterministic tap fallback.
 
-## Intended demo usage
-Use this prototype for controlled internal and limited external walkthroughs of the canonical flow:
-- question progression
-- artifact proposal (`artifact_film` path)
-- completion state
+## Demo behavior
+- one-question-at-a-time screen flow
+- deterministic progression to artifact/completion
+- supported gesture inputs:
+  - `circle` (or `c`) -> YES
+  - `cross` (or `x`) -> NO
+- tap inputs remain default and reliable: `yes/no` (`y/n`)
 
 ## Files
-- `app.ts` — prototype lifecycle driver and input loop
+- `app.ts` — prototype lifecycle driver and input routing
 - `session.ts` — deterministic state transitions
-- `bridge/client.ts` — bridge API client with minimal defensive errors
-- `screens/*` — stable question/artifact/completion screen rendering
+- `bridge/client.ts` — bridge API client with defensive error messaging
+- `input/gestureRecognition.ts` — prototype gesture recognition heuristics
+- `input/gestureStub.ts` — sample stroke paths + compatibility helpers
 - `input/tapInput.ts` — strict tap normalization (`yes`/`no`)
-- `input/gestureStub.ts` — non-production gesture stub mappings
-- `__tests__/nativeMobilePrototype.test.ts` — deterministic lifecycle and failure-path tests
+- `screens/*` — stable question/artifact/completion rendering
+- `__tests__/gestureRecognition.test.ts` — gesture detection tests
+- `__tests__/nativeMobilePrototype.test.ts` — lifecycle + stability tests
 
 ## Run locally
 ```bash
@@ -24,14 +28,8 @@ npm run bridge:dev
 npm run prototype:native
 ```
 
-## Refined behavior
-- clearer screen distinction across transitions
-- stable one-question-at-a-time rendering
-- predictable invalid-input handling
-- explicit bridge failure messages for start/answer/state issues
-
-## Limitations (still in place)
-- no real gesture recognition (stub only)
+## Prototype limitations
+- gesture recognition is prototype-level heuristic, not production-grade
 - no notifications/account system
 - no production persistence/deployment
 - local/internal demo environment orientation
