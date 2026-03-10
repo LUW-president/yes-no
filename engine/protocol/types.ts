@@ -1,5 +1,7 @@
 export type EventType =
   | 'question.presented'
+  | 'answer.submitted'
+  | 'session.updated'
   | 'answer.recorded'
   | 'artifact.proposed'
   | 'artifact.accepted'
@@ -19,6 +21,20 @@ export type QuestionPresentedEvent = BaseEvent & {
   question_id: string;
   question_text: string;
   channel: string;
+};
+
+export type AnswerSubmittedEvent = BaseEvent & {
+  event_type: 'answer.submitted';
+  question_id: string;
+  answer: 'yes' | 'no';
+  input_mode: 'gesture' | 'tap' | 'voice';
+  latency_ms: number;
+};
+
+export type SessionUpdatedEvent = BaseEvent & {
+  event_type: 'session.updated';
+  stage: 'question' | 'artifact' | 'completed';
+  answered_count: number;
 };
 
 export type AnswerRecordedEvent = BaseEvent & {
@@ -57,8 +73,14 @@ export type SessionClosedEvent = BaseEvent & {
 
 export type ProtocolEvent =
   | QuestionPresentedEvent
+  | AnswerSubmittedEvent
+  | SessionUpdatedEvent
   | AnswerRecordedEvent
   | ArtifactProposedEvent
   | ArtifactAcceptedEvent
   | ArtifactRejectedEvent
   | SessionClosedEvent;
+
+export type ProtocolStreamEvent = ProtocolEvent & {
+  sequence: number;
+};

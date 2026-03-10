@@ -8,5 +8,21 @@
 - **ORBIS Agent** — research and experimental development
 
 ## Notes
-- ORBIS Agent is concept-stage research only.
+- ORBIS Agent
+- Strategic Intelligence Agent
+- Build Agent is concept-stage research only.
 - Runtime implementation changes remain under explicit Noah-approved execution paths.
+
+
+## Active agent system
+
+Noah — orchestrator
+
+Agents
+
+- Architecture Agent
+- Documentation Agent
+- Stability Agent
+- ORBIS Agent
+- Strategic Intelligence Agent
+- Build Agent
