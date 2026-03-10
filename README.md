@@ -8,3 +8,8 @@ See [PRINCIPLES.md](./PRINCIPLES.md) and [docs/vision/product-thesis.md](./docs/
 - Release baseline: `docs/releases/release-baseline-v0.md`
 - Local demo runbook: `ops/runbooks/local-demo-runbook.md`
 - Test baseline runbook: `ops/runbooks/test-baseline-runbook.md`
+
+## Ops Control Layer
+- `docs/ops/AGENT_DIRECTIVE.md`
+- `docs/ops/PROJECT_STATE.md`
+- `docs/ops/AGENT_LOOP.md`
