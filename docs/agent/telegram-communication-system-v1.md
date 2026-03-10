@@ -85,32 +85,33 @@ Example:
 
 ## Message types
 
-### 1) Heartbeat
+### 1) Morning Intelligence Report
+Purpose: provide a daily strategic summary before active hours.
+
+Schedule:
+- **06:08 AM EST**
+
+Required contents:
+- system status
+- active projects
+- signals detected in last 24h
+- risks
+- decisions required
+- next observation window
+
+### 2) Heartbeat
 Purpose: confirm active system state and workstreams.
 
-Frequency: every 2 hours.
+Schedule:
+- every hour at minute `:08`
+- active window: **06:08 AM – 09:08 PM EST**
 
-Full format:
+Heartbeat format:
 ```
-[NOAH] 🔋🛶
-
-Active workstreams
-🖥️ YES_NO
-🧭 ORBIS
-🏠 RealEstate
-🌱 GrantApplications
-
-Signals: none
-
-Next observation: 2h
+[NOAH] 🔋🛶 | 🖥️ YES_NO 🧭 ORBIS 🌱 Grants
 ```
 
-Compact format:
-```
-[NOAH] 🔋🛶 | 🖥️ YES_NO 🧭 ORBIS 🌱 Grants | Next 2h
-```
-
-### 2) Action Required
+### 3) Action Required
 Purpose: request human decision/review.
 
 Format:
@@ -119,7 +120,7 @@ Format:
 https://docs.google.com/xxxxx
 ```
 
-### 3) Prototype Ready
+### 4) Prototype Ready
 Purpose: notify deliverable readiness.
 
 Format:
@@ -129,7 +130,7 @@ Open:
 https://github.com/xxxxx
 ```
 
-### 4) Discovery Signal
+### 5) Discovery Signal
 Purpose: notify high-value research signal.
 
 Format:
@@ -138,7 +139,7 @@ Format:
 Report prepared.
 ```
 
-### 5) Alert
+### 6) Alert
 Purpose: notify risks/blockers/system issues.
 
 Format:
@@ -146,7 +147,7 @@ Format:
 [STABILITY] 🚧 Dependency risk detected.
 ```
 
-### 6) Completion
+### 7) Completion
 Purpose: notify task/project completion.
 
 Format:
@@ -154,18 +155,31 @@ Format:
 [ARCH] 🔵 Architecture review complete.
 ```
 
-## Heartbeat schedule
-- Standard cadence: every 2 hours
-- Must include current workstreams and next observation timing
-- Use compact format when possible for mobile readability
+## Quiet hours
+Between:
+- **10:00 PM – 06:08 AM EST**
+
+Rule:
+- do not send any messages during quiet hours.
 
 ## Alert priority rules
-The following signals must be sent immediately (do not wait for heartbeat):
+The following signals are high-priority events:
 - ☎️ human intervention required
 - 🚧 risk detected
 - 🛑 blocked task
 - 💡 discovery signal
 - 🟢 prototype ready
+
+During quiet hours, these events are not sent immediately; they must be logged and included in the next Morning Intelligence Report.
+
+## Event storage and next-report rule
+All alerts, discoveries, and notable events must be stored and summarized in the next Morning Intelligence report.
+
+Summary expectation:
+- event type
+- time window
+- impact
+- required follow-up/decision
 
 ## Mobile readability rule
 Messages must be:
