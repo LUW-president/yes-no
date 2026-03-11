@@ -3,7 +3,7 @@ import {
   getSessionSummaryController,
   startSessionController,
   submitAnswerController,
-} from '../../bridge/reference-app/sessionController';
+} from '../../bridge/reference-app/sessionController.js';
 
 const pageHtml = `<!doctype html>
 <html lang="en">

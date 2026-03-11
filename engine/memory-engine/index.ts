@@ -1,3 +1,3 @@
-export * from './types';
-export * from './model';
-export * from './update';
+export * from './types.js';
+export * from './model.js';
+export * from './update.js';

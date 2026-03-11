@@ -1,4 +1,4 @@
-import { ProtocolEvent } from '../protocol';
+import { ProtocolEvent } from '../protocol/index.js';
 
 export type SignalName =
   | 'create_interest'

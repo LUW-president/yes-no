@@ -1,7 +1,7 @@
-import { computeConfidenceTimeline } from '../memory-engine/confidence';
-import { evaluateGuardReportFromEvents } from '../memory-engine/confidenceGuard';
-import { evaluateDecisionGateFromEvents } from '../memory-engine/decisionGate';
-import { ProtocolStreamEvent } from '../protocol';
+import { computeConfidenceTimeline } from '../memory-engine/confidence.js';
+import { evaluateGuardReportFromEvents } from '../memory-engine/confidenceGuard.js';
+import { evaluateDecisionGateFromEvents } from '../memory-engine/decisionGate.js';
+import { ProtocolStreamEvent } from '../protocol/index.js';
 
 export type EffectLabel = 'stabilize' | 'clarify' | 'confirm';
 

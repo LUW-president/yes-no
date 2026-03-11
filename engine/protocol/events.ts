@@ -1,4 +1,4 @@
-import { EventType, ProtocolEvent } from './types';
+import { EventType, ProtocolEvent } from './types.js';
 
 const VALID_EVENT_TYPES: EventType[] = [
   'question.presented',

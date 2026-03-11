@@ -1,12 +1,12 @@
 import { readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createEvent, InMemoryEventStore, ProtocolStreamEvent } from '../protocol';
-import { createEmptyProfile, updateProfileFromEvent, UserProfile } from '../memory-engine';
-import { loadPackFromPath } from '../question-engine/packLoader';
-import { resolveNextInPack } from '../question-engine/resolver';
-import { LoadedPack } from '../question-engine/types';
-import { RecordAnswerResult, SessionState, StartSessionResult } from './types';
+import { createEvent, InMemoryEventStore, ProtocolStreamEvent } from '../protocol/index.js';
+import { createEmptyProfile, updateProfileFromEvent, UserProfile } from '../memory-engine/index.js';
+import { loadPackFromPath } from '../question-engine/packLoader.js';
+import { resolveNextInPack } from '../question-engine/resolver.js';
+import { LoadedPack } from '../question-engine/types.js';
+import { RecordAnswerResult, SessionState, StartSessionResult } from './types.js';
 
 const eventStore = new InMemoryEventStore();
 const sessions = new Map<string, SessionState>();

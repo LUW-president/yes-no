@@ -1,6 +1,6 @@
-import { loadPackFromPath } from './packLoader';
-import { resolveNextInPack } from './resolver';
-import { Answer, LoadedPack, ResolveResult } from './types';
+import { loadPackFromPath } from './packLoader.js';
+import { resolveNextInPack } from './resolver.js';
+import { Answer, LoadedPack, ResolveResult } from './types.js';
 
 const packs = new Map<string, LoadedPack>();
 let activePackId: string | null = null;
@@ -25,6 +25,6 @@ export function resolveNext(question_id: string, answer: Answer): ResolveResult 
   return resolveNextInPack(pack, question_id, answer);
 }
 
-export * from './types';
-export * from './packLoader';
-export * from './resolver';
+export * from './types.js';
+export * from './packLoader.js';
+export * from './resolver.js';
