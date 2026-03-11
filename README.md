@@ -1,3 +1,5 @@
+> **Prototype / Non-Production Notice:** YES/NO is currently a live prototype for validation and iteration.
+
 # YES/NO
 
 ## PROJECT OVERVIEW
@@ -108,3 +110,11 @@ but the signal is buried under noise.
 
 ## SJ86 Canon
 - `docs/product/yes-no-by-sj86-product-logic-v1.md`
+
+
+## Open Source Readiness
+- `CONTRIBUTING.md`
+- `CODE_OF_CONDUCT.md`
+- `SECURITY.md`
+- `.github/ISSUE_TEMPLATE/*`
+- `.github/PULL_REQUEST_TEMPLATE.md`

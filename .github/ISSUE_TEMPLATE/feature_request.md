@@ -1,14 +1,18 @@
 ---
 name: Feature request
-about: Propose a new feature for YES/NO
-labels: feature
+about: Suggest an improvement aligned with YES/NO philosophy
+title: "[Feature] "
+labels: enhancement
+assignees: ''
 ---
 
 ## Problem
 
-## Proposal
+## Proposed change
 
-## Why now
+## Why this aligns with YES/NO
+- Deterministic?
+- Explainable?
+- Small safe increment?
 
-## Simplicity check
-(Does this preserve YES/NO radical simplicity?)
+## Alternatives considered
