@@ -132,5 +132,6 @@ Please read `CONTRIBUTING.md` before opening a PR.
 ## Governance
 - `docs/agent/philosophy-reflected-code-policy-v1.md`
 
-## Integration Specs
-- `docs/specs/integration-ubereats-adapter-v1.md`
+
+## Testing
+- Run all core checks: `npm run test:all`
