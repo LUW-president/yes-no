@@ -16,3 +16,10 @@ Pattern understanding
 AI assistant that knows you deeply
 ↓
 Suggested actions
+
+
+People often already know the answer,
+but the signal is buried under noise.
+
+
+See also: `docs/product/product-logic-canon-v1.md`

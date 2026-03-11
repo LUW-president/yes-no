@@ -80,9 +80,9 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
     <p id="state-strip" class="hint">state: idle | step: 0</p>
     <div class="progress-track" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
     <p id="question" class="question">Welcome. Press <strong>Start Session</strong> to load your first yes/no question.</p>
-    <label for="decision-topic" class="hint strong">Decision Topic</label>
+    <label for="decision-topic" class="hint strong">Decision Topic (optional)</label>
     <input id="decision-topic" type="text" placeholder="e.g. Should I move to another city?" style="width:100%;margin:6px 0 8px;padding:10px 12px;border-radius:10px;border:1px solid #334; background:#0f141c; color:#e9f0ff;" />
-    <p id="topic-help" class="topic-help">Give a concrete decision so your final summary is contextual.</p>
+    <p id="topic-help" class="topic-help">If you're unsure, leave it blank and let YES/NO questions surface your signal.</p>
     <div class="actions">
       <button id="start" class="primary">Start Session</button>
       <button id="yes" class="yes" disabled>Yes</button>
@@ -187,7 +187,7 @@ function renderSummaryCard(summary, topic){
       ? 'Meaning: pause and clarify before committing.'
       : 'Meaning: hold this decision; reduce uncertainty first.';
   summaryEl.innerHTML=''
-    +(topic?'<div class=\"summary-topic\">Decision Topic: <span class=\"summary-value\">'+topic+'</span></div>':'')
+    +'<div class=\"summary-topic\">Decision Topic: <span class=\"summary-value\">'+(topic||'Not specified')+'</span></div>'
     +'<div class=\"summary-lede\">Decision: <span class=\"summary-value\">'+summary.gate_result+'</span> with guard status <span class=\"summary-value\">'+summary.guard_status+'</span>. Confidence is <span class=\"summary-value\">'+Number(summary.final_confidence).toFixed(2)+'</span>.</div>'
     +'<div class=\"summary-meaning\">'+meaning+'</div>'
     +'<div class="k">confidence</div><div>'+Number(summary.final_confidence).toFixed(2)+'</div>'
@@ -217,14 +217,12 @@ function renderStateStrip(state){
 
 async function startSession(){
   decisionTopic=(decisionTopicEl&&decisionTopicEl.value?decisionTopicEl.value.trim():'');
-  if(!decisionTopic){
-    if(decisionTopicEl){ decisionTopicEl.classList.add('input-error'); decisionTopicEl.focus(); }
-    if(topicHelpEl) topicHelpEl.textContent='Please enter a decision topic to start.';
-    renderError('Please enter a decision topic before starting.');
-    return;
-  }
   if(decisionTopicEl) decisionTopicEl.classList.remove('input-error');
-  if(topicHelpEl) topicHelpEl.textContent='Great. We will keep this topic in your final summary.';
+  if(topicHelpEl){
+    topicHelpEl.textContent = decisionTopic
+      ? 'Great. We will keep this topic in your final summary.'
+      : 'No topic needed. The system will help reveal your hidden preference.';
+  }
   if(decisionTopicEl) decisionTopicEl.setAttribute('disabled','true');
   setBusy(true);
   setAnswerButtons(false);
