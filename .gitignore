@@ -3,3 +3,12 @@
 node_modules/
 dist/
 build/
+.vercel/
+
+# Local Expo shell artifacts (workspace-only)
+expo-shell/.expo/
+expo-shell/tsconfig.json
+expo-shell/package-lock.json
+
+# Root lockfile remains local unless explicitly tracked
+package-lock.json
