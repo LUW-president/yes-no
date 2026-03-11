@@ -77,6 +77,8 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
     <p id="state-strip" class="hint">state: idle | step: 0</p>
     <div class="progress-track" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
     <p id="question" class="question">Welcome. Press <strong>Start Session</strong> to load your first yes/no question.</p>
+    <label for="decision-topic" class="hint strong">Decision Topic</label>
+    <input id="decision-topic" type="text" placeholder="e.g. Should I move to another city?" style="width:100%;margin:6px 0 12px;padding:10px 12px;border-radius:10px;border:1px solid #334; background:#0f141c; color:#e9f0ff;" />
     <div class="actions">
       <button id="start" class="primary">Start Session</button>
       <button id="yes" class="yes" disabled>Yes</button>
@@ -113,9 +115,11 @@ const statusEl=document.getElementById('status');
 const progressEl=document.getElementById('progress');
 const hintEl=document.getElementById('hint');
 const stateStripEl=document.getElementById('state-strip');
+const decisionTopicEl=document.getElementById('decision-topic');
 
 let sessionId=null;
 let questionCount=0;
+let decisionTopic='';
 const visualQuestionCap=4;
 
 function setBusy(isBusy){
@@ -152,7 +156,7 @@ function renderHistory(){
   if(!historyEl) return;
   if(sessionHistory.length===0){ historyEl.textContent='(no completed sessions yet)'; return; }
   historyEl.textContent=sessionHistory.map((h,i)=>
-    '#'+(i+1)+' '+h.gate+' | conf '+Number(h.confidence).toFixed(2)+' | guard '+h.guard+' | reason '+h.reason
+    '#'+(i+1)+' '+h.gate+' | topic '+(h.topic||'-')+' | conf '+Number(h.confidence).toFixed(2)+' | guard '+h.guard+' | reason '+h.reason
   ).join('\\n');
 }
 
@@ -162,10 +166,11 @@ function chipClass(gate){
   return 'status-chip chip-no-go';
 }
 
-function renderSummaryCard(summary){
+function renderSummaryCard(summary, topic){
   if(!summaryEl) return;
   summaryEl.innerHTML=''
-    +'<div class="summary-lede">Decision: <span class="summary-value">'+summary.gate_result+'</span> with guard status <span class="summary-value">'+summary.guard_status+'</span>. Confidence is <span class="summary-value">'+Number(summary.final_confidence).toFixed(2)+'</span>.</div>'
+    +(topic?'<div class=\"summary-topic\">Decision Topic: <span class=\"summary-value\">'+topic+'</span></div>':'')
+    +'<div class=\"summary-lede\">Decision: <span class=\"summary-value\">'+summary.gate_result+'</span> with guard status <span class=\"summary-value\">'+summary.guard_status+'</span>. Confidence is <span class=\"summary-value\">'+Number(summary.final_confidence).toFixed(2)+'</span>.</div>'
     +'<div class="k">confidence</div><div>'+Number(summary.final_confidence).toFixed(2)+'</div>'
     +'<div class="k">guard status</div><div>'+summary.guard_status+'</div>'
     +'<div class="k">gate result</div><div>'+summary.gate_result+'</div>'
@@ -192,6 +197,12 @@ function renderStateStrip(state){
 }
 
 async function startSession(){
+  decisionTopic=(decisionTopicEl&&decisionTopicEl.value?decisionTopicEl.value.trim():'');
+  if(!decisionTopic){
+    renderError('Please enter a decision topic before starting.');
+    return;
+  }
+  if(decisionTopicEl) decisionTopicEl.setAttribute('disabled','true');
   setBusy(true);
   setAnswerButtons(false);
   if(summaryEl) summaryEl.innerHTML='<div class="k">state</div><div>Session in progress. Summary appears when complete.</div>';
@@ -252,23 +263,24 @@ async function answer(value){
   const summaryResponse=await fetch('/api/session/'+encodeURIComponent(sessionId)+'/summary');
   const summary=await summaryResponse.json();
   if(!summaryResponse.ok) throw new Error(summary.error||('HTTP '+summaryResponse.status));
-  renderSummaryCard(summary);
+  renderSummaryCard(summary, decisionTopic);
   sessionHistory.unshift({
     gate:summary.gate_result,
     confidence:summary.final_confidence,
     guard:summary.guard_status,
     reason:summary.primary_reason,
+    topic: decisionTopic || '-',
   });
   if(sessionHistory.length>6) sessionHistory.length=6;
   renderHistory();
 }
 
-startBtn.addEventListener('click',()=>startSession().catch((err)=>{setBusy(false);setAnswerButtons(false);renderError('Failed to start session: '+(err&&err.message?err.message:String(err)));}));
+startBtn.addEventListener('click',()=>startSession().catch((err)=>{setBusy(false);setAnswerButtons(false); if(decisionTopicEl) decisionTopicEl.removeAttribute('disabled'); renderError('Failed to start session: '+(err&&err.message?err.message:String(err)));}));
 yesBtn.addEventListener('click',()=>answer('yes').catch((err)=>renderError('Failed to submit answer: '+(err&&err.message?err.message:String(err)))));
 noBtn.addEventListener('click',()=>answer('no').catch((err)=>renderError('Failed to submit answer: '+(err&&err.message?err.message:String(err)))));
 
 
-restartBtn.addEventListener('click',()=>startSession().catch((err)=>{setBusy(false);setAnswerButtons(false);renderError('Failed to start session: '+(err&&err.message?err.message:String(err)));}));
+restartBtn.addEventListener('click',()=>startSession().catch((err)=>{setBusy(false);setAnswerButtons(false); if(decisionTopicEl) decisionTopicEl.removeAttribute('disabled'); renderError('Failed to start session: '+(err&&err.message?err.message:String(err)));}));
 demoAltBtn.addEventListener('click',async ()=>{
   try{
     await startSession();
