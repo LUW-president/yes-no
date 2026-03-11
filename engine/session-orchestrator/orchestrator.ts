@@ -15,7 +15,7 @@ const packs = new Map<string, LoadedPack>();
 let seq = 0;
 function id(prefix: string) {
   seq += 1;
-  return `${prefix}_${Date.now()}_${seq}`;
+  return `${prefix}_${seq}`;
 }
 
 function nowIso() {
