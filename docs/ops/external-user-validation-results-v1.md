@@ -42,3 +42,12 @@ Status: In progress
 
 ## Recommendation
 GO_TO_MORE_VALIDATION
+
+
+## Operator kit
+- `docs/ops/external-validation-moderator-guide-v1.md`
+- `docs/ops/external-validation-invite-message-v1.md`
+- `docs/ops/external-validation-interview-script-v1.md`
+- `docs/ops/external-validation-session-checklist-v1.md`
+- `docs/ops/external-validation-runbook-v1.md`
+- `ops/validation/external-user-sessions.example.jsonl` (dummy/example only)
