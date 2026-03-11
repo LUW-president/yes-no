@@ -1,0 +1,36 @@
+name: CI - V1 Core Tests
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  v1-core-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: test:v1-summary
+        run: npm run test:v1-summary
+
+      - name: test:v1-cli
+        run: npm run test:v1-cli
+
+      - name: test:v1-e2e
+        run: npm run test:v1-e2e
+
+      - name: test:orchestrator
+        run: npm run test:orchestrator
