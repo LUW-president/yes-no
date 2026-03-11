@@ -49,6 +49,9 @@ p,pre{margin:0}
 .kv{display:grid;grid-template-columns:170px 1fr;gap:6px;margin-top:8px;color:#d9e2ec}
 .kv .k{color:#9fb0c4}
 .actions-secondary{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.topic-help{color:#9fb0c4;font-size:.82rem;margin-top:4px}
+.input-error{outline:1px solid #cc4f4f;box-shadow:0 0 0 2px #cc4f4f33}
+.summary-meaning{margin:8px 0 10px;color:#dfe7f2;font-size:.92rem}
 button.ghost{background:transparent;border-color:#3d4758;color:#c9d7e8}
 .question{font-size:1.06rem;line-height:1.5;margin:8px 0 14px;min-height:3.2em}
 .actions{display:flex;gap:10px;flex-wrap:wrap}
@@ -78,7 +81,8 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
     <div class="progress-track" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
     <p id="question" class="question">Welcome. Press <strong>Start Session</strong> to load your first yes/no question.</p>
     <label for="decision-topic" class="hint strong">Decision Topic</label>
-    <input id="decision-topic" type="text" placeholder="e.g. Should I move to another city?" style="width:100%;margin:6px 0 12px;padding:10px 12px;border-radius:10px;border:1px solid #334; background:#0f141c; color:#e9f0ff;" />
+    <input id="decision-topic" type="text" placeholder="e.g. Should I move to another city?" style="width:100%;margin:6px 0 8px;padding:10px 12px;border-radius:10px;border:1px solid #334; background:#0f141c; color:#e9f0ff;" />
+    <p id="topic-help" class="topic-help">Give a concrete decision so your final summary is contextual.</p>
     <div class="actions">
       <button id="start" class="primary">Start Session</button>
       <button id="yes" class="yes" disabled>Yes</button>
@@ -116,6 +120,7 @@ const progressEl=document.getElementById('progress');
 const hintEl=document.getElementById('hint');
 const stateStripEl=document.getElementById('state-strip');
 const decisionTopicEl=document.getElementById('decision-topic');
+const topicHelpEl=document.getElementById('topic-help');
 
 let sessionId=null;
 let questionCount=0;
@@ -168,9 +173,15 @@ function chipClass(gate){
 
 function renderSummaryCard(summary, topic){
   if(!summaryEl) return;
+  const meaning=(summary.gate_result==='GO')
+    ? 'Meaning: proceed with confidence; keep scope focused.'
+    : (summary.gate_result==='REVIEW')
+      ? 'Meaning: pause and clarify before committing.'
+      : 'Meaning: hold this decision; reduce uncertainty first.';
   summaryEl.innerHTML=''
     +(topic?'<div class=\"summary-topic\">Decision Topic: <span class=\"summary-value\">'+topic+'</span></div>':'')
     +'<div class=\"summary-lede\">Decision: <span class=\"summary-value\">'+summary.gate_result+'</span> with guard status <span class=\"summary-value\">'+summary.guard_status+'</span>. Confidence is <span class=\"summary-value\">'+Number(summary.final_confidence).toFixed(2)+'</span>.</div>'
+    +'<div class=\"summary-meaning\">'+meaning+'</div>'
     +'<div class="k">confidence</div><div>'+Number(summary.final_confidence).toFixed(2)+'</div>'
     +'<div class="k">guard status</div><div>'+summary.guard_status+'</div>'
     +'<div class="k">gate result</div><div>'+summary.gate_result+'</div>'
@@ -199,9 +210,13 @@ function renderStateStrip(state){
 async function startSession(){
   decisionTopic=(decisionTopicEl&&decisionTopicEl.value?decisionTopicEl.value.trim():'');
   if(!decisionTopic){
+    if(decisionTopicEl){ decisionTopicEl.classList.add('input-error'); decisionTopicEl.focus(); }
+    if(topicHelpEl) topicHelpEl.textContent='Please enter a decision topic to start.';
     renderError('Please enter a decision topic before starting.');
     return;
   }
+  if(decisionTopicEl) decisionTopicEl.classList.remove('input-error');
+  if(topicHelpEl) topicHelpEl.textContent='Great. We will keep this topic in your final summary.';
   if(decisionTopicEl) decisionTopicEl.setAttribute('disabled','true');
   setBusy(true);
   setAnswerButtons(false);
@@ -225,6 +240,7 @@ async function startSession(){
   statusEl.textContent='in progress';
   renderStateStrip('in-progress');
   hintEl.textContent='Question ready. Choose Yes or No (or press Y / N).';
+  if(topicHelpEl) topicHelpEl.textContent='Session active for: '+decisionTopic;
   hintEl.classList.remove('busy');
   setBusy(false);
 }
