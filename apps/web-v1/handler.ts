@@ -61,6 +61,7 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
 <main class="app">
   <section class="card">
     <div class="meta"><h1>YES/NO V1 Prototype</h1><span class="badge">Prototype • Deterministic</span></div>
+    <p id="state-strip" class="hint">state: idle | step: 0</p>
     <div class="progress-track" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
     <p id="question" class="question">Press start to begin.</p>
     <div class="actions">
@@ -84,6 +85,7 @@ const summaryEl=document.getElementById('summary');
 const statusEl=document.getElementById('status');
 const progressEl=document.getElementById('progress');
 const hintEl=document.getElementById('hint');
+const stateStripEl=document.getElementById('state-strip');
 
 let sessionId=null;
 let questionCount=0;
@@ -113,6 +115,13 @@ function renderError(message){
   questionEl.innerHTML='<span class="error">'+message+'</span>';
   statusEl.textContent='error';
   hintEl.textContent='Try starting a new session.';
+  renderStateStrip('error');
+}
+
+
+function renderStateStrip(state){
+  if(!stateStripEl) return;
+  stateStripEl.textContent='state: '+state+' | step: '+questionCount;
 }
 
 async function startSession(){
@@ -120,6 +129,7 @@ async function startSession(){
   setAnswerButtons(false);
   summaryEl.textContent='(not available yet)';
   statusEl.textContent='starting';
+  renderStateStrip('starting');
   hintEl.textContent='Session started. Answer with Yes or No.';
   questionCount=0;
   updateProgress();
@@ -133,6 +143,7 @@ async function startSession(){
   updateProgress();
   setAnswerButtons(true);
   statusEl.textContent='in progress';
+  renderStateStrip('in-progress');
   setBusy(false);
 }
 
@@ -140,6 +151,7 @@ async function answer(value){
   if(!sessionId) return;
   setAnswerButtons(false);
   statusEl.textContent='processing';
+  renderStateStrip('processing');
 
   const response=await fetch('/api/session/answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:sessionId,answer:value})});
   const out=await response.json();
@@ -150,6 +162,7 @@ async function answer(value){
     updateProgress();
     questionEl.textContent=out.next_question;
     statusEl.textContent='in progress';
+    renderStateStrip('in-progress');
     hintEl.textContent='Keep going. Use Y / N for quick input.';
     setAnswerButtons(true);
     return;
@@ -157,6 +170,7 @@ async function answer(value){
 
   questionEl.textContent=out.artifact_proposed?'Artifact proposed. Session complete.':'Session complete.';
   statusEl.textContent='complete';
+  renderStateStrip('complete');
   hintEl.textContent='Run another session to compare outcomes.';
   progressEl.style.width='100%';
 
