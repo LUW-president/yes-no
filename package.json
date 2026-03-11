@@ -5,6 +5,7 @@
   "scripts": {
     "test:protocol": "tsx engine/protocol/__tests__/protocol.test.ts",
     "test:question": "tsx engine/question-engine/__tests__/questionEngine.test.ts",
+    "test:improvement-policy": "tsx engine/question-engine/__tests__/improvementPolicy.test.ts",
     "test:memory": "tsx engine/memory-engine/__tests__/memoryEngine.test.ts",
     "test:confidence": "tsx engine/memory-engine/__tests__/confidence.test.ts",
     "test:confidence-explain": "tsx engine/memory-engine/__tests__/confidenceExplain.test.ts",
@@ -21,6 +22,7 @@
     "test:explain-cli": "tsx apps/cli/__tests__/explainCommand.test.ts",
     "test:guard-cli": "tsx apps/cli/__tests__/guardCommand.test.ts",
     "test:gate-cli": "tsx apps/cli/__tests__/gateCommand.test.ts",
+    "test:improve-cli": "tsx apps/cli/__tests__/improveCommand.test.ts",
     "yesno:demo": "tsx apps/cli/yesno.ts demo",
     "test:demo": "tsx apps/demo/__tests__/demoScript.test.ts",
     "bridge:dev": "tsx bridge/reference-app/server.ts",

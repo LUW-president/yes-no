@@ -1,4 +1,4 @@
-export type Command = 'run' | 'harness' | 'demo' | 'status' | 'trace' | 'confidence' | 'explain' | 'guard' | 'gate';
+export type Command = 'run' | 'harness' | 'demo' | 'status' | 'trace' | 'confidence' | 'explain' | 'guard' | 'gate' | 'improve';
 
 export type DispatchResult =
   | { kind: 'ok'; command: Command }
@@ -18,6 +18,7 @@ export function usageMessage(): string {
     'yesno explain --session <session_id>',
     'yesno guard --session <session_id>',
     'yesno gate --session <session_id>',
+    'yesno improve --session <session_id>',
   ].join('\n');
 }
 
@@ -94,6 +95,14 @@ export async function dispatchCommand(cmd: string, args: string[] = []): Promise
       if (typeof mod.gateCommand === 'function') await mod.gateCommand(args);
     }
     return { kind: 'ok', command: 'gate' };
+  }
+
+  if (cmd === 'improve') {
+    if (!noExec) {
+      const mod = await import('./improve');
+      if (typeof mod.improveCommand === 'function') await mod.improveCommand(args);
+    }
+    return { kind: 'ok', command: 'improve' };
   }
 
   return { kind: 'usage', message: usageMessage() };
