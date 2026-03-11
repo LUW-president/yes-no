@@ -96,6 +96,12 @@ Core Engines
 The system does not decide for you.
 It learns how you decide.
 
+People often already know the answer,
+but the signal is buried under noise.
+
 ## Architecture Canon
 - `docs/architecture/layered-system-model-v1.md`
 - `docs/product/yes-no-philosophy-v1.md`
+
+## Product Logic Canon
+- `docs/product/product-logic-canon-v1.md`
