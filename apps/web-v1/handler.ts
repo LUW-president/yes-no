@@ -89,6 +89,10 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
       <button id="demo-alt" class="ghost">Try Alternate Path</button>
     </div>
   </section>
+  <section class="card">
+    <div class="meta"><h2>Session History (current browser)</h2><span class="badge">local only</span></div>
+    <pre id="history">(no completed sessions yet)</pre>
+  </section>
 </main>
 <script>
 const startBtn=document.getElementById('start');
@@ -99,6 +103,8 @@ const summaryEl=document.getElementById('summary');
 const resultChipsEl=document.getElementById('result-chips');
 const restartBtn=document.getElementById('restart');
 const demoAltBtn=document.getElementById('demo-alt');
+const historyEl=document.getElementById('history');
+const sessionHistory=[];
 const statusEl=document.getElementById('status');
 const progressEl=document.getElementById('progress');
 const hintEl=document.getElementById('hint');
@@ -128,6 +134,15 @@ function updateProgress(){
   progressEl.style.width=width+'%';
 }
 
+
+
+function renderHistory(){
+  if(!historyEl) return;
+  if(sessionHistory.length===0){ historyEl.textContent='(no completed sessions yet)'; return; }
+  historyEl.textContent=sessionHistory.map((h,i)=>
+    '#'+(i+1)+' '+h.gate+' | conf '+Number(h.confidence).toFixed(2)+' | guard '+h.guard+' | reason '+h.reason
+  ).join('\n');
+}
 
 function chipClass(gate){
   if(gate==='GO') return 'status-chip chip-go';
