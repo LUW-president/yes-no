@@ -79,3 +79,7 @@ Core Engines
 
 ## Ops Checklists
 - `docs/ops/v1-prototype-stability-checklist-v0.md`
+
+## V1 Operations
+- `docs/ops/v1-weekly-usage-loop-v0.md`
+- `ops/reports/v1-weekly-metrics-template.md`
