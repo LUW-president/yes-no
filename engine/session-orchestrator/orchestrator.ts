@@ -1,5 +1,6 @@
 import { readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createEvent, InMemoryEventStore, ProtocolStreamEvent } from '../protocol';
 import { createEmptyProfile, updateProfileFromEvent, UserProfile } from '../memory-engine';
 import { loadPackFromPath } from '../question-engine/packLoader';
@@ -26,17 +27,31 @@ function countRecordedAnswers(session_id: string): number {
   return eventStore.getSessionEvents(session_id).filter((e) => e.event_type === 'answer.recorded').length;
 }
 
+function resolvePackBases(): string[] {
+  const here = dirname(fileURLToPath(import.meta.url));
+  return [
+    process.env.YESNO_PACKS_DIR || '',
+    join(process.cwd(), 'content', 'packs'),
+    join(here, '..', '..', 'content', 'packs'),
+    '/var/task/content/packs',
+  ].filter(Boolean);
+}
+
 function loadPackById(pack_id: string): LoadedPack {
   if (packs.has(pack_id)) return packs.get(pack_id)!;
 
-  const base = join(process.cwd(), 'content', 'packs');
-  const files = readdirSync(base).filter((f) => f.endsWith('.yaml'));
-
-  for (const f of files) {
-    const p = loadPackFromPath(join(base, f));
-    if (p.pack_id === pack_id) {
-      packs.set(pack_id, p);
-      return p;
+  for (const base of resolvePackBases()) {
+    try {
+      const files = readdirSync(base).filter((f) => f.endsWith('.yaml'));
+      for (const f of files) {
+        const p = loadPackFromPath(join(base, f));
+        if (p.pack_id === pack_id) {
+          packs.set(pack_id, p);
+          return p;
+        }
+      }
+    } catch {
+      // try next candidate base
     }
   }
 
