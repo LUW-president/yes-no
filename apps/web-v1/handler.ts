@@ -60,10 +60,14 @@ button.primary{border-color:#3e4f6b;background:#202a38}
 button.yes{border-color:#2a734d;color:#97f2c0}
 button.no{border-color:#7b3232;color:#ffb4b4}
 .hint{margin-top:10px;color:var(--muted);font-size:.85rem}
+.hint.strong{color:#dce8f8}
+.hint.busy{color:#ffd089}
 .progress-track{height:8px;background:#12161c;border:1px solid #29313d;border-radius:999px;overflow:hidden;margin:8px 0 12px}
 .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#8ce7ff);transition:width .28s ease}
 pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radius:10px;padding:12px;color:#d9e2ec;line-height:1.45;min-height:130px}
 .error{color:#ff8f8f}
+.summary-lede{margin:8px 0 10px;color:#dce8f8;line-height:1.45}
+.summary-value{font-weight:700}
 </style>
 </head>
 <body>
@@ -72,18 +76,18 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
     <div class="meta"><h1>YES/NO V1 Prototype</h1><span class="badge">Prototype • Deterministic</span></div>
     <p id="state-strip" class="hint">state: idle | step: 0</p>
     <div class="progress-track" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
-    <p id="question" class="question">Press start to begin.</p>
+    <p id="question" class="question">Welcome. Press <strong>Start Session</strong> to load your first yes/no question.</p>
     <div class="actions">
       <button id="start" class="primary">Start Session</button>
       <button id="yes" class="yes" disabled>Yes</button>
       <button id="no" class="no" disabled>No</button>
     </div>
-    <p id="hint" class="hint">Tip: press Y / N on your keyboard to answer quickly.</p>
+    <p id="hint" class="hint strong">Start with one click, then answer each prompt with Yes or No. Tip: you can also press Y / N.</p>
   </section>
   <section class="card">
     <div class="meta"><h2>Final Summary</h2><span id="status" class="badge">idle</span></div>
     <div id="result-chips"></div>
-    <div id="summary" class="kv"><div class="k">state</div><div>(not available yet)</div></div>
+    <div id="summary" class="kv"><div class="k">state</div><div>Start a session to generate a decision summary.</div></div>
     <div class="actions-secondary">
       <button id="restart" class="ghost">Start New Session</button>
       <button id="demo-alt" class="ghost">Try Alternate Path</button>
@@ -127,6 +131,14 @@ function setBusy(isBusy){
 function setAnswerButtons(enabled){
   yesBtn.disabled=!enabled;
   noBtn.disabled=!enabled;
+  if(enabled){
+    yesBtn.textContent='Yes';
+    noBtn.textContent='No';
+    hintEl.classList.remove('busy');
+    return;
+  }
+  yesBtn.textContent='Yes (waiting)';
+  noBtn.textContent='No (waiting)';
 }
 
 function updateProgress(){
@@ -153,6 +165,7 @@ function chipClass(gate){
 function renderSummaryCard(summary){
   if(!summaryEl) return;
   summaryEl.innerHTML=''
+    +'<div class="summary-lede">Decision: <span class="summary-value">'+summary.gate_result+'</span> with guard status <span class="summary-value">'+summary.guard_status+'</span>. Confidence is <span class="summary-value">'+Number(summary.final_confidence).toFixed(2)+'</span>.</div>'
     +'<div class="k">confidence</div><div>'+Number(summary.final_confidence).toFixed(2)+'</div>'
     +'<div class="k">guard status</div><div>'+summary.guard_status+'</div>'
     +'<div class="k">gate result</div><div>'+summary.gate_result+'</div>'
@@ -181,11 +194,12 @@ function renderStateStrip(state){
 async function startSession(){
   setBusy(true);
   setAnswerButtons(false);
-  if(summaryEl) summaryEl.innerHTML='<div class="k">state</div><div>(not available yet)</div>';
+  if(summaryEl) summaryEl.innerHTML='<div class="k">state</div><div>Session in progress. Summary appears when complete.</div>';
   if(resultChipsEl) resultChipsEl.innerHTML='';
   statusEl.textContent='starting';
   renderStateStrip('starting');
-  hintEl.textContent='Session started. Answer with Yes or No.';
+  hintEl.textContent='Session started. Please wait while we load the first question...';
+  hintEl.classList.add('busy');
   questionCount=0;
   updateProgress();
 
@@ -199,6 +213,8 @@ async function startSession(){
   setAnswerButtons(true);
   statusEl.textContent='in progress';
   renderStateStrip('in-progress');
+  hintEl.textContent='Question ready. Choose Yes or No (or press Y / N).';
+  hintEl.classList.remove('busy');
   setBusy(false);
 }
 
@@ -207,6 +223,8 @@ async function answer(value){
   setAnswerButtons(false);
   statusEl.textContent='processing';
   renderStateStrip('processing');
+  hintEl.textContent='Answer received. Checking next step...';
+  hintEl.classList.add('busy');
 
   const response=await fetch('/api/session/answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:sessionId,answer:value})});
   const out=await response.json();
@@ -218,7 +236,8 @@ async function answer(value){
     questionEl.textContent=out.next_question;
     statusEl.textContent='in progress';
     renderStateStrip('in-progress');
-    hintEl.textContent='Keep going. Use Y / N for quick input.';
+    hintEl.textContent='Next question ready. Keep going with Yes / No (or Y / N).';
+    hintEl.classList.remove('busy');
     setAnswerButtons(true);
     return;
   }
@@ -227,19 +246,21 @@ async function answer(value){
   statusEl.textContent='complete';
   renderStateStrip('complete');
   hintEl.textContent='Run another session to compare outcomes.';
+  hintEl.classList.remove('busy');
   progressEl.style.width='100%';
 
   const summaryResponse=await fetch('/api/session/'+encodeURIComponent(sessionId)+'/summary');
   const summary=await summaryResponse.json();
   if(!summaryResponse.ok) throw new Error(summary.error||('HTTP '+summaryResponse.status));
-  summaryEl.textContent=[
-    'SESSION SUMMARY (PROTOTYPE)',
-    'confidence: '+Number(summary.final_confidence).toFixed(2),
-    'guard status: '+summary.guard_status,
-    'gate result: '+summary.gate_result,
-    'primary reason: '+summary.primary_reason,
-    'expected effect: '+summary.expected_effect,
-  ].join('\\n');
+  renderSummaryCard(summary);
+  sessionHistory.unshift({
+    gate:summary.gate_result,
+    confidence:summary.final_confidence,
+    guard:summary.guard_status,
+    reason:summary.primary_reason,
+  });
+  if(sessionHistory.length>6) sessionHistory.length=6;
+  renderHistory();
 }
 
 startBtn.addEventListener('click',()=>startSession().catch((err)=>{setBusy(false);setAnswerButtons(false);renderError('Failed to start session: '+(err&&err.message?err.message:String(err)));}));
