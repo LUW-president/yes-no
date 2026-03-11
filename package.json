@@ -45,7 +45,8 @@
     "test:web-v1-smoke": "tsx apps/web-v1/__tests__/webV1Smoke.test.ts",
     "nurse:live-health-round": "tsx ops/health/liveHealthRound.ts",
     "loop:report": "tsx ops/automation/selfTriggerLoopReport.ts",
-    "validation:summary": "tsx ops/validation/validationSummary.ts"
+    "validation:summary": "tsx ops/validation/validationSummary.ts",
+    "test:all": "npm run test:v1-summary && npm run test:v1-cli && npm run test:v1-e2e && npm run test:orchestrator && npm run test:web-v1-smoke"
   },
   "devDependencies": {
     "tsx": "^4.19.2",

@@ -132,4 +132,6 @@ Please read `CONTRIBUTING.md` before opening a PR.
 ## Governance
 - `docs/agent/philosophy-reflected-code-policy-v1.md`
 
-- `docs/specs/action-adapter-framework-v1.md`
+
+## Testing
+- Run all core checks: `npm run test:all`

@@ -22,6 +22,9 @@ Thanks for contributing to YES/NO (prototype / non-production).
 
 ## Local checks
 Run before PR:
+- `npm run test:all`
+
+Or run individually:
 - `npm run test:v1-summary`
 - `npm run test:v1-cli`
 - `npm run test:v1-e2e`
