@@ -105,3 +105,6 @@ but the signal is buried under noise.
 
 ## Product Logic Canon
 - `docs/product/product-logic-canon-v1.md`
+
+## SJ86 Canon
+- `docs/product/yes-no-by-sj86-product-logic-v1.md`

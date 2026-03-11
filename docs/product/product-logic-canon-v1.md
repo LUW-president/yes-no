@@ -34,3 +34,6 @@ It learns how you decide.
 
 People often already know the answer,
 but the signal is buried under noise.
+
+
+See authoritative SJ86 canon: `docs/product/yes-no-by-sj86-product-logic-v1.md`
