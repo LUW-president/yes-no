@@ -153,7 +153,7 @@ function renderHistory(){
   if(sessionHistory.length===0){ historyEl.textContent='(no completed sessions yet)'; return; }
   historyEl.textContent=sessionHistory.map((h,i)=>
     '#'+(i+1)+' '+h.gate+' | conf '+Number(h.confidence).toFixed(2)+' | guard '+h.guard+' | reason '+h.reason
-  ).join('\n');
+  ).join('\\n');
 }
 
 function chipClass(gate){
