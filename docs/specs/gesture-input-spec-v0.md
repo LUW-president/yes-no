@@ -80,3 +80,8 @@ These remain non-binding examples.
 - no SDKs or libraries referenced
 - platform-neutral
 - must preserve product philosophy
+
+
+## Cross-reference
+- `docs/architecture/layered-system-model-v1.md`
+- `docs/product/yes-no-philosophy-v1.md`

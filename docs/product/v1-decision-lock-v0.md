@@ -46,3 +46,8 @@ Lock V1 product decisions to prevent scope drift and keep delivery deterministic
 
 ## Current cycle objective
 Deliver a stable, usable V1 wrapper and collect controlled usage signals.
+
+
+## Philosophy alignment
+- `docs/product/yes-no-philosophy-v1.md`
+- `docs/architecture/layered-system-model-v1.md`

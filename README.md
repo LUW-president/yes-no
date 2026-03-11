@@ -90,3 +90,12 @@ Core Engines
 
 ## MVP Governance
 - `docs/release/mvp-complete-checklist-v1.md`
+
+
+## YES/NO Principle
+The system does not decide for you.
+It learns how you decide.
+
+## Architecture Canon
+- `docs/architecture/layered-system-model-v1.md`
+- `docs/product/yes-no-philosophy-v1.md`
