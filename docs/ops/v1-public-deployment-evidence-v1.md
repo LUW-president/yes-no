@@ -38,3 +38,9 @@ Status: Prototype / Non-Production
 
 ## Recommendation
 GO for first public prototype sharing (with non-production disclaimer).
+
+
+## Post-deployment alignment fix
+- Updated first question copy to be topic-neutral for broader decision contexts.
+- Rationale: reduce validation mismatch when users enter non-creative topics.
+- Change is deterministic and copy-only (no engine logic changes).
