@@ -12,6 +12,7 @@ const pageHtml = `<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>YES/NO V1 Prototype</title>
 <style>
+
 :root{
   color-scheme:dark;
   --bg:#050607;
@@ -41,6 +42,14 @@ h2{font-size:1.05rem;margin:0}
 p,pre{margin:0}
 .meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:.9rem;margin-bottom:10px}
 .badge{padding:4px 10px;border-radius:999px;border:1px solid #2f3c52;background:#162035;color:#c5d5ff;font-size:.78rem;font-weight:600}
+.status-chip{display:inline-block;padding:5px 10px;border-radius:999px;font-weight:700;font-size:.76rem;border:1px solid #3b4456;margin-right:6px}
+.chip-go{background:#123322;border-color:#2f9b69;color:#b7ffd8}
+.chip-review{background:#3a2f14;border-color:#d4a53b;color:#ffe8b3}
+.chip-no-go{background:#3b1717;border-color:#cc4f4f;color:#ffc8c8}
+.kv{display:grid;grid-template-columns:170px 1fr;gap:6px;margin-top:8px;color:#d9e2ec}
+.kv .k{color:#9fb0c4}
+.actions-secondary{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+button.ghost{background:transparent;border-color:#3d4758;color:#c9d7e8}
 .question{font-size:1.06rem;line-height:1.5;margin:8px 0 14px;min-height:3.2em}
 .actions{display:flex;gap:10px;flex-wrap:wrap}
 button{border:1px solid #2c3443;background:#1a202a;color:var(--text);padding:10px 15px;border-radius:11px;font-weight:600;cursor:pointer;transition:transform .08s ease,background .15s ease,border-color .15s ease,opacity .15s}
@@ -73,7 +82,12 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
   </section>
   <section class="card">
     <div class="meta"><h2>Final Summary</h2><span id="status" class="badge">idle</span></div>
-    <pre id="summary">(not available yet)</pre>
+    <div id="result-chips"></div>
+    <div id="summary" class="kv"><div class="k">state</div><div>(not available yet)</div></div>
+    <div class="actions-secondary">
+      <button id="restart" class="ghost">Start New Session</button>
+      <button id="demo-alt" class="ghost">Try Alternate Path</button>
+    </div>
   </section>
 </main>
 <script>
@@ -82,6 +96,9 @@ const yesBtn=document.getElementById('yes');
 const noBtn=document.getElementById('no');
 const questionEl=document.getElementById('question');
 const summaryEl=document.getElementById('summary');
+const resultChipsEl=document.getElementById('result-chips');
+const restartBtn=document.getElementById('restart');
+const demoAltBtn=document.getElementById('demo-alt');
 const statusEl=document.getElementById('status');
 const progressEl=document.getElementById('progress');
 const hintEl=document.getElementById('hint');
@@ -111,6 +128,28 @@ function updateProgress(){
   progressEl.style.width=width+'%';
 }
 
+
+function chipClass(gate){
+  if(gate==='GO') return 'status-chip chip-go';
+  if(gate==='REVIEW') return 'status-chip chip-review';
+  return 'status-chip chip-no-go';
+}
+
+function renderSummaryCard(summary){
+  if(!summaryEl) return;
+  summaryEl.innerHTML=''
+    +'<div class="k">confidence</div><div>'+Number(summary.final_confidence).toFixed(2)+'</div>'
+    +'<div class="k">guard status</div><div>'+summary.guard_status+'</div>'
+    +'<div class="k">gate result</div><div>'+summary.gate_result+'</div>'
+    +'<div class="k">primary reason</div><div>'+summary.primary_reason+'</div>'
+    +'<div class="k">expected effect</div><div>'+summary.expected_effect+'</div>';
+  if(resultChipsEl){
+    resultChipsEl.innerHTML=''
+      +'<span class="'+chipClass(summary.gate_result)+'">'+summary.gate_result+'</span>'
+      +'<span class="status-chip">'+summary.guard_status+'</span>';
+  }
+}
+
 function renderError(message){
   questionEl.innerHTML='<span class="error">'+message+'</span>';
   statusEl.textContent='error';
@@ -127,7 +166,8 @@ function renderStateStrip(state){
 async function startSession(){
   setBusy(true);
   setAnswerButtons(false);
-  summaryEl.textContent='(not available yet)';
+  if(summaryEl) summaryEl.innerHTML='<div class="k">state</div><div>(not available yet)</div>';
+  if(resultChipsEl) resultChipsEl.innerHTML='';
   statusEl.textContent='starting';
   renderStateStrip('starting');
   hintEl.textContent='Session started. Answer with Yes or No.';
@@ -190,6 +230,19 @@ async function answer(value){
 startBtn.addEventListener('click',()=>startSession().catch((err)=>{setBusy(false);setAnswerButtons(false);renderError('Failed to start session: '+(err&&err.message?err.message:String(err)));}));
 yesBtn.addEventListener('click',()=>answer('yes').catch((err)=>renderError('Failed to submit answer: '+(err&&err.message?err.message:String(err)))));
 noBtn.addEventListener('click',()=>answer('no').catch((err)=>renderError('Failed to submit answer: '+(err&&err.message?err.message:String(err)))));
+
+
+restartBtn.addEventListener('click',()=>startSession().catch((err)=>{setBusy(false);setAnswerButtons(false);renderError('Failed to start session: '+(err&&err.message?err.message:String(err)));}));
+demoAltBtn.addEventListener('click',async ()=>{
+  try{
+    await startSession();
+    await answer('yes');
+    await answer('no');
+    await answer('yes');
+  }catch(err){
+    renderError('Failed alternate path: '+(err&&err.message?err.message:String(err)));
+  }
+});
 
 document.addEventListener('keydown',(event)=>{
   if(event.repeat) return;
