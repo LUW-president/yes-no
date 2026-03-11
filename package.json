@@ -44,7 +44,8 @@
     "web:v1": "tsx apps/web-v1/server.ts",
     "test:web-v1-smoke": "tsx apps/web-v1/__tests__/webV1Smoke.test.ts",
     "nurse:live-health-round": "tsx ops/health/liveHealthRound.ts",
-    "loop:report": "tsx ops/automation/selfTriggerLoopReport.ts"
+    "loop:report": "tsx ops/automation/selfTriggerLoopReport.ts",
+    "validation:summary": "tsx ops/validation/validationSummary.ts"
   },
   "devDependencies": {
     "tsx": "^4.19.2",
