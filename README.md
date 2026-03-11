@@ -87,3 +87,6 @@ Core Engines
 ## V1 Governance
 - `docs/product/v1-decision-lock-v0.md`
 - `docs/agent/v1-drift-audit-v0.md`
+
+## MVP Governance
+- `docs/release/mvp-complete-checklist-v1.md`
