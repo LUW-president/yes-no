@@ -41,6 +41,19 @@ function httpJson(port: number, method: string, path: string, body?: unknown): P
   });
 }
 
+
+function httpText(port: number, method: string, path: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const req = request({ hostname: '127.0.0.1', port, path, method }, (res) => {
+      const chunks: Buffer[] = [];
+      res.on('data', (chunk) => chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)));
+      res.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+    });
+    req.on('error', reject);
+    req.end();
+  });
+}
+
 async function run() {
   __resetForTests();
 
@@ -50,6 +63,13 @@ async function run() {
   const port = address.port;
 
   try {
+    const html = await httpText(port, 'GET', '/');
+    assert(html.includes('Decision Topic (optional)'), 'onboarding should show optional decision topic');
+    assert(
+      html.includes("If you're unsure, leave it blank and let YES/NO questions surface your signal."),
+      'onboarding should include discovery-first helper copy',
+    );
+
     const start = await httpJson(port, 'POST', '/api/session/start', {
       user_id: 'smoke_user',
       pack_id: 'creation_v0',
