@@ -83,3 +83,7 @@ Core Engines
 ## V1 Operations
 - `docs/ops/v1-weekly-usage-loop-v0.md`
 - `ops/reports/v1-weekly-metrics-template.md`
+
+## V1 Governance
+- `docs/product/v1-decision-lock-v0.md`
+- `docs/agent/v1-drift-audit-v0.md`
