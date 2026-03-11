@@ -7,15 +7,25 @@ Reduce first-run input friction for binary decisions by allowing direct gesture 
 - circle -> yes
 - cross -> no
 
-## 2) YES/NO Philosophy Alignment (SJ86-aware)
-This plan preserves the YES/NO project philosophy constraints currently enforced in repository governance:
-- deterministic behavior
-- explainable decision flow
-- minimal complexity
-- safe, reversible rollout
-- no ML inference in core decision path
+## 2) YES/NO Philosophy Alignment (SJ86)
+Canonical product direction:
 
-> Note: incorporate explicit "SJ86" wording once provided verbatim by operator to ensure exact fidelity.
+Human
+↓
+YES / NO interactions
+↓
+Decision history
+↓
+Pattern understanding
+↓
+AI assistant that knows you deeply
+↓
+Suggested actions
+
+Interpretation for this plan:
+- V1 gesture work only improves the YES/NO interaction layer.
+- It must not bypass deterministic history capture.
+- It must preserve explainability and safety for later pattern-understanding stages.
 
 ## 3) Scope (Phase 1)
 - Web-v1 prototype layer only
