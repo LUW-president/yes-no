@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { LoadedPack, QuestionNode, QuestionPack } from './types';
+import { LoadedPack, QuestionNode, QuestionPack } from './types.js';
 
 function parseSimplePackYaml(raw: string): QuestionPack {
   const lines = raw.split(/\r?\n/).map((l) => l.replace(/\t/g, '  '));

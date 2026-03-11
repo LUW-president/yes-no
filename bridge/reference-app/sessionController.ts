@@ -4,7 +4,7 @@ import {
   recordAnswer,
   startSession,
   __getProfile,
-} from '../../engine/session-orchestrator/index';
+} from '../../engine/session-orchestrator/index.js';
 import {
   StartSessionRequest,
   StartSessionResponse,
@@ -12,7 +12,7 @@ import {
   SubmitAnswerResponse,
   SessionStateResponse,
   SessionSummaryResponse,
-} from './types';
+} from './types.js';
 
 const sessionToUser = new Map<string, string>();
 

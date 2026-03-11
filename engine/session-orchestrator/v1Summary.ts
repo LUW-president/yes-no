@@ -1,9 +1,9 @@
-import { getSessionEventStream } from './orchestrator';
-import { computeConfidenceTimeline } from '../memory-engine/confidence';
-import { buildConfidenceExplanation } from '../memory-engine/confidenceExplain';
-import { evaluateGuardReportFromEvents } from '../memory-engine/confidenceGuard';
-import { evaluateDecisionGateFromEvents } from '../memory-engine/decisionGate';
-import { recommendFollowupFromEvents } from '../question-engine/improvementPolicy';
+import { getSessionEventStream } from './orchestrator.js';
+import { computeConfidenceTimeline } from '../memory-engine/confidence.js';
+import { buildConfidenceExplanation } from '../memory-engine/confidenceExplain.js';
+import { evaluateGuardReportFromEvents } from '../memory-engine/confidenceGuard.js';
+import { evaluateDecisionGateFromEvents } from '../memory-engine/decisionGate.js';
+import { recommendFollowupFromEvents } from '../question-engine/improvementPolicy.js';
 
 export type SessionDecisionSummary = {
   session_id: string;

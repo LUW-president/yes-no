@@ -1,5 +1,5 @@
-import { ConfidenceReasonCode, ConfidenceStep, computeConfidenceTimeline } from './confidence';
-import { ProtocolStreamEvent } from '../protocol';
+import { ConfidenceReasonCode, ConfidenceStep, computeConfidenceTimeline } from './confidence.js';
+import { ProtocolStreamEvent } from '../protocol/index.js';
 
 export type ConfidenceExplanationStep = {
   step: number;

@@ -1,5 +1,5 @@
-import { mapArtifactToSignal, mapQuestionToSignal, clampScore } from './model';
-import { MemoryEvent, SignalName, UserProfile } from './types';
+import { mapArtifactToSignal, mapQuestionToSignal, clampScore } from './model.js';
+import { MemoryEvent, SignalName, UserProfile } from './types.js';
 
 const YES_DELTA = 0.1;
 const NO_DELTA = -0.05;

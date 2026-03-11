@@ -1,7 +1,7 @@
-import { computeConfidenceTimeline } from './confidence';
-import { evaluateConfidenceGuards } from './confidenceGuard';
-import { buildConfidenceExplanation } from './confidenceExplain';
-import { ProtocolStreamEvent } from '../protocol';
+import { computeConfidenceTimeline } from './confidence.js';
+import { evaluateConfidenceGuards } from './confidenceGuard.js';
+import { buildConfidenceExplanation } from './confidenceExplain.js';
+import { ProtocolStreamEvent } from '../protocol/index.js';
 
 export type GateResult = 'GO' | 'REVIEW' | 'NO_GO';
 

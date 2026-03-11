@@ -4,7 +4,7 @@ import {
   getSessionSummaryController,
   startSessionController,
   submitAnswerController,
-} from './sessionController';
+} from './sessionController.js';
 
 async function readJsonBody(req: IncomingMessage): Promise<any> {
   const chunks: Buffer[] = [];

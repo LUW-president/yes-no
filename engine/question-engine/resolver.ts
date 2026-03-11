@@ -1,4 +1,4 @@
-import { Answer, LoadedPack, ResolveResult } from './types';
+import { Answer, LoadedPack, ResolveResult } from './types.js';
 
 export function resolveNextInPack(pack: LoadedPack, question_id: string, answer: Answer): ResolveResult {
   if (answer !== 'yes' && answer !== 'no') {

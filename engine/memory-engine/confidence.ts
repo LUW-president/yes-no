@@ -1,4 +1,4 @@
-import { ProtocolStreamEvent } from '../protocol';
+import { ProtocolStreamEvent } from '../protocol/index.js';
 
 export type ConfidenceReasonCode =
   | 'LATENCY_FAST'

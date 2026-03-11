@@ -1,4 +1,4 @@
-import { SignalName } from './types';
+import { SignalName } from './types.js';
 
 export function clampScore(v: number): number {
   if (v < 0) return 0;

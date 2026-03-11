@@ -1,5 +1,5 @@
-import { ProtocolEvent, ProtocolStreamEvent } from './types';
-import { validateEvent } from './events';
+import { ProtocolEvent, ProtocolStreamEvent } from './types.js';
+import { validateEvent } from './events.js';
 
 export class InMemoryEventStore {
   private events: ProtocolStreamEvent[] = [];

@@ -1,5 +1,5 @@
-import { ConfidenceStep, computeConfidenceTimeline } from './confidence';
-import { ProtocolStreamEvent } from '../protocol';
+import { ConfidenceStep, computeConfidenceTimeline } from './confidence.js';
+import { ProtocolStreamEvent } from '../protocol/index.js';
 
 export type GuardRule = 'SUDDEN_DROP' | 'REVERSAL_CLUSTER' | 'LOW_CONFIDENCE_FLOOR';
 export type GuardRecommendation = 'CONTINUE' | 'SLOW_DOWN' | 'REVIEW';

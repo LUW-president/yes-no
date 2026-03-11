@@ -1,5 +1,5 @@
 import { createServer } from 'node:http';
-import { handleWebV1Request } from './handler';
+import { handleWebV1Request } from './handler.js';
 
 export function startWebV1Server(port = 3000) {
   const server = createServer((req, res) => {
