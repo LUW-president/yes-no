@@ -163,13 +163,14 @@ async function answer(value){
   const summaryResponse=await fetch('/api/session/'+encodeURIComponent(sessionId)+'/summary');
   const summary=await summaryResponse.json();
   if(!summaryResponse.ok) throw new Error(summary.error||('HTTP '+summaryResponse.status));
-  summaryEl.textContent=JSON.stringify({
-    confidence:summary.final_confidence,
-    guard_status:summary.guard_status,
-    gate_result:summary.gate_result,
-    primary_reason:summary.primary_reason,
-    expected_effect:summary.expected_effect
-  },null,2);
+  summaryEl.textContent=[
+    'SESSION SUMMARY (PROTOTYPE)',
+    'confidence: '+Number(summary.final_confidence).toFixed(2),
+    'guard status: '+summary.guard_status,
+    'gate result: '+summary.gate_result,
+    'primary reason: '+summary.primary_reason,
+    'expected effect: '+summary.expected_effect,
+  ].join('\n');
 }
 
 startBtn.addEventListener('click',()=>startSession().catch((err)=>{setBusy(false);setAnswerButtons(false);renderError('Failed to start session: '+(err&&err.message?err.message:String(err)));}));
