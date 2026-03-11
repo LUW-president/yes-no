@@ -21,3 +21,12 @@
 
 ## Notes
 Prototype / non-production scope preserved.
+
+
+## Philosophy Reflected Code (required)
+- [ ] Binary integrity preserved (YES/NO only)
+- [ ] User sovereignty preserved (no system-side deciding)
+- [ ] Deterministic behavior preserved
+- [ ] Explainability preserved
+- [ ] Layer alignment preserved (1→5 model)
+- [ ] Signal clarity improved or preserved

@@ -128,3 +128,6 @@ New contributors can start with these issues:
 - [#129 Expand web-v1 smoke tests for onboarding/start flow](https://github.com/LUW-president/yes-no/issues/129)
 
 Please read `CONTRIBUTING.md` before opening a PR.
+
+## Governance
+- `docs/agent/philosophy-reflected-code-policy-v1.md`
