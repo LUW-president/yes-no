@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "strict": false,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noEmit": true
+  },
+  "include": ["apps/**/*.ts", "apps/**/*.tsx", "bridge/**/*.ts", "engine/**/*.ts", "ops/**/*.ts", "adapters/**/*.ts", "prototype/**/*.ts", "expo-shell/**/*.ts", "expo-shell/**/*.tsx"]
+}
