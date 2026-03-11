@@ -170,7 +170,7 @@ async function answer(value){
     'gate result: '+summary.gate_result,
     'primary reason: '+summary.primary_reason,
     'expected effect: '+summary.expected_effect,
-  ].join('\n');
+  ].join('\\n');
 }
 
 startBtn.addEventListener('click',()=>startSession().catch((err)=>{setBusy(false);setAnswerButtons(false);renderError('Failed to start session: '+(err&&err.message?err.message:String(err)));}));
