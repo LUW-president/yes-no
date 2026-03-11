@@ -97,6 +97,7 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
     <div class="actions-secondary">
       <button id="restart" class="ghost">Start New Session</button>
       <button id="demo-alt" class="ghost">Try Alternate Path</button>
+      <button id="copy-summary" class="ghost">Copy Summary</button>
     </div>
   </section>
   <section class="card">
@@ -113,6 +114,7 @@ const summaryEl=document.getElementById('summary');
 const resultChipsEl=document.getElementById('result-chips');
 const restartBtn=document.getElementById('restart');
 const demoAltBtn=document.getElementById('demo-alt');
+const copySummaryBtn=document.getElementById('copy-summary');
 const historyEl=document.getElementById('history');
 const sessionHistory=[];
 const statusEl=document.getElementById('status');
@@ -169,6 +171,12 @@ function chipClass(gate){
   if(gate==='GO') return 'status-chip chip-go';
   if(gate==='REVIEW') return 'status-chip chip-review';
   return 'status-chip chip-no-go';
+}
+
+
+function summaryTextForClipboard(){
+  if(!summaryEl) return '';
+  return summaryEl.innerText || summaryEl.textContent || '';
 }
 
 function renderSummaryCard(summary, topic){
@@ -305,6 +313,25 @@ demoAltBtn.addEventListener('click',async ()=>{
     await answer('yes');
   }catch(err){
     renderError('Failed alternate path: '+(err&&err.message?err.message:String(err)));
+  }
+});
+
+
+copySummaryBtn.addEventListener('click', async ()=>{
+  try{
+    const text = summaryTextForClipboard();
+    if(!text || text.includes('(not available yet)')){
+      hintEl.textContent='No summary yet. Complete a session first.';
+      return;
+    }
+    if(navigator && navigator.clipboard && navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(text);
+      hintEl.textContent='Summary copied to clipboard.';
+    }else{
+      hintEl.textContent='Clipboard unavailable in this browser.';
+    }
+  }catch{
+    hintEl.textContent='Unable to copy summary right now.';
   }
 });
 
