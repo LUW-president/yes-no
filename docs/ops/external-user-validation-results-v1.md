@@ -14,6 +14,7 @@ Status: In progress
 - participantType (`first_time` | `repeat`)
 - device (`mobile` | `desktop`)
 - startSuccess (true/false)
+- startHesitated (true/false)
 - completed (true/false)
 - summaryUnderstood (true/false)
 - timeToCompleteSec (number)
