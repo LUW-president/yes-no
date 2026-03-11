@@ -12,6 +12,7 @@ Provide a single command surface (`yesno`) for local execution of core app flows
 - `yesno confidence --session <session_id>`
 - `yesno explain --session <session_id>`
 - `yesno guard --session <session_id>`
+- `yesno gate --session <session_id>`
 
 ## Developer run instructions
 ```bash
@@ -23,4 +24,5 @@ npx tsx apps/cli/yesno.ts trace --demo
 npx tsx apps/cli/yesno.ts confidence --session <session_id>
 npx tsx apps/cli/yesno.ts explain --session <session_id>
 npx tsx apps/cli/yesno.ts guard --session <session_id>
+npx tsx apps/cli/yesno.ts gate --session <session_id>
 ```
