@@ -42,7 +42,8 @@
     "test:prototype:native": "tsx prototype/native-mobile/__tests__/nativeMobilePrototype.test.ts",
     "test:prototype:gesture": "tsx prototype/native-mobile/__tests__/gestureRecognition.test.ts",
     "web:v1": "tsx apps/web-v1/server.ts",
-    "test:web-v1-smoke": "tsx apps/web-v1/__tests__/webV1Smoke.test.ts"
+    "test:web-v1-smoke": "tsx apps/web-v1/__tests__/webV1Smoke.test.ts",
+    "nurse:live-health-round": "tsx ops/health/liveHealthRound.ts"
   },
   "devDependencies": {
     "tsx": "^4.19.2",
