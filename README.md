@@ -74,5 +74,9 @@ Core Engines
 - keep README concise
 - reflect actual repo state only
 
+
+## V1 Prototype Stability
+- `docs/ops/v1-prototype-stability-checklist-v0.md`
+
 ## Exploratory Concepts
 - `docs/concepts/README.md`
