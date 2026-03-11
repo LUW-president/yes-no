@@ -8,6 +8,8 @@
 - ORBIS Agent
 - Discovery Agent
 - Build Agent
+- Doctor Agent
+- Nurse Agent
 
 ## 1) Invocation rules
 - Architecture Agent: boundary checks, layer integrity, drift detection
@@ -15,7 +17,9 @@
 - Stability Agent: command/run reliability, test-surface health
 - ORBIS Agent: spatial research and exploratory concept cycles
 - Discovery Agent
-- Build Agent: cross-cycle signal synthesis and prototype-candidate extraction
+- Build Agent
+- Doctor Agent
+- Nurse Agent: cross-cycle signal synthesis and prototype-candidate extraction
 
 ## 2) Parallel vs sequential analysis
 - Parallel: independent audits across architecture/docs/stability/research domains
@@ -47,3 +51,7 @@ Strategic Intelligence -> Architecture -> Build -> Stability -> Documentation ->
 
 ## Ordered execution source of truth
 See: `docs/agent/agent-execution-order-v1.md`
+
+
+## Reliability incident pipeline
+Nurse -> Doctor -> Architecture -> Build -> Stability -> Documentation -> Noah

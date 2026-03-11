@@ -4,6 +4,7 @@ Status: Active
 Scope: YES/NO repository autonomous operations
 
 ## Canonical order
+0. **Nurse Agent** (continuous health rounds)
 1. **Strategic Intelligence Agent**
    - identifies highest-leverage opportunity
 2. **Architecture Agent**
@@ -46,3 +47,7 @@ A cycle is complete when:
 - main synced
 - status artifact updated
 - blockers and next actions logged
+
+
+## Reactive triage
+Doctor Agent activates instantly on incidents and drives minimal-fix triage before Build execution.
