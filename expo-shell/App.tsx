@@ -43,7 +43,18 @@ export default function App() {
   }
 
   if (state.mode === 'question') {
-    return <QuestionScreen question={state.question} onYes={() => onAnswer('yes')} onNo={() => onAnswer('no')} />;
+    return (
+      <SafeAreaView style={styles.container}>
+        <QuestionScreen question={state.question} onYes={() => onAnswer('yes')} onNo={() => onAnswer('no')} />
+        {state.live_summary ? (
+          <View style={styles.summaryBox}>
+            <Text style={styles.summaryText}>confidence: {state.live_summary.final_confidence.toFixed(2)}</Text>
+            <Text style={styles.summaryText}>guard: {state.live_summary.guard_status}</Text>
+            <Text style={styles.summaryText}>gate: {state.live_summary.gate_result}</Text>
+          </View>
+        ) : null}
+      </SafeAreaView>
+    );
   }
 
   if (state.mode === 'artifact') {
@@ -51,6 +62,13 @@ export default function App() {
       <SafeAreaView style={styles.container}>
         <Text style={styles.text}>ARTIFACT</Text>
         <Text style={styles.text}>{state.artifact}</Text>
+        {state.live_summary ? (
+          <View style={styles.summaryBox}>
+            <Text style={styles.summaryText}>confidence: {state.live_summary.final_confidence.toFixed(2)}</Text>
+            <Text style={styles.summaryText}>guard: {state.live_summary.guard_status}</Text>
+            <Text style={styles.summaryText}>gate: {state.live_summary.gate_result}</Text>
+          </View>
+        ) : null}
         <View style={{ height: 16 }} />
         <QuestionScreen question="Accept this artifact?" onYes={() => onAnswer('yes')} onNo={() => onAnswer('no')} />
       </SafeAreaView>
@@ -78,4 +96,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#000', justifyContent: 'center', alignItems: 'center', padding: 24 },
   text: { color: '#fff', fontSize: 22, textAlign: 'center' },
+  summaryBox: { borderColor: '#555', borderWidth: 1, padding: 10, marginTop: 12, width: '100%' },
+  summaryText: { color: '#bbb', fontSize: 14, textAlign: 'left' },
 });

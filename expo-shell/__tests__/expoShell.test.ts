@@ -38,12 +38,15 @@ async function main() {
   const api = new MockApi();
   const s0 = await bootstrapSession(api as any, 'u', 'creation_v0');
   assert(s0.mode === 'question', 'session start should return question state');
+  if (s0.mode === 'question') assert(!!s0.live_summary, 'question state should include live summary');
 
   const s1 = await applyAnswer(api as any, s0, 'yes');
   assert(s1.mode === 'question', 'yes/no submission should move to next question');
+  if (s1.mode === 'question') assert(!!s1.live_summary, 'next question should keep live summary');
 
   const s2 = await applyAnswer(api as any, s1, 'yes');
   assert(s2.mode === 'artifact', 'basic state progression should reach artifact state');
+  if (s2.mode === 'artifact') assert(!!s2.live_summary, 'artifact state should include live summary');
 
   const s3 = await applyAnswer(api as any, s2, 'yes');
   assert(s3.mode === 'completion', 'basic state progression should reach completion state');
