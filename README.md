@@ -45,6 +45,7 @@ Core Engines
 - `yesno explain --session <session_id>` — explain confidence reasons from deterministic reason codes (prototype, non-production)
 - `yesno guard --session <session_id>` — evaluate deterministic guard rules over confidence timeline (prototype, non-production)
 - `yesno gate --session <session_id>` — evaluate deterministic decision gate result from confidence + guard signals (prototype, non-production)
+- `yesno v1 [--answers yes,no,...] [--user <user_id>] [--pack <pack_id>]` — run one end-to-end deterministic session and print final decision summary (prototype, non-production)
 
 ## CURRENT BASELINE
 - core engine architecture complete

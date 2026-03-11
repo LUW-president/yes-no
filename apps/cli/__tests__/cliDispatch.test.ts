@@ -14,6 +14,7 @@ async function main() {
   assert(usageMessage().includes('yesno explain'), 'usage missing explain command');
   assert(usageMessage().includes('yesno guard'), 'usage missing guard command');
   assert(usageMessage().includes('yesno gate'), 'usage missing gate command');
+  assert(usageMessage().includes('yesno v1'), 'usage missing v1 command');
 
   const runMapped = await dispatchCommand('run', ['--test-noexec']);
   assert(runMapped.kind === 'ok' && runMapped.command === 'run', 'run dispatch mapping failed');
@@ -41,6 +42,9 @@ async function main() {
 
   const gateMapped = await dispatchCommand('gate', ['--test-noexec']);
   assert(gateMapped.kind === 'ok' && gateMapped.command === 'gate', 'gate dispatch mapping failed');
+
+  const v1Mapped = await dispatchCommand('v1', ['--test-noexec']);
+  assert(v1Mapped.kind === 'ok' && v1Mapped.command === 'v1', 'v1 dispatch mapping failed');
 
   console.log('cli dispatch tests passed');
 }
