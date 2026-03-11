@@ -95,3 +95,32 @@ Phase D: decide whether to expand to richer presets
 - Account linking
 - Autonomous execution
 - Non-binary confirmation paths
+
+
+## 11) Context Trigger Pack v1 (Hunger)
+Initial deterministic trigger sequence:
+
+1. Ask: **Did you eat today?**
+2. If NO -> Ask: **Do you want to order now?**
+3. If YES -> continue to suggestion stage.
+4. Suggest action: **Open Uber Eats**.
+5. Final user confirmation remains binary: YES/NO.
+
+Notes:
+- No autonomous ordering.
+- Keep prompts explicit and short.
+
+## 12) Last-Order Preference Adapter (proposal)
+If order history is available (authorized source), use deterministic preference hints:
+- last merchant
+- last category/type
+- last price band
+
+Suggestion examples:
+- **Repeat last order style?** (YES/NO)
+- **Try a lighter option?** (YES/NO)
+- **Open Uber Eats with this suggestion?** (YES/NO)
+
+Fallback mode when order history is unavailable:
+- Ask self-report prompt: **Do you want something similar to your last meal?**
+- Continue with binary-only confirmation flow.
