@@ -1,5 +1,5 @@
 pack_id: creation_v0
-version: 0.1
+version: 0.2
 
 questions:
   - id: q_create
@@ -20,9 +20,54 @@ questions:
   - id: q_film
     text: "Would you like to create a film?"
     yes: artifact_film
-    no: end
+    no: q_music
+
+  - id: q_music
+    text: "Would you like to create music or audio?"
+    yes: artifact_audio
+    no: q_story
+
+  - id: q_story
+    text: "Would you like to write a short story?"
+    yes: artifact_story
+    no: q_other
 
   - id: q_other
     text: "Would you like to explore another creative format?"
+    yes: q_interactive
+    no: q_tiny
+
+  - id: q_interactive
+    text: "Would you like to make something interactive?"
+    yes: artifact_interactive
+    no: q_design
+
+  - id: q_design
+    text: "Would you like to focus on design (visual identity/layout)?"
+    yes: artifact_design
+    no: q_idea
+
+  - id: q_idea
+    text: "Would you like a structured idea prompt to start?"
     yes: artifact_idea
+    no: q_tiny
+
+  - id: q_tiny
+    text: "Would you like a tiny 15-minute version to start now?"
+    yes: artifact_tiny
     no: end
+
+  - id: q_problem
+    text: "Would you rather solve a practical problem than create art?"
+    yes: q_problem_type
+    no: end
+
+  - id: q_problem_type
+    text: "Should we focus on personal productivity?"
+    yes: artifact_productivity
+    no: q_business
+
+  - id: q_business
+    text: "Should we focus on business growth decisions?"
+    yes: artifact_business
+    no: artifact_reflection
