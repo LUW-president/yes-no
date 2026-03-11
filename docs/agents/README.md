@@ -30,3 +30,6 @@ Agents
 
 ## Execution order
 - `docs/agent/agent-execution-order-v1.md`
+
+- Doctor Agent
+- Nurse Agent
