@@ -42,7 +42,7 @@ async function testNonInteractiveSmokePath() {
 
   const combined = printed.join('\n');
   assert(combined.includes('YES/NO V1 SESSION (prototype / non-production)'), 'missing v1 session intro');
-  assert(combined.includes('question: Would you like to create something?'), 'missing first question');
+  assert(combined.includes('question: Would you like to work on this decision now?'), 'missing first question');
   assert(combined.includes('artifact proposed: artifact_image'), 'missing artifact output');
   assert(combined.includes('SESSION DECISION SUMMARY (V1 PROTOTYPE / NON-PRODUCTION)'), 'missing summary header');
   assert(combined.includes('gate result:'), 'missing gate result line');

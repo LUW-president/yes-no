@@ -32,6 +32,8 @@ Status: In progress
 - gate mix: N/A
 
 ## Top friction points (current evidence)
+(Updated after topic-first-question alignment: first question copy is now topic-neutral.)
+
 1. First-run users may still hesitate before pressing Start Session.
 2. Decision-topic requirement adds context but can block users if unclear.
 3. Summary is more readable now, but comprehension still needs real-user confirmation.
