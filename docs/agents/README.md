@@ -26,3 +26,7 @@ Agents
 - ORBIS Agent
 - Strategic Intelligence Agent
 - Build Agent
+
+
+## Execution order
+- `docs/agent/agent-execution-order-v1.md`

@@ -44,3 +44,6 @@ All cycle outputs should include:
 
 ## Reference pipeline
 Strategic Intelligence -> Architecture -> Build -> Stability -> Documentation -> Noah
+
+## Ordered execution source of truth
+See: `docs/agent/agent-execution-order-v1.md`
