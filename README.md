@@ -118,3 +118,13 @@ but the signal is buried under noise.
 - `SECURITY.md`
 - `.github/ISSUE_TEMPLATE/*`
 - `.github/PULL_REQUEST_TEMPLATE.md`
+
+## Start Contributing
+New contributors can start with these issues:
+- [#125 Onboarding copy clarity for first-time users (web-v1)](https://github.com/LUW-president/yes-no/issues/125)
+- [#126 Validation summary: add start-hesitation metric](https://github.com/LUW-president/yes-no/issues/126)
+- [#127 Summary readability polish for non-technical users](https://github.com/LUW-president/yes-no/issues/127)
+- [#128 Contributor quickstart: 10-minute path](https://github.com/LUW-president/yes-no/issues/128)
+- [#129 Expand web-v1 smoke tests for onboarding/start flow](https://github.com/LUW-president/yes-no/issues/129)
+
+Please read `CONTRIBUTING.md` before opening a PR.
