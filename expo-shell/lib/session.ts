@@ -1,10 +1,10 @@
-import { BridgeApi, type YesNo } from './api';
+import { BridgeApi, type SessionSummaryResponse, type YesNo } from './api';
 
 export type ShellState =
   | { mode: 'launch' }
   | { mode: 'question'; session_id: string; question: string }
   | { mode: 'artifact'; session_id: string; artifact: string }
-  | { mode: 'completion'; session_id: string };
+  | { mode: 'completion'; session_id: string; summary: SessionSummaryResponse | null };
 
 export function initialState(): ShellState {
   return { mode: 'launch' };
@@ -31,12 +31,14 @@ export async function applyAnswer(api: BridgeApi, state: ShellState, answer: Yes
   }
 
   if (res.session_complete) {
-    return { mode: 'completion', session_id: state.session_id };
+    const summary = await api.getSummary(state.session_id);
+    return { mode: 'completion', session_id: state.session_id, summary };
   }
 
   if (res.next_question) {
     return { mode: 'question', session_id: state.session_id, question: res.next_question };
   }
 
-  return { mode: 'completion', session_id: state.session_id };
+  const summary = await api.getSummary(state.session_id);
+  return { mode: 'completion', session_id: state.session_id, summary };
 }

@@ -11,6 +11,15 @@ export type SubmitAnswerResponse = {
   session_complete?: boolean;
 };
 
+export type SessionSummaryResponse = {
+  session_id: string;
+  final_confidence: number;
+  guard_status: 'CONTINUE' | 'SLOW_DOWN' | 'REVIEW';
+  gate_result: 'GO' | 'REVIEW' | 'NO_GO';
+  primary_reason: string;
+  expected_effect: 'stabilize' | 'clarify' | 'confirm';
+};
+
 export class BridgeApi {
   constructor(private baseUrl: string = 'http://localhost:3000') {}
 
@@ -38,5 +47,12 @@ export class BridgeApi {
       artifact_proposed: data.artifact_proposed,
       session_complete: data.session_complete,
     };
+  }
+
+  async getSummary(session_id: string): Promise<SessionSummaryResponse> {
+    const res = await fetch(`${this.baseUrl}/session/${encodeURIComponent(session_id)}/summary`);
+    const data = await res.json();
+    if (!res.ok) throw new Error('Failed to read session summary');
+    return data as SessionSummaryResponse;
   }
 }

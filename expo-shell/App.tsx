@@ -59,7 +59,18 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.text}>SESSION COMPLETE</Text>
+      <Text style={styles.text}>SESSION COMPLETE (V1 PROTOTYPE)</Text>
+      {state.summary ? (
+        <>
+          <Text style={styles.text}>confidence: {state.summary.final_confidence.toFixed(2)}</Text>
+          <Text style={styles.text}>guard: {state.summary.guard_status}</Text>
+          <Text style={styles.text}>gate: {state.summary.gate_result}</Text>
+          <Text style={styles.text}>reason: {state.summary.primary_reason}</Text>
+          <Text style={styles.text}>effect: {state.summary.expected_effect}</Text>
+        </>
+      ) : (
+        <Text style={styles.text}>summary unavailable</Text>
+      )}
     </SafeAreaView>
   );
 }
