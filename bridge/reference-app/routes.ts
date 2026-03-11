@@ -1,6 +1,7 @@
 import { IncomingMessage, ServerResponse } from 'node:http';
 import {
   getSessionStateController,
+  getSessionSummaryController,
   startSessionController,
   submitAnswerController,
 } from './sessionController';
@@ -34,6 +35,12 @@ export async function handleRequest(req: IncomingMessage, res: ServerResponse) {
     if (method === 'POST' && url === '/session/answer') {
       const body = await readJsonBody(req);
       const out = submitAnswerController(body);
+      return sendJson(res, 200, out);
+    }
+
+    if (method === 'GET' && url.startsWith('/session/') && url.endsWith('/summary')) {
+      const session_id = decodeURIComponent(url.replace('/session/', '').replace('/summary', ''));
+      const out = getSessionSummaryController(session_id);
       return sendJson(res, 200, out);
     }
 

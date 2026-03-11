@@ -19,6 +19,16 @@ class MockApi extends BridgeApi {
     if (this.step === 2) return { artifact_proposed: 'artifact_film' };
     return { session_complete: true };
   }
+  async getSummary() {
+    return {
+      session_id: 's1',
+      final_confidence: 0.72,
+      guard_status: 'CONTINUE' as const,
+      gate_result: 'GO' as const,
+      primary_reason: 'CONSISTENCY_HIGH',
+      expected_effect: 'confirm' as const,
+    };
+  }
 }
 
 async function main() {
@@ -37,6 +47,10 @@ async function main() {
 
   const s3 = await applyAnswer(api as any, s2, 'yes');
   assert(s3.mode === 'completion', 'basic state progression should reach completion state');
+  if (s3.mode === 'completion') {
+    assert(!!s3.summary, 'completion should include summary');
+    assert(s3.summary?.gate_result === 'GO', 'summary gate result mismatch');
+  }
 
   console.log('expo shell tests passed');
 }

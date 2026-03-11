@@ -9,6 +9,12 @@ Current shell target: **Expo SDK 54** (compatible with current Expo Go).
 - question screen (black screen + YES/NO taps)
 - bridge calls to start/answer session
 - basic artifact and completion states
+- completion summary snapshot from session API (`/session/{id}/summary`)
+  - final confidence
+  - guard status
+  - gate result
+  - primary reason
+  - expected effect
 
 ## How to run locally
 1. From `expo-shell/`:

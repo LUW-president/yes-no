@@ -25,3 +25,12 @@ export type SessionStateResponse = {
   current_question: string;
   signals: Record<string, number>;
 };
+
+export type SessionSummaryResponse = {
+  session_id: string;
+  final_confidence: number;
+  guard_status: 'CONTINUE' | 'SLOW_DOWN' | 'REVIEW';
+  gate_result: 'GO' | 'REVIEW' | 'NO_GO';
+  primary_reason: string;
+  expected_effect: 'stabilize' | 'clarify' | 'confirm';
+};

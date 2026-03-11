@@ -1,5 +1,18 @@
-import { getSessionState, recordAnswer, startSession, __getProfile } from '../../engine/session-orchestrator/orchestrator';
-import { StartSessionRequest, StartSessionResponse, SubmitAnswerRequest, SubmitAnswerResponse, SessionStateResponse } from './types';
+import {
+  buildSessionDecisionSummary,
+  getSessionState,
+  recordAnswer,
+  startSession,
+  __getProfile,
+} from '../../engine/session-orchestrator/index';
+import {
+  StartSessionRequest,
+  StartSessionResponse,
+  SubmitAnswerRequest,
+  SubmitAnswerResponse,
+  SessionStateResponse,
+  SessionSummaryResponse,
+} from './types';
 
 const sessionToUser = new Map<string, string>();
 
@@ -48,5 +61,18 @@ export function getSessionStateController(session_id: string): SessionStateRespo
     status: s.status,
     current_question: s.current_question_id,
     signals: p.signals,
+  };
+}
+
+export function getSessionSummaryController(session_id: string): SessionSummaryResponse {
+  if (!session_id) throw new Error('Invalid request: session_id required');
+  const summary = buildSessionDecisionSummary(session_id);
+  return {
+    session_id: summary.session_id,
+    final_confidence: summary.final_confidence,
+    guard_status: summary.guard.final_status,
+    gate_result: summary.gate.result,
+    primary_reason: summary.gate.primary_reason,
+    expected_effect: summary.improve.expected_effect,
   };
 }
