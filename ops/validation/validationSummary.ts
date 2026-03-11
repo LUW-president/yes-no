@@ -6,11 +6,20 @@ const rows = raw ? raw.split('\n').map((l) => JSON.parse(l)) : [];
 
 const completedRows = rows.filter((r) => typeof r.startSuccess === 'boolean');
 const n = completedRows.length;
+const hesitationRows = rows.filter((r) => typeof r.startHesitated === 'boolean');
+const hesitationN = hesitationRows.length;
 
 function pct(fn: (r: any) => boolean): string {
   if (!n) return 'N/A';
   const c = completedRows.filter(fn).length;
   return `${Math.round((c / n) * 100)}% (${c}/${n})`;
+}
+
+
+function pctFrom(rowsIn: any[], fn: (r: any) => boolean): string {
+  if (!rowsIn.length) return 'N/A';
+  const c = rowsIn.filter(fn).length;
+  return `${Math.round((c / rowsIn.length) * 100)}% (${c}/${rowsIn.length})`;
 }
 
 const times = completedRows.map((r) => r.timeToCompleteSec).filter((v) => typeof v === 'number').sort((a, b) => a - b);
@@ -27,4 +36,7 @@ console.log(JSON.stringify({
   summaryUnderstandableRate: pct((r) => r.summaryUnderstood === true),
   medianTimeToCompleteSec: median ?? 'N/A',
   gateMix: gate,
+  startHesitationRate: pctFrom(hesitationRows, (r) => r.startHesitated === true),
+  startHesitationCount: hesitationRows.filter((r) => r.startHesitated === true).length,
+  startHesitationSamples: hesitationN,
 }, null, 2));
