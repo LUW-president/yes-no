@@ -349,6 +349,20 @@ document.addEventListener('keydown',(event)=>{
 </body>
 </html>`;
 
+
+function runtimeLog(event: string, data: Record<string, unknown>) {
+  const payload = {
+    ts: new Date().toISOString(),
+    event,
+    ...data,
+  };
+  try {
+    console.log(JSON.stringify(payload));
+  } catch {
+    // no-op: logging must never break request flow
+  }
+}
+
 function sendJson(res: ServerResponse, status: number, payload: unknown) {
   res.statusCode = status;
   res.setHeader('Content-Type', 'application/json');
@@ -379,17 +393,37 @@ export async function handleWebV1Request(req: IncomingMessage, res: ServerRespon
 
     if (method === 'POST' && url === '/api/session/start') {
       const body = await readJsonBody(req);
-      return sendJson(res, 200, startSessionController(body));
+      const out = startSessionController(body);
+      runtimeLog('session_start', {
+        user_id: body?.user_id ?? 'unknown',
+        pack_id: body?.pack_id ?? 'unknown',
+        session_id: out?.session_id ?? 'unknown',
+      });
+      return sendJson(res, 200, out);
     }
 
     if (method === 'POST' && url === '/api/session/answer') {
       const body = await readJsonBody(req);
-      return sendJson(res, 200, submitAnswerController(body));
+      const out = submitAnswerController(body);
+      if (out?.session_complete === true || out?.completed === true || out?.done === true) {
+        runtimeLog('session_complete', {
+          session_id: body?.session_id ?? 'unknown',
+          completion: true,
+        });
+      }
+      return sendJson(res, 200, out);
     }
 
     if (method === 'GET' && url.startsWith('/api/session/') && url.endsWith('/summary')) {
       const session_id = decodeURIComponent(url.replace('/api/session/', '').replace('/summary', ''));
-      return sendJson(res, 200, getSessionSummaryController(session_id));
+      const out = getSessionSummaryController(session_id);
+      runtimeLog('session_summary', {
+        session_id,
+        gate_result: out?.gate_result ?? 'unknown',
+        guard_status: out?.guard_status ?? 'unknown',
+        final_confidence: typeof out?.final_confidence === 'number' ? out.final_confidence : null,
+      });
+      return sendJson(res, 200, out);
     }
 
     return sendJson(res, 404, { error: 'Not found' });
