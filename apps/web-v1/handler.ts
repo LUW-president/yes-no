@@ -79,19 +79,19 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
 <body>
 <main class="app">
   <section class="card">
-    <div class="meta"><h1>YES/NO V1 Prototype</h1><span class="badge">Prototype • Deterministic</span></div>
+    <div class="meta"><h1>YES/NO V1 Prototype</h1><span class="badge">Prototype • Single Session • Deterministic</span></div>
     <p id="state-strip" class="hint">state: idle | step: 0</p>
     <div class="progress-track" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
     <p id="question" class="question">Welcome. Press <strong>Start Session</strong> to load your first yes/no question.</p>
     <label for="decision-topic" class="hint strong">Decision Topic (optional)</label>
     <input id="decision-topic" type="text" placeholder="e.g. Should I move to another city?" style="width:100%;margin:6px 0 8px;padding:10px 12px;border-radius:10px;border:1px solid #334; background:#0f141c; color:#e9f0ff;" />
-    <p id="topic-help" class="topic-help">If you're unsure, leave it blank and let YES/NO questions surface your signal.</p>
+    <p id="topic-help" class="topic-help">This session focuses on one decision only. Leave blank if unsure and we'll still complete one clear session.</p>
     <div class="actions">
       <button id="start" class="primary">Start Session</button>
       <button id="yes" class="yes" disabled>Yes</button>
       <button id="no" class="no" disabled>No</button>
     </div>
-    <p id="hint" class="hint strong">Start with one click, then answer each prompt with Yes or No. Tip: you can also press Y / N.</p>
+    <p id="hint" class="hint strong">One session = one decision. Start, answer Yes/No, get a clear summary in minutes. Tip: press Y / N.</p>
   </section>
   <section class="card">
     <div class="meta"><h2>Final Summary</h2><span id="status" class="badge">idle</span></div>
@@ -227,7 +227,7 @@ async function startSession(){
   if(topicHelpEl){
     topicHelpEl.textContent = decisionTopic
       ? 'Great. We will keep this topic in your final summary.'
-      : 'No topic needed. The system will help reveal your hidden preference.';
+      : 'No topic provided. We will still run one focused session and return a clear summary.';
   }
   if(decisionTopicEl) decisionTopicEl.setAttribute('disabled','true');
   setBusy(true);
@@ -236,7 +236,7 @@ async function startSession(){
   if(resultChipsEl) resultChipsEl.innerHTML='';
   statusEl.textContent='starting';
   renderStateStrip('starting');
-  hintEl.textContent='Session started. Please wait while we load the first question...';
+  hintEl.textContent='Session started. We are running one focused decision session...';
   hintEl.classList.add('busy');
   questionCount=0;
   updateProgress();
@@ -251,7 +251,7 @@ async function startSession(){
   setAnswerButtons(true);
   statusEl.textContent='in progress';
   renderStateStrip('in-progress');
-  hintEl.textContent='Question ready. Choose Yes or No (or press Y / N).';
+  hintEl.textContent='Question ready. Keep answers binary to finish this session fast (Yes/No).';
   if(topicHelpEl) topicHelpEl.textContent='Session active for: '+decisionTopic;
   hintEl.classList.remove('busy');
   setBusy(false);
