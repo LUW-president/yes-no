@@ -83,9 +83,15 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
     <p id="state-strip" class="hint">state: idle | step: 0</p>
     <div class="progress-track" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
     <p id="question" class="question">Welcome. Press <strong>Start Session</strong> to load your first yes/no question.</p>
-    <label for="decision-topic" class="hint strong">Decision Topic (optional)</label>
-    <input id="decision-topic" type="text" placeholder="e.g. Should I move to another city?" style="width:100%;margin:6px 0 8px;padding:10px 12px;border-radius:10px;border:1px solid #334; background:#0f141c; color:#e9f0ff;" />
-    <p id="topic-help" class="topic-help">This session focuses on one decision only. Leave blank if unsure and we'll still complete one clear session.</p>
+    <label for="decision-topic" class="hint strong">What decision are you trying to make? (optional)</label>
+    <input id="decision-topic" type="text" placeholder="One sentence decision, e.g. Should I hire a part-time assistant this month?" style="width:100%;margin:6px 0 8px;padding:10px 12px;border-radius:10px;border:1px solid #334; background:#0f141c; color:#e9f0ff;" />
+    <p id="topic-help" class="topic-help">Enter one decision you need to make now (one sentence). If unsure, choose an example or skip for now.</p>
+    <div class="actions-secondary" style="margin:6px 0 10px;">
+      <button id="example-hire" class="ghost">Should I hire a part-time assistant this month?</button>
+      <button id="example-move" class="ghost">Should I move to another city this year?</button>
+      <button id="example-buy" class="ghost">Should I postpone this purchase?</button>
+      <button id="skip-topic" class="ghost">Skip for now</button>
+    </div>
     <div class="actions">
       <button id="start" class="primary">Start Session</button>
       <button id="yes" class="yes" disabled>Yes</button>
@@ -126,6 +132,10 @@ const hintEl=document.getElementById('hint');
 const stateStripEl=document.getElementById('state-strip');
 const decisionTopicEl=document.getElementById('decision-topic');
 const topicHelpEl=document.getElementById('topic-help');
+const exampleHireBtn=document.getElementById('example-hire');
+const exampleMoveBtn=document.getElementById('example-move');
+const exampleBuyBtn=document.getElementById('example-buy');
+const skipTopicBtn=document.getElementById('skip-topic');
 
 let sessionId=null;
 let questionCount=0;
@@ -215,6 +225,14 @@ function renderError(message){
   renderStateStrip('error');
 }
 
+
+
+function setTopicExample(text){
+  if(!decisionTopicEl) return;
+  decisionTopicEl.value=text;
+  decisionTopicEl.focus();
+  if(topicHelpEl) topicHelpEl.textContent='Great. We will run one focused session with this decision.';
+}
 
 function renderStateStrip(state){
   if(!stateStripEl) return;
@@ -337,6 +355,15 @@ copySummaryBtn.addEventListener('click', async ()=>{
   }catch{
     hintEl.textContent='Unable to copy summary right now.';
   }
+});
+
+
+if(exampleHireBtn) exampleHireBtn.addEventListener('click',()=>setTopicExample('Should I hire a part-time assistant this month?'));
+if(exampleMoveBtn) exampleMoveBtn.addEventListener('click',()=>setTopicExample('Should I move to another city this year?'));
+if(exampleBuyBtn) exampleBuyBtn.addEventListener('click',()=>setTopicExample('Should I postpone this purchase?'));
+if(skipTopicBtn) skipTopicBtn.addEventListener('click',()=>{
+  if(decisionTopicEl) decisionTopicEl.value='General decision';
+  if(topicHelpEl) topicHelpEl.textContent='No problem. We will run one focused session with a neutral topic.';
 });
 
 document.addEventListener('keydown',(event)=>{

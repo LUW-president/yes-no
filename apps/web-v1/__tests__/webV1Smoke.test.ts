@@ -64,14 +64,15 @@ async function run() {
 
   try {
     const html = await httpText(port, 'GET', '/');
-    assert(html.includes('Decision Topic (optional)'), 'onboarding should show optional decision topic');
+    assert(html.includes('What decision are you trying to make? (optional)'), 'onboarding should show clear decision input label');
     assert(html.includes('Prototype • Single Session • Deterministic'), 'badge should clarify single-session mode');
     assert(
-      html.includes("This session focuses on one decision only. Leave blank if unsure and we'll still complete one clear session."),
+      html.includes("Enter one decision you need to make now (one sentence). If unsure, choose an example or skip for now."),
       'onboarding should include single-session discovery helper copy',
     );
     assert(html.includes('Not specified'), 'summary fallback for missing topic should be present');
     assert(html.includes('press Y / N'), 'onboarding should expose keyboard yes/no shortcut hint');
+    assert(html.includes('Skip for now'), 'onboarding should offer skip-for-now quick action');
 
     const start = await httpJson(port, 'POST', '/api/session/start', {
       user_id: 'smoke_user',
