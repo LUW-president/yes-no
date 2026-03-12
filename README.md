@@ -138,3 +138,6 @@ New contributors can start with these issues:
 
 ## Testing
 - Run all core checks: `npm run test:all`
+
+## Validation Ops
+- `docs/ops/hybrid-validation-loop-v1.md`
