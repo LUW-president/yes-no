@@ -69,6 +69,8 @@ async function run() {
       html.includes("If you're unsure, leave it blank and let YES/NO questions surface your signal."),
       'onboarding should include discovery-first helper copy',
     );
+    assert(html.includes('Not specified'), 'summary fallback for missing topic should be present');
+    assert(html.includes('or press Y / N'), 'onboarding should expose keyboard yes/no shortcut hint');
 
     const start = await httpJson(port, 'POST', '/api/session/start', {
       user_id: 'smoke_user',
