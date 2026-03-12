@@ -20,6 +20,9 @@ Thanks for contributing to YES/NO (prototype / non-production).
 - Do not introduce unnecessary dependencies
 - Do not change core decision logic without approval
 
+## 10-minute contributor path
+Use: `docs/ops/contributor-quickstart-10min.md`
+
 ## Local checks
 Run before PR:
 - `npm run test:all`
