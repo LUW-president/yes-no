@@ -69,7 +69,10 @@ button.no{border-color:#7b3232;color:#ffb4b4}
 .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#8ce7ff);transition:width .28s ease}
 pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radius:10px;padding:12px;color:#d9e2ec;line-height:1.45;min-height:130px}
 .error{color:#ff8f8f}
-.summary-lede{margin:8px 0 10px;color:#dce8f8;line-height:1.45}
+.summary-topic{margin:8px 0 6px;color:#dce8f8;line-height:1.4}
+.summary-lede{margin:4px 0 8px;color:#dce8f8;line-height:1.45}
+.summary-checklist{margin:0 0 10px;padding-left:18px;color:#dfe7f2;line-height:1.5}
+.summary-checklist li{margin:2px 0}
 .summary-value{font-weight:700}
 </style>
 </head>
@@ -181,20 +184,23 @@ function summaryTextForClipboard(){
 
 function renderSummaryCard(summary, topic){
   if(!summaryEl) return;
+  const confidence=Number(summary.final_confidence).toFixed(2);
   const meaning=(summary.gate_result==='GO')
-    ? 'Meaning: proceed with confidence; keep scope focused.'
+    ? 'Proceed with confidence and keep scope focused.'
     : (summary.gate_result==='REVIEW')
-      ? 'Meaning: pause and clarify before committing.'
-      : 'Meaning: hold this decision; reduce uncertainty first.';
+      ? 'Pause and clarify before committing.'
+      : 'Hold this decision and reduce uncertainty first.';
   summaryEl.innerHTML=''
-    +'<div class=\"summary-topic\">Decision Topic: <span class=\"summary-value\">'+(topic||'Not specified')+'</span></div>'
-    +'<div class=\"summary-lede\">Decision: <span class=\"summary-value\">'+summary.gate_result+'</span> with guard status <span class=\"summary-value\">'+summary.guard_status+'</span>. Confidence is <span class=\"summary-value\">'+Number(summary.final_confidence).toFixed(2)+'</span>.</div>'
-    +'<div class=\"summary-meaning\">'+meaning+'</div>'
-    +'<div class="k">confidence</div><div>'+Number(summary.final_confidence).toFixed(2)+'</div>'
-    +'<div class="k">guard status</div><div>'+summary.guard_status+'</div>'
+    +'<div class="summary-topic">Decision Topic: <span class="summary-value">'+(topic||'Not specified')+'</span></div>'
+    +'<div class="summary-lede">Final Decision: <span class="summary-value">'+summary.gate_result+'</span> • Guard: <span class="summary-value">'+summary.guard_status+'</span> • Confidence: <span class="summary-value">'+confidence+'</span></div>'
+    +'<ul class="summary-checklist">'
+    +'<li><span class="summary-value">What this means:</span> '+meaning+'</li>'
+    +'<li><span class="summary-value">Primary reason:</span> '+summary.primary_reason+'</li>'
+    +'<li><span class="summary-value">Expected effect:</span> '+summary.expected_effect+'</li>'
+    +'</ul>'
     +'<div class="k">gate result</div><div>'+summary.gate_result+'</div>'
-    +'<div class="k">primary reason</div><div>'+summary.primary_reason+'</div>'
-    +'<div class="k">expected effect</div><div>'+summary.expected_effect+'</div>';
+    +'<div class="k">guard status</div><div>'+summary.guard_status+'</div>'
+    +'<div class="k">confidence</div><div>'+confidence+'</div>';
   if(resultChipsEl){
     resultChipsEl.innerHTML=''
       +'<span class="'+chipClass(summary.gate_result)+'">'+summary.gate_result+'</span>'
