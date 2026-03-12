@@ -29,6 +29,16 @@ for (const r of completedRows) {
   if (r.gateResult && gate[r.gateResult] !== undefined) gate[r.gateResult] += 1;
 }
 
+const personaDistribution = completedRows.reduce((acc: Record<string, number>, row: any) => {
+  if (typeof row.persona === 'string' && row.persona.trim()) {
+    const key = row.persona.trim();
+    acc[key] = (acc[key] ?? 0) + 1;
+  }
+  return acc;
+}, {});
+
+const hesitationRate = pctFrom(hesitationRows, (r) => r.startHesitated === true);
+
 console.log(JSON.stringify({
   sessionsRecorded: n,
   startSuccessRate: pct((r) => r.startSuccess === true),
@@ -36,7 +46,9 @@ console.log(JSON.stringify({
   summaryUnderstandableRate: pct((r) => r.summaryUnderstood === true),
   medianTimeToCompleteSec: median ?? 'N/A',
   gateMix: gate,
-  startHesitationRate: pctFrom(hesitationRows, (r) => r.startHesitated === true),
+  startHesitationRate: hesitationRate,
+  hesitationRate,
   startHesitationCount: hesitationRows.filter((r) => r.startHesitated === true).length,
   startHesitationSamples: hesitationN,
+  personaDistribution,
 }, null, 2));
