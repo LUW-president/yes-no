@@ -138,3 +138,6 @@ New contributors can start with these issues:
 
 ## Testing
 - Run all core checks: `npm run test:all`
+
+## Public Docs
+- `docs/public/how-to-run-a-decision-session.md`
