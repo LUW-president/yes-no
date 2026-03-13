@@ -20,7 +20,24 @@ export const gestureCanvasClientJs = String.raw`
       const r=canvas.getBoundingClientRect();
       return { x:(ev.clientX-r.left)*(canvas.width/r.width), y:(ev.clientY-r.top)*(canvas.height/r.height) };
     }
-    function flash(kind){
+    function normalizeStroke(stroke){
+      if(!Array.isArray(stroke) || stroke.length<=2) return stroke || [];
+      const out=[stroke[0]];
+      for(let i=1;i<stroke.length;i++){
+        const prev=out[out.length-1];
+        const cur=stroke[i];
+        const d=Math.hypot(cur.x-prev.x, cur.y-prev.y);
+        if(d>=3) out.push(cur);
+      }
+      if(out.length===1 && stroke.length>1) out.push(stroke[stroke.length-1]);
+      return out;
+    }
+
+    function normalizeStrokes(all){
+      return (all||[]).map(normalizeStroke).filter((s)=>Array.isArray(s) && s.length>=2);
+    }
+
+function flash(kind){
       if(kind==='yes') canvas.style.boxShadow='0 0 26px #3be98799';
       else if(kind==='no') canvas.style.boxShadow='0 0 26px #ff767699';
       else canvas.style.boxShadow='0 0 24px #ffffffaa';
@@ -36,8 +53,9 @@ export const gestureCanvasClientJs = String.raw`
 
     async function finalizeGesture(){
       if(!strokes.length) return;
-      const result=classifyGesture(strokes);
-      if(onDetected) onDetected(result, strokes);
+      const normalizedStrokes = normalizeStrokes(strokes);
+      const result=classifyGesture(normalizedStrokes);
+      if(onDetected) onDetected(result, normalizedStrokes);
       flash(result);
       if (result === 'unknown') {
         if(hintEl) hintEl.textContent='Gesture not recognized. Draw a clear circle (YES) or cross (NO).';
