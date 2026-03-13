@@ -3,7 +3,7 @@ version: 0.2
 
 questions:
   - id: q_create
-    text: "Would you like to work on this decision now?"
+    text: "Are you having a good day so far?"
     yes: q_art
     no: end
 
