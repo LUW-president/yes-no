@@ -89,7 +89,7 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
 <main class="app">
   <section class="card black-glass">
     <div class="meta debug-only" id="prototype-header"><h1>YES/NO V1 Prototype</h1><span class="badge">Prototype • Single Session • Deterministic</span></div>
-    <p id="state-strip" class="hint">state: initializing | step: 0</p>
+    <p id="state-strip" class="hint debug-only">state: initializing | step: 0</p>
     <div class="progress-track debug-only" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
     <p id="question" class="gesture-prompt">Preparing your decision session...</p>
     <p class="covenant-line debug-only">Gesture controls<br><span class="instr-yes">⭕ Circle = YES</span><br><span class="instr-no">❌ X = NO</span></p>
