@@ -1,4 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'node:http';
+import { gestureClassifierClientJs } from './gestureClassifier.ts';
+import { gestureCanvasClientJs } from './gestureCanvas.ts';
 import {
   getSessionSummaryController,
   startSessionController,
@@ -114,6 +116,8 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
   </section>
 </main>
 <script>
+${gestureClassifierClientJs}
+${gestureCanvasClientJs}
 const startBtn=document.getElementById('start');
 const yesBtn=document.getElementById('yes');
 const noBtn=document.getElementById('no');
@@ -322,8 +326,6 @@ noBtn.addEventListener('click',()=>answer('no').catch((err)=>renderError('Failed
 
 restartBtn.addEventListener('click',()=>startSession().catch((err)=>{setBusy(false);setAnswerButtons(false); if(decisionTopicEl) decisionTopicEl.removeAttribute('disabled'); renderError('Failed to start session: '+(err&&err.message?err.message:String(err)));}));
 
-// Phase 2 scaffold: auto-start session on load (single-session, gesture-first surface)
-startSession().catch((err)=>{ setBusy(false); setAnswerButtons(false); renderError('Failed to start session: '+(err&&err.message?err.message:String(err))); });
 demoAltBtn.addEventListener('click',async ()=>{
   try{
     await startSession();
@@ -355,25 +357,28 @@ copySummaryBtn.addEventListener('click', async ()=>{
 });
 
 
-// Phase 2 scaffold: trace capture only (no gesture classification/submission yet)
-if(gestureCanvas && gestureCanvas.getContext){
-  const ctx=gestureCanvas.getContext('2d');
-  let drawing=false;
-  let points=[];
-  const drawPoint=(x,y)=>{ if(!ctx) return; ctx.fillStyle='#f2f5f8'; ctx.fillRect(x,y,2,2); };
-  const pos=(ev)=>{
-    const r=gestureCanvas.getBoundingClientRect();
-    return { x: (ev.clientX-r.left)*(gestureCanvas.width/r.width), y: (ev.clientY-r.top)*(gestureCanvas.height/r.height) };
-  };
-  const clearCanvas=()=>{ if(!ctx) return; ctx.fillStyle='#000'; ctx.fillRect(0,0,gestureCanvas.width,gestureCanvas.height); };
-  clearCanvas();
-  const begin=(ev)=>{ drawing=true; points=[]; clearCanvas(); const p=pos(ev); points.push(p); drawPoint(p.x,p.y); if(hintEl) hintEl.textContent='Tracing gesture...'; };
-  const move=(ev)=>{ if(!drawing) return; const p=pos(ev); points.push(p); drawPoint(p.x,p.y); };
-  const end=()=>{ if(!drawing) return; drawing=false; if(hintEl) hintEl.textContent='Trace captured. Classification is enabled in next phase.'; console.log(JSON.stringify({event:'gesture_trace_captured', points: points.length})); };
-  gestureCanvas.addEventListener('pointerdown', begin);
-  gestureCanvas.addEventListener('pointermove', move);
-  gestureCanvas.addEventListener('pointerup', end);
-  gestureCanvas.addEventListener('pointerleave', end);
+
+// Phase 4: mounted gesture pipeline (classifier + canvas modules)
+if(gestureCanvas && window.__gestureClassifier && window.__mountGestureCanvas){
+  window.__mountGestureCanvas({
+    canvas: gestureCanvas,
+    hintEl,
+    classifyGesture: window.__gestureClassifier.classifyGesture,
+    onSubmit: async (normalized)=>{
+      if (normalized === 'yes' || normalized === 'no') {
+        console.log(JSON.stringify({ event: 'gesture_submitted', normalized_answer: normalized }));
+        await answer(normalized);
+      }
+    },
+    onUnknown: ()=>{
+      console.log(JSON.stringify({ event: 'gesture_unknown_retry', reason: 'unrecognized_gesture' }));
+    },
+    onDetected: (result)=>{
+      if(result==='yes') console.log(JSON.stringify({ event: 'gesture_detected_yes' }));
+      else if(result==='no') console.log(JSON.stringify({ event: 'gesture_detected_no' }));
+      else console.log(JSON.stringify({ event: 'gesture_unknown_retry', reason: 'classifier_unknown' }));
+    },
+  });
 }
 
 document.addEventListener('keydown',(event)=>{
