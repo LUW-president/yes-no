@@ -84,6 +84,10 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
 .instr-yes{color:var(--yes);font-weight:700}
 .instr-no{color:var(--no);font-weight:700}
 .candidate-line{font-size:.84rem;color:#b8c0ca;margin:4px 0 8px;min-height:1.2em}
+.tutorial-card{margin:10px 0 12px;padding:10px 12px;border:1px solid #3a2f25;border-radius:12px;background:#120f0d;color:#efd8bf;font-size:.86rem;line-height:1.45}
+.tutorial-card h3{margin:0 0 6px;font-size:.9rem;color:#ffd9ab}
+.tutorial-card .tiny{opacity:.85;font-size:.82rem}
+.tutorial-dismiss{margin-top:8px;background:#241b14;border:1px solid #5f4832;color:#ffd9ab;border-radius:8px;padding:5px 9px;cursor:pointer}
 .candidate-yes{color:var(--yes);font-weight:700}
 .candidate-no{color:var(--no);font-weight:700}
 .candidate-unknown{color:#f2f5f8;font-weight:700}
@@ -107,6 +111,15 @@ body.flash-unknown::before{background:#ffffff}
     <p id="question" class="gesture-prompt">Preparing your decision session...</p>
     <p class="covenant-line">Gesture controls<br><span class="instr-yes">O = YES</span><br><span class="instr-no">X = NO</span></p>
     <p id="candidate-line" class="candidate-line">Candidate: —</p>
+    <div id="mvp-tutorial" class="tutorial-card">
+      <h3>Do you understand the MVP? YES or NO</h3>
+      <div>How it works:</div>
+      <div class="tiny">1) Read the question</div>
+      <div class="tiny">2) Draw <span class="instr-yes">O = YES</span> or <span class="instr-no">X = NO</span></div>
+      <div class="tiny">3) The system asks the next question until clarity is reached</div>
+      <div class="tiny">4) You receive a final decision summary</div>
+      <button id="tutorial-dismiss" class="tutorial-dismiss">Got it</button>
+    </div>
     <canvas id="gestureCanvas" width="1200" height="640" aria-label="gesture-input-canvas"></canvas>
     <p id="hint" class="hint strong debug-only">Draw a gesture on the black glass.</p>
     <div class="actions debug-only" id="debug-controls">
@@ -157,8 +170,22 @@ const gestureCanvas=document.getElementById('gestureCanvas');
 const debugControls=document.getElementById('debug-controls');
 const candidateLineEl=document.getElementById('candidate-line');
 const proposalOverlayEl=document.getElementById('proposal-overlay');
+const tutorialEl=document.getElementById('mvp-tutorial');
+const tutorialDismissBtn=document.getElementById('tutorial-dismiss');
 const debugMode = new URLSearchParams(window.location.search).get('debug') === '1';
 if(debugMode){ document.querySelectorAll('.debug-only').forEach((el)=>{ el.style.display = ''; }); }
+
+try {
+  const hidden = localStorage.getItem('yesno_mvp_tutorial_hidden') === '1';
+  if (hidden && tutorialEl) tutorialEl.style.display = 'none';
+} catch {}
+if (tutorialDismissBtn) {
+  tutorialDismissBtn.addEventListener('click', ()=>{
+    if (tutorialEl) tutorialEl.style.display = 'none';
+    try { localStorage.setItem('yesno_mvp_tutorial_hidden', '1'); } catch {}
+  });
+}
+
 
 let sessionId=null;
 let questionCount=0;
