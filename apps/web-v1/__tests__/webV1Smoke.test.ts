@@ -64,11 +64,11 @@ async function run() {
 
   try {
     const html = await httpText(port, 'GET', '/');
-    assert(html.includes('Prototype • Single Session • Deterministic'), 'badge should clarify single-session mode');
+    assert(html.includes('Prototype • Single Session'), 'badge should clarify single-session mode');
     assert(html.includes('question → gesture → answer → clarity'), 'covenant line should be visible');
     assert(html.includes('id="gestureCanvas"'), 'gesture canvas id should be gestureCanvas');
-    assert(html.includes('Draw a gesture on the black glass.'), 'gesture-first hint should be visible');
-    assert(html.includes('Decision Topic (optional)'), 'debug fallback topic control should still exist in source');
+    assert(html.includes('Draw a circle for YES or a cross for NO.'), 'gesture-first hint should be visible');
+    assert(html.includes('id="debug-controls"'), 'debug fallback controls should still exist in source');
 
     const start = await httpJson(port, 'POST', '/api/session/start', {
       user_id: 'smoke_user',
