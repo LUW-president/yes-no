@@ -1,16 +1,48 @@
 const BASE = process.env.YESNO_LIVE_URL || 'https://yes-no-kappa.vercel.app';
+const REQUEST_TIMEOUT_MS = Number(process.env.YESNO_LIVE_TIMEOUT_MS || 7000);
+const MAX_RETRIES = Number(process.env.YESNO_LIVE_RETRIES || 2);
 
 function assert(cond: boolean, msg: string) {
   if (!cond) throw new Error(msg);
 }
 
+type RequestOptions = {
+  method?: string;
+  headers?: Record<string, string>;
+  body?: string;
+};
+
+async function fetchWithRetry(path: string, options?: RequestOptions): Promise<Response> {
+  const url = `${BASE}${path}`;
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= MAX_RETRIES + 1; attempt += 1) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+    try {
+      return await fetch(url, { ...options, signal: controller.signal });
+    } catch (error) {
+      lastError = error;
+      if (attempt > MAX_RETRIES) {
+        const message = error instanceof Error ? error.message : String(error);
+        throw new Error(`request failed after ${attempt} attempts: ${path} (${message})`);
+      }
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  throw new Error(`request failed: ${path} (${String(lastError)})`);
+}
+
 async function main() {
-  const root = await fetch(`${BASE}/`);
+  const root = await fetchWithRetry('/');
   const html = await root.text();
   assert(root.ok, `root not ok: ${root.status}`);
   assert(html.includes('YES/NO V1'), 'root missing YES/NO marker');
 
-  const startRes = await fetch(`${BASE}/api/session/start`, {
+  const startRes = await fetchWithRetry('/api/session/start', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ user_id: 'nurse_health', pack_id: 'creation_v0' }),
@@ -20,7 +52,7 @@ async function main() {
 
   let answer: any = null;
   for (let i = 0; i < 8; i += 1) {
-    const r = await fetch(`${BASE}/api/session/answer`, {
+    const r = await fetchWithRetry('/api/session/answer', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ session_id: start.session_id, answer: 'yes' }),
@@ -30,7 +62,7 @@ async function main() {
     if (!answer.next_question) break;
   }
 
-  const summaryRes = await fetch(`${BASE}/api/session/${encodeURIComponent(start.session_id)}/summary`);
+  const summaryRes = await fetchWithRetry(`/api/session/${encodeURIComponent(start.session_id)}/summary`);
   const summary = await summaryRes.json();
   assert(summaryRes.ok, `summary failed: ${JSON.stringify(summary)}`);
   assert(typeof summary.final_confidence === 'number', 'summary.final_confidence missing');
