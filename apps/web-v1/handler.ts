@@ -22,8 +22,8 @@ const pageHtml = `<!doctype html>
   --panel-border:#232933;
   --text:#f2f5f8;
   --muted:#a7b0ba;
-  --yes:#33d17a;
-  --no:#ff6b6b;
+  --yes:#3be987;
+  --no:#ff7676;
   --accent:#7aa2ff;
 }
 *{box-sizing:border-box}
@@ -45,9 +45,9 @@ p,pre{margin:0}
 .meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:.9rem;margin-bottom:10px}
 .badge{padding:4px 10px;border-radius:999px;border:1px solid #2f3c52;background:#162035;color:#c5d5ff;font-size:.78rem;font-weight:600}
 .status-chip{display:inline-block;padding:5px 10px;border-radius:999px;font-weight:700;font-size:.76rem;border:1px solid #3b4456;margin-right:6px}
-.chip-go{background:#123322;border-color:#2f9b69;color:#b7ffd8}
+.chip-go{background:#144129;border-color:#38b377;color:#c8ffe2}
 .chip-review{background:#3a2f14;border-color:#d4a53b;color:#ffe8b3}
-.chip-no-go{background:#3b1717;border-color:#cc4f4f;color:#ffc8c8}
+.chip-no-go{background:#4a1b1b;border-color:#e35f5f;color:#ffd9d9}
 .kv{display:grid;grid-template-columns:170px 1fr;gap:6px;margin-top:8px;color:#d9e2ec}
 .kv .k{color:#9fb0c4}
 .actions-secondary{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
@@ -62,8 +62,8 @@ button:hover:enabled{transform:translateY(-1px);background:#212a36}
 button:active:enabled{transform:translateY(0)}
 button:disabled{opacity:.45;cursor:not-allowed}
 button.primary{border-color:#3e4f6b;background:#202a38}
-button.yes{border-color:#2a734d;color:#97f2c0}
-button.no{border-color:#7b3232;color:#ffb4b4}
+button.yes{border-color:#36a96f;color:#b9ffd9;background:#0f2119}
+button.no{border-color:#b34848;color:#ffd0d0;background:#251313}
 .hint{margin-top:10px;color:var(--muted);font-size:.85rem}
 .hint.strong{color:#dce8f8}
 .hint.busy{color:#ffd089}
@@ -77,7 +77,7 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
 .summary-checklist li{margin:2px 0}
 .summary-value{font-weight:700}
 .black-glass{background:#000 !important;border-color:#111 !important}
-#gestureCanvas{width:100%;height:320px;background:#000;border:1px solid #1a1a1a;border-radius:12px;touch-action:none;display:block;margin:10px 0 12px}
+#gestureCanvas{width:100%;height:320px;background:#000;border:1px solid #2a2a2a;border-radius:12px;touch-action:none;display:block;margin:10px 0 12px}
 .gesture-prompt{font-size:1.05rem;line-height:1.5;margin:8px 0 2px;color:#f5f5f5}
 .covenant-line{color:#8d99a6;font-size:.82rem;margin-bottom:8px}
 .debug-only{display:none}
