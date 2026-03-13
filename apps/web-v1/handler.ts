@@ -77,7 +77,7 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
 .summary-checklist li{margin:2px 0}
 .summary-value{font-weight:700}
 .black-glass{background:#000 !important;border-color:#111 !important}
-#gesture-canvas{width:100%;height:320px;background:#000;border:1px solid #1a1a1a;border-radius:12px;touch-action:none;display:block;margin:10px 0 12px}
+#gestureCanvas{width:100%;height:320px;background:#000;border:1px solid #1a1a1a;border-radius:12px;touch-action:none;display:block;margin:10px 0 12px}
 .gesture-prompt{font-size:1.05rem;line-height:1.5;margin:8px 0 2px;color:#f5f5f5}
 .covenant-line{color:#8d99a6;font-size:.82rem;margin-bottom:8px}
 .debug-only{display:none}
@@ -85,20 +85,22 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
 </head>
 <body>
 <main class="app">
-  <section class="card">
+  <section class="card black-glass">
     <div class="meta"><h1>YES/NO V1 Prototype</h1><span class="badge">Prototype • Single Session • Deterministic</span></div>
-    <p id="state-strip" class="hint">state: idle | step: 0</p>
+    <p id="state-strip" class="hint">state: initializing | step: 0</p>
     <div class="progress-track" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
-    <p id="question" class="question">Welcome. Press <strong>Start Session</strong> to load your first yes/no question.</p>
-    <label for="decision-topic" class="hint strong">Decision Topic (optional)</label>
-    <input id="decision-topic" type="text" placeholder="e.g. Should I move to another city?" style="width:100%;margin:6px 0 8px;padding:10px 12px;border-radius:10px;border:1px solid #334; background:#0f141c; color:#e9f0ff;" />
-    <p id="topic-help" class="topic-help">This session focuses on one decision only. Leave blank if unsure and we'll still complete one clear session.</p>
-    <div class="actions">
+    <p id="question" class="gesture-prompt">Preparing your decision session...</p>
+    <p class="covenant-line">question → gesture → answer → clarity</p>
+    <canvas id="gestureCanvas" width="1200" height="640" aria-label="gesture-input-canvas"></canvas>
+    <p id="hint" class="hint strong">Draw a gesture on the black glass.</p>
+    <div class="actions debug-only" id="debug-controls">
       <button id="start" class="primary">Start Session</button>
       <button id="yes" class="yes" disabled>Yes</button>
       <button id="no" class="no" disabled>No</button>
     </div>
-    <p id="hint" class="hint strong">One session = one decision. Start, answer Yes/No, get a clear summary in minutes. Tip: press Y / N.</p>
+    <label for="decision-topic" class="hint strong debug-only">Decision Topic (optional)</label>
+    <input id="decision-topic" class="debug-only" type="text" placeholder="e.g. Should I move to another city?" style="width:100%;margin:6px 0 8px;padding:10px 12px;border-radius:10px;border:1px solid #334; background:#0f141c; color:#e9f0ff;" />
+    <p id="topic-help" class="topic-help debug-only">Debug fallback controls (hidden by default).</p>
   </section>
   <section class="card">
     <div class="meta"><h2>Final Summary</h2><span id="status" class="badge">idle</span></div>
@@ -135,7 +137,7 @@ const hintEl=document.getElementById('hint');
 const stateStripEl=document.getElementById('state-strip');
 const decisionTopicEl=document.getElementById('decision-topic');
 const topicHelpEl=document.getElementById('topic-help');
-const gestureCanvas=document.getElementById('gesture-canvas');
+const gestureCanvas=document.getElementById('gestureCanvas');
 const debugControls=document.getElementById('debug-controls');
 const debugMode = new URLSearchParams(window.location.search).get('debug') === '1';
 if(debugMode){ document.querySelectorAll('.debug-only').forEach((el)=>{ el.style.display = ''; }); }

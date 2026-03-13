@@ -64,14 +64,11 @@ async function run() {
 
   try {
     const html = await httpText(port, 'GET', '/');
-    assert(html.includes('Decision Topic (optional)'), 'onboarding should show optional decision topic');
     assert(html.includes('Prototype • Single Session • Deterministic'), 'badge should clarify single-session mode');
-    assert(
-      html.includes("This session focuses on one decision only. Leave blank if unsure and we'll still complete one clear session."),
-      'onboarding should include single-session discovery helper copy',
-    );
-    assert(html.includes('Not specified'), 'summary fallback for missing topic should be present');
-    assert(html.includes('press Y / N'), 'onboarding should expose keyboard yes/no shortcut hint');
+    assert(html.includes('question → gesture → answer → clarity'), 'covenant line should be visible');
+    assert(html.includes('id="gestureCanvas"'), 'gesture canvas id should be gestureCanvas');
+    assert(html.includes('Draw a gesture on the black glass.'), 'gesture-first hint should be visible');
+    assert(html.includes('Decision Topic (optional)'), 'debug fallback topic control should still exist in source');
 
     const start = await httpJson(port, 'POST', '/api/session/start', {
       user_id: 'smoke_user',
