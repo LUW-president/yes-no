@@ -1,13 +1,14 @@
 export const gestureCanvasClientJs = String.raw`
 (function(){
   function mountGestureCanvas(options){
-    const { canvas, hintEl, classifyGesture, onSubmit, onUnknown, onDetected } = options;
+    const { canvas, hintEl, classifyGesture, earlyStrokeIntent, onSubmit, onUnknown, onDetected } = options;
     if(!canvas || !canvas.getContext) return;
     const ctx = canvas.getContext('2d');
     let drawing=false;
     let currentStroke=[];
     let strokes=[];
     let classifyTimer=null;
+    let lastIntentHint='unknown';
 
     function clearCanvas(){
       if(!ctx) return;
@@ -51,6 +52,7 @@ export const gestureCanvasClientJs = String.raw`
       if(classifyTimer){ clearTimeout(classifyTimer); classifyTimer=null; }
       drawing=true;
       currentStroke=[];
+      lastIntentHint='unknown';
       const p=pos(ev);
       currentStroke.push(p);
       if(hintEl) hintEl.textContent='Tracing gesture...';
@@ -70,6 +72,20 @@ export const gestureCanvasClientJs = String.raw`
         ctx.moveTo(prev.x, prev.y);
         ctx.lineTo(p.x, p.y);
         ctx.stroke();
+      }
+
+      if (typeof earlyStrokeIntent === 'function' && currentStroke.length >= 8) {
+        const candidate = earlyStrokeIntent(currentStroke);
+        if (candidate !== lastIntentHint) {
+          lastIntentHint = candidate;
+          if (candidate === 'no') {
+            if (hintEl) hintEl.textContent = 'NO candidate detected... keep drawing to confirm.';
+            console.log(JSON.stringify({ event: 'gesture_intent_candidate', candidate: 'no' }));
+          } else if (candidate === 'yes') {
+            if (hintEl) hintEl.textContent = 'YES candidate detected... keep drawing to confirm.';
+            console.log(JSON.stringify({ event: 'gesture_intent_candidate', candidate: 'yes' }));
+          }
+        }
       }
     }
     function end(){
