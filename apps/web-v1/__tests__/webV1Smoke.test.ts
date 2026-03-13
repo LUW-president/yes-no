@@ -72,6 +72,7 @@ async function run() {
     );
     assert(html.includes('Not specified'), 'summary fallback for missing topic should be present');
     assert(html.includes('press Y / N'), 'onboarding should expose keyboard yes/no shortcut hint');
+    assert(html.includes('id="gesture-canvas"'), 'gesture canvas should be rendered for gesture-first input');
 
     const start = await httpJson(port, 'POST', '/api/session/start', {
       user_id: 'smoke_user',

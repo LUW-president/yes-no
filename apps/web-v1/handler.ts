@@ -90,6 +90,8 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
     <p id="state-strip" class="hint">state: idle | step: 0</p>
     <div class="progress-track" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
     <p id="question" class="question">Welcome. Press <strong>Start Session</strong> to load your first yes/no question.</p>
+    <p class="gesture-prompt">Draw a <strong>circle</strong> for YES or a <strong>cross</strong> for NO.</p>
+    <canvas id="gesture-canvas" width="640" height="320" aria-label="gesture input canvas"></canvas>
     <label for="decision-topic" class="hint strong">Decision Topic (optional)</label>
     <input id="decision-topic" type="text" placeholder="e.g. Should I move to another city?" style="width:100%;margin:6px 0 8px;padding:10px 12px;border-radius:10px;border:1px solid #334; background:#0f141c; color:#e9f0ff;" />
     <p id="topic-help" class="topic-help">This session focuses on one decision only. Leave blank if unsure and we'll still complete one clear session.</p>
