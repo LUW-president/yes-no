@@ -103,18 +103,14 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
     <p id="topic-help" class="topic-help debug-only">Debug fallback controls (hidden by default).</p>
   </section>
   <section class="card">
-    <div class="meta"><h2>Final Summary</h2><span id="status" class="badge">idle</span></div>
+    <div class="meta"><h2>Final Summary</h2><span id="status" class="badge">running</span></div>
     <div id="result-chips"></div>
-    <div id="summary" class="kv"><div class="k">state</div><div>Start a session to generate a decision summary.</div></div>
+    <div id="summary" class="kv"><div class="k">state</div><div>Session auto-starts on load. Summary appears at completion.</div></div>
     <div class="actions-secondary">
-      <button id="restart" class="ghost">Start New Session</button>
-      <button id="demo-alt" class="ghost">Try Alternate Path</button>
+      <button id="restart" class="ghost debug-only">Start New Session</button>
+      <button id="demo-alt" class="ghost debug-only">Try Alternate Path</button>
       <button id="copy-summary" class="ghost">Copy Summary</button>
     </div>
-  </section>
-  <section class="card">
-    <div class="meta"><h2>Session History (current browser)</h2><span class="badge">local only</span></div>
-    <pre id="history">(no completed sessions yet)</pre>
   </section>
 </main>
 <script>
@@ -129,8 +125,6 @@ const resultChipsEl=document.getElementById('result-chips');
 const restartBtn=document.getElementById('restart');
 const demoAltBtn=document.getElementById('demo-alt');
 const copySummaryBtn=document.getElementById('copy-summary');
-const historyEl=document.getElementById('history');
-const sessionHistory=[];
 const statusEl=document.getElementById('status');
 const progressEl=document.getElementById('progress');
 const hintEl=document.getElementById('hint');
@@ -145,6 +139,7 @@ if(debugMode){ document.querySelectorAll('.debug-only').forEach((el)=>{ el.style
 let sessionId=null;
 let questionCount=0;
 let decisionTopic='';
+let sessionComplete=false;
 const visualQuestionCap=4;
 
 function setBusy(isBusy){
@@ -176,14 +171,6 @@ function updateProgress(){
 }
 
 
-
-function renderHistory(){
-  if(!historyEl) return;
-  if(sessionHistory.length===0){ historyEl.textContent='(no completed sessions yet)'; return; }
-  historyEl.textContent=sessionHistory.map((h,i)=>
-    '#'+(i+1)+' '+h.gate+' | topic '+(h.topic||'-')+' | conf '+Number(h.confidence).toFixed(2)+' | guard '+h.guard+' | reason '+h.reason
-  ).join('\\n');
-}
 
 function chipClass(gate){
   if(gate==='GO') return 'status-chip chip-go';
@@ -237,6 +224,7 @@ function renderStateStrip(state){
 }
 
 async function startSession(){
+  if(sessionComplete && !debugMode) return;
   decisionTopic=(decisionTopicEl&&decisionTopicEl.value?decisionTopicEl.value.trim():'');
   if(decisionTopicEl) decisionTopicEl.classList.remove('input-error');
   if(topicHelpEl){
@@ -254,6 +242,7 @@ async function startSession(){
   hintEl.textContent='Session started. We are running one focused decision session...';
   hintEl.classList.add('busy');
   questionCount=0;
+  sessionComplete=false;
   updateProgress();
 
   const response=await fetch('/api/session/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:'web_v1_user',pack_id:'creation_v0'})});
@@ -298,8 +287,9 @@ async function answer(value){
 
   questionEl.textContent=out.artifact_proposed?'Artifact proposed. Session complete.':'Session complete.';
   statusEl.textContent='complete';
+  sessionComplete=true;
   renderStateStrip('complete');
-  hintEl.textContent='Run another session to compare outcomes.';
+  hintEl.textContent='Session complete. Review the final clarity summary below.';
   hintEl.classList.remove('busy');
   progressEl.style.width='100%';
 
@@ -307,15 +297,6 @@ async function answer(value){
   const summary=await summaryResponse.json();
   if(!summaryResponse.ok) throw new Error(summary.error||('HTTP '+summaryResponse.status));
   renderSummaryCard(summary, decisionTopic);
-  sessionHistory.unshift({
-    gate:summary.gate_result,
-    confidence:summary.final_confidence,
-    guard:summary.guard_status,
-    reason:summary.primary_reason,
-    topic: decisionTopic || '-',
-  });
-  if(sessionHistory.length>6) sessionHistory.length=6;
-  renderHistory();
 }
 
 startBtn.addEventListener('click',()=>startSession().catch((err)=>{setBusy(false);setAnswerButtons(false); if(decisionTopicEl) decisionTopicEl.removeAttribute('disabled'); renderError('Failed to start session: '+(err&&err.message?err.message:String(err)));}));
