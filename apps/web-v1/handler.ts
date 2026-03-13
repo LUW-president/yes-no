@@ -81,6 +81,8 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
 .gesture-prompt{font-size:1.22rem;line-height:1.45;margin:12px 0 6px;color:#fff7ef;font-weight:560;letter-spacing:.2px}
 .covenant-line{color:#b79a7a;font-size:.8rem;margin-bottom:10px;opacity:.85}
 .debug-only{display:none}
+.instr-yes{color:var(--yes);font-weight:700}
+.instr-no{color:var(--no);font-weight:700}
 </style>
 </head>
 <body>
@@ -90,7 +92,7 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
     <p id="state-strip" class="hint">state: initializing | step: 0</p>
     <div class="progress-track debug-only" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
     <p id="question" class="gesture-prompt">Preparing your decision session...</p>
-    <p class="covenant-line debug-only">Gesture controls<br>⭕ Circle = YES<br>❌ X = NO</p>
+    <p class="covenant-line debug-only">Gesture controls<br><span class="instr-yes">⭕ Circle = YES</span><br><span class="instr-no">❌ X = NO</span></p>
     <canvas id="gestureCanvas" width="1200" height="640" aria-label="gesture-input-canvas"></canvas>
     <p id="hint" class="hint strong debug-only">Draw a gesture on the black glass.</p>
     <div class="actions debug-only" id="debug-controls">
