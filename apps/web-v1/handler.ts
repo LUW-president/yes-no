@@ -87,6 +87,9 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
 .candidate-yes{color:var(--yes);font-weight:700}
 .candidate-no{color:var(--no);font-weight:700}
 .candidate-unknown{color:#f2f5f8;font-weight:700}
+.proposal-pulse{animation:proposalPulse .7s ease}
+@keyframes proposalPulse{0%{box-shadow:0 0 0 0 #e7b36b66}50%{box-shadow:0 0 0 12px #e7b36b11}100%{box-shadow:0 0 0 0 #e7b36b00}}
+body.artifact-proposed::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;background:radial-gradient(circle at center,#e7b36b22 0%,#0000 55%);opacity:1;transition:opacity .35s ease}
 body.flash-yes::before,body.flash-no::before,body.flash-unknown::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.28;transition:opacity .18s ease}
 body.flash-yes::before{background:#00ff66}
 body.flash-no::before{background:#ff3030}
@@ -207,6 +210,21 @@ function chipClass(gate){
 function summaryTextForClipboard(){
   if(!summaryEl) return '';
   return summaryEl.innerText || summaryEl.textContent || '';
+}
+
+
+function triggerArtifactFeedback(){
+  const card = document.getElementById('summary-panel') || summaryEl?.closest('.card');
+  if(card){
+    card.classList.remove('proposal-pulse');
+    // reflow for repeated trigger
+    void card.offsetWidth;
+    card.classList.add('proposal-pulse');
+  }
+  document.body.classList.remove('artifact-proposed');
+  void document.body.offsetWidth;
+  document.body.classList.add('artifact-proposed');
+  setTimeout(()=>document.body.classList.remove('artifact-proposed'), 700);
 }
 
 function renderSummaryCard(summary, topic){

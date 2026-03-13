@@ -53,7 +53,7 @@ questions:
     no: q_tiny
 
   - id: q_tiny
-    text: "Would you like a tiny 15-minute version to start now?"
+    text: "Do you want a quick 15-minute reset right now?"
     yes: artifact_tiny
     no: end
 
