@@ -157,3 +157,5 @@ New contributors can start with these issues:
 
 ## Phase 6 Engagement Packs
 - `docs/product/phase6-engagement-question-pack-v1.md`
+
+- `docs/product/discovery-graph-v1.md`
