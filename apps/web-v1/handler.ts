@@ -83,6 +83,14 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
 .debug-only{display:none}
 .instr-yes{color:var(--yes);font-weight:700}
 .instr-no{color:var(--no);font-weight:700}
+.candidate-line{font-size:.84rem;color:#b8c0ca;margin:4px 0 8px;min-height:1.2em}
+.candidate-yes{color:var(--yes);font-weight:700}
+.candidate-no{color:var(--no);font-weight:700}
+.candidate-unknown{color:#f2f5f8;font-weight:700}
+body.flash-yes::before,body.flash-no::before,body.flash-unknown::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.28;transition:opacity .18s ease}
+body.flash-yes::before{background:#00ff66}
+body.flash-no::before{background:#ff3030}
+body.flash-unknown::before{background:#ffffff}
 </style>
 </head>
 <body>
@@ -92,7 +100,8 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
     <p id="state-strip" class="hint debug-only">state: initializing | step: 0</p>
     <div class="progress-track debug-only" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
     <p id="question" class="gesture-prompt">Preparing your decision session...</p>
-    <p class="covenant-line">Gesture controls<br><span class="instr-yes">⭕ Circle = YES</span><br><span class="instr-no">❌ X = NO</span></p>
+    <p class="covenant-line">Gesture controls<br><span class="instr-yes">O = YES</span><br><span class="instr-no">X = NO</span></p>
+    <p id="candidate-line" class="candidate-line">Candidate: —</p>
     <canvas id="gestureCanvas" width="1200" height="640" aria-label="gesture-input-canvas"></canvas>
     <p id="hint" class="hint strong debug-only">Draw a gesture on the black glass.</p>
     <div class="actions debug-only" id="debug-controls">
@@ -141,6 +150,7 @@ const decisionTopicEl=document.getElementById('decision-topic');
 const topicHelpEl=document.getElementById('topic-help');
 const gestureCanvas=document.getElementById('gestureCanvas');
 const debugControls=document.getElementById('debug-controls');
+const candidateLineEl=document.getElementById('candidate-line');
 const debugMode = new URLSearchParams(window.location.search).get('debug') === '1';
 if(debugMode){ document.querySelectorAll('.debug-only').forEach((el)=>{ el.style.display = ''; }); }
 
@@ -383,6 +393,12 @@ if(gestureCanvas && window.__gestureClassifier && window.__mountGestureCanvas){
     },
     onUnknown: ()=>{
       console.log(JSON.stringify({ event: 'gesture_unknown_retry', reason: 'unrecognized_gesture' }));
+    },
+    onCandidate: (candidate)=>{
+      if(!candidateLineEl) return;
+      if(candidate==='yes'){ candidateLineEl.innerHTML='Candidate: <span class="candidate-yes">YES</span>'; }
+      else if(candidate==='no'){ candidateLineEl.innerHTML='Candidate: <span class="candidate-no">NO</span>'; }
+      else { candidateLineEl.innerHTML='Candidate: <span class="candidate-unknown">UNKNOWN</span>'; }
     },
     onDetected: (result)=>{
       if(result==='yes') console.log(JSON.stringify({ event: 'gesture_detected_yes' }));
