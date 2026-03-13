@@ -13,6 +13,28 @@ function pathLength(points: Stroke): number {
   return total;
 }
 
+function pointToSegmentDistance(p: Point, a: Point, b: Point): number {
+  const abx = b.x - a.x;
+  const aby = b.y - a.y;
+  const apx = p.x - a.x;
+  const apy = p.y - a.y;
+  const ab2 = abx * abx + aby * aby;
+  const t = ab2 > 0 ? Math.max(0, Math.min(1, (apx * abx + apy * aby) / ab2)) : 0;
+  const x = a.x + abx * t;
+  const y = a.y + aby * t;
+  return Math.hypot(p.x - x, p.y - y);
+}
+
+function segmentDistance(a: Point, b: Point, c: Point, d: Point): number {
+  if (segmentIntersect(a, b, c, d)) return 0;
+  return Math.min(
+    pointToSegmentDistance(a, c, d),
+    pointToSegmentDistance(b, c, d),
+    pointToSegmentDistance(c, a, b),
+    pointToSegmentDistance(d, a, b),
+  );
+}
+
 function segmentIntersect(a: Point, b: Point, c: Point, d: Point): boolean {
   const ccw = (p1: Point, p2: Point, p3: Point) => (p3.y - p1.y) * (p2.x - p1.x) > (p2.y - p1.y) * (p3.x - p1.x);
   return ccw(a, c, d) !== ccw(b, c, d) && ccw(a, b, c) !== ccw(a, b, d);
@@ -97,9 +119,9 @@ export function earlyStrokeIntent(stroke: Stroke): GestureIntentCandidate {
 export function isCircle(stroke: Stroke): boolean {
   if (!stroke || stroke.length < 20) return false;
   const len = pathLength(stroke);
-  if (len < 220) return false;
+  if (len < 150) return false;
   const close = dist(stroke[0], stroke[stroke.length - 1]);
-  if (close > 45) return false;
+  if (close > 70) return false;
 
   const cx = stroke.reduce((a, p) => a + p.x, 0) / stroke.length;
   const cy = stroke.reduce((a, p) => a + p.y, 0) / stroke.length;
@@ -108,7 +130,7 @@ export function isCircle(stroke: Stroke): boolean {
   if (rMean < 20) return false;
   const variance = radii.reduce((a, r) => a + Math.pow(r - rMean, 2), 0) / radii.length;
   const std = Math.sqrt(variance);
-  return std / rMean < 0.45;
+  return std / rMean < 0.58;
 }
 
 export function isCross(strokes: Stroke[]): boolean {
@@ -143,6 +165,23 @@ export const gestureClassifierClientJs = String.raw`
 (function(){
   function dist(a,b){ return Math.hypot(a.x-b.x,a.y-b.y); }
   function pathLength(points){ let t=0; for(let i=1;i<points.length;i++) t+=dist(points[i-1],points[i]); return t; }
+  function pointToSegmentDistance(p,a,b){
+    const abx=b.x-a.x, aby=b.y-a.y;
+    const apx=p.x-a.x, apy=p.y-a.y;
+    const ab2=abx*abx+aby*aby;
+    const t=ab2>0 ? Math.max(0,Math.min(1,(apx*abx+apy*aby)/ab2)) : 0;
+    const x=a.x+abx*t, y=a.y+aby*t;
+    return Math.hypot(p.x-x,p.y-y);
+  }
+  function segmentDistance(a,b,c,d){
+    if(segmentIntersect(a,b,c,d)) return 0;
+    return Math.min(
+      pointToSegmentDistance(a,c,d),
+      pointToSegmentDistance(b,c,d),
+      pointToSegmentDistance(c,a,b),
+      pointToSegmentDistance(d,a,b),
+    );
+  }
   function segmentIntersect(a,b,c,d){
     const ccw=(p1,p2,p3)=> (p3.y-p1.y)*(p2.x-p1.x) > (p2.y-p1.y)*(p3.x-p1.x);
     return ccw(a,c,d)!==ccw(b,c,d) && ccw(a,b,c)!==ccw(a,b,d);
@@ -203,8 +242,8 @@ export const gestureClassifierClientJs = String.raw`
 
   function isCircle(stroke){
     if(!stroke || stroke.length<20) return false;
-    const len=pathLength(stroke); if(len<220) return false;
-    const close=dist(stroke[0], stroke[stroke.length-1]); if(close>45) return false;
+    const len=pathLength(stroke); if(len<150) return false;
+    const close=dist(stroke[0], stroke[stroke.length-1]); if(close>70) return false;
     const cx=stroke.reduce((a,p)=>a+p.x,0)/stroke.length;
     const cy=stroke.reduce((a,p)=>a+p.y,0)/stroke.length;
     const radii=stroke.map((p)=>Math.hypot(p.x-cx,p.y-cy));
@@ -212,7 +251,7 @@ export const gestureClassifierClientJs = String.raw`
     if(rMean<20) return false;
     const variance=radii.reduce((a,r)=>a+Math.pow(r-rMean,2),0)/radii.length;
     const std=Math.sqrt(variance);
-    return (std/rMean)<0.45;
+    return (std/rMean)<0.58;
   }
   function isCross(strokes){
     if(strokes.length===2){
