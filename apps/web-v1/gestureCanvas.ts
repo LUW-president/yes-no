@@ -1,13 +1,14 @@
 export const gestureCanvasClientJs = String.raw`
 (function(){
   function mountGestureCanvas(options){
-    const { canvas, hintEl, classifyGesture, onSubmit, onUnknown, onDetected } = options;
+    const { canvas, hintEl, classifyGesture, predictEarlyIntent, onSubmit, onUnknown, onDetected, onEarlyIntent } = options;
     if(!canvas || !canvas.getContext) return;
     const ctx = canvas.getContext('2d');
     let drawing=false;
     let currentStroke=[];
     let strokes=[];
     let classifyTimer=null;
+    let earlyIntent='unknown';
 
     function clearCanvas(){
       if(!ctx) return;
@@ -31,6 +32,7 @@ export const gestureCanvasClientJs = String.raw`
       const result=classifyGesture(strokes);
       if(onDetected) onDetected(result, strokes);
       flash(result);
+      earlyIntent='unknown';
       if (result === 'unknown') {
         if(hintEl) hintEl.textContent='Gesture not recognized. Draw a clear circle (YES) or cross (NO).';
         setTimeout(clearCanvas, 220);
@@ -53,12 +55,20 @@ export const gestureCanvasClientJs = String.raw`
       currentStroke=[];
       const p=pos(ev);
       currentStroke.push(p);
+      earlyIntent='unknown';
       if(hintEl) hintEl.textContent='Tracing gesture...';
     }
     function move(ev){
       if(!drawing || !ctx) return;
       const p=pos(ev);
       currentStroke.push(p);
+      if(predictEarlyIntent && currentStroke.length>=6){
+        const candidate=predictEarlyIntent(currentStroke);
+        if(candidate!==earlyIntent){
+          earlyIntent=candidate;
+          if(onEarlyIntent) onEarlyIntent(candidate);
+        }
+      }
       const prev=currentStroke[currentStroke.length-2];
       if(prev){
         ctx.strokeStyle='#dbeafe';

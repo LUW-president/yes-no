@@ -366,6 +366,7 @@ if(gestureCanvas && window.__gestureClassifier && window.__mountGestureCanvas){
     canvas: gestureCanvas,
     hintEl,
     classifyGesture: window.__gestureClassifier.classifyGesture,
+    predictEarlyIntent: window.__gestureClassifier.predictEarlyIntent,
     onSubmit: async (normalized)=>{
       if (normalized === 'yes' || normalized === 'no') {
         console.log(JSON.stringify({ event: 'gesture_submitted', normalized_answer: normalized }));
@@ -379,6 +380,10 @@ if(gestureCanvas && window.__gestureClassifier && window.__mountGestureCanvas){
       if(result==='yes') console.log(JSON.stringify({ event: 'gesture_detected_yes' }));
       else if(result==='no') console.log(JSON.stringify({ event: 'gesture_detected_no' }));
       else console.log(JSON.stringify({ event: 'gesture_unknown_retry', reason: 'classifier_unknown' }));
+    },
+    onEarlyIntent: (candidate)=>{
+      if(candidate==='yes') console.log(JSON.stringify({ event: 'gesture_intent_candidate_yes' }));
+      else if(candidate==='no') console.log(JSON.stringify({ event: 'gesture_intent_candidate_no' }));
     },
   });
 }

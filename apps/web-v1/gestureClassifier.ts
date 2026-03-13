@@ -97,6 +97,42 @@ export function classifyGesture(strokes: Stroke[]): GestureResult {
   return 'unknown';
 }
 
+export function predictEarlyIntent(stroke: Stroke): GestureResult {
+  if (!stroke || stroke.length < 6) return 'unknown';
+  const segmentLength = Math.max(6, Math.ceil(stroke.length * 0.3));
+  const earlyStroke = stroke.slice(0, segmentLength);
+  const earlyPath = pathLength(earlyStroke);
+  if (earlyPath < 24) return 'unknown';
+
+  const displacement = dist(earlyStroke[0], earlyStroke[earlyStroke.length - 1]);
+  const straightness = displacement / earlyPath;
+
+  let totalTurn = 0;
+  for (let i = 2; i < earlyStroke.length; i += 1) {
+    const p0 = earlyStroke[i - 2];
+    const p1 = earlyStroke[i - 1];
+    const p2 = earlyStroke[i];
+    const v1x = p1.x - p0.x;
+    const v1y = p1.y - p0.y;
+    const v2x = p2.x - p1.x;
+    const v2y = p2.y - p1.y;
+    const mag1 = Math.hypot(v1x, v1y);
+    const mag2 = Math.hypot(v2x, v2y);
+    if (mag1 < 1e-6 || mag2 < 1e-6) continue;
+    const dot = v1x * v2x + v1y * v2y;
+    const cos = Math.max(-1, Math.min(1, dot / (mag1 * mag2)));
+    totalTurn += Math.acos(cos);
+  }
+
+  const meanTurn = totalTurn / Math.max(1, earlyStroke.length - 2);
+  const curvedStart = straightness < 0.91 || meanTurn > 0.2;
+  const straightStart = straightness > 0.96 && meanTurn < 0.1;
+
+  if (straightStart) return 'no';
+  if (curvedStart) return 'yes';
+  return 'unknown';
+}
+
 export const gestureClassifierClientJs = String.raw`
 (function(){
   function dist(a,b){ return Math.hypot(a.x-b.x,a.y-b.y); }
@@ -162,6 +198,36 @@ export const gestureClassifierClientJs = String.raw`
     if(isCross(strokes)) return 'no';
     return 'unknown';
   }
-  window.__gestureClassifier = { classifyGesture };
+  function predictEarlyIntent(stroke){
+    if(!stroke || stroke.length<6) return 'unknown';
+    const segmentLength=Math.max(6, Math.ceil(stroke.length*0.3));
+    const earlyStroke=stroke.slice(0, segmentLength);
+    const earlyPath=pathLength(earlyStroke);
+    if(earlyPath<24) return 'unknown';
+
+    const displacement=dist(earlyStroke[0], earlyStroke[earlyStroke.length-1]);
+    const straightness=displacement/earlyPath;
+
+    let totalTurn=0;
+    for(let i=2;i<earlyStroke.length;i++){
+      const p0=earlyStroke[i-2], p1=earlyStroke[i-1], p2=earlyStroke[i];
+      const v1x=p1.x-p0.x, v1y=p1.y-p0.y;
+      const v2x=p2.x-p1.x, v2y=p2.y-p1.y;
+      const mag1=Math.hypot(v1x,v1y), mag2=Math.hypot(v2x,v2y);
+      if(mag1<1e-6 || mag2<1e-6) continue;
+      const dot=v1x*v2x+v1y*v2y;
+      const cos=Math.max(-1,Math.min(1,dot/(mag1*mag2)));
+      totalTurn+=Math.acos(cos);
+    }
+
+    const meanTurn=totalTurn/Math.max(1,earlyStroke.length-2);
+    const curvedStart=straightness<0.91 || meanTurn>0.2;
+    const straightStart=straightness>0.96 && meanTurn<0.1;
+
+    if(straightStart) return 'no';
+    if(curvedStart) return 'yes';
+    return 'unknown';
+  }
+  window.__gestureClassifier = { classifyGesture, predictEarlyIntent };
 })();
 `;
