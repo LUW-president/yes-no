@@ -145,3 +145,6 @@ New contributors can start with these issues:
 
 ## Validation Ops
 - `docs/ops/hybrid-validation-loop-v1.md`
+
+## Canonical System Context
+- `docs/architecture/system-context-canonical-v1.md`
