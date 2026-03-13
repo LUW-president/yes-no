@@ -88,9 +88,9 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
   <section class="card black-glass">
     <div class="meta"><h1>YES/NO V1 Prototype</h1><span class="badge">Prototype • Single Session • Deterministic</span></div>
     <p id="state-strip" class="hint">state: initializing | step: 0</p>
-    <div class="progress-track" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
+    <div class="progress-track debug-only" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
     <p id="question" class="gesture-prompt">Preparing your decision session...</p>
-    <p class="covenant-line">question → gesture → answer → clarity</p>
+    <p class="covenant-line">Gesture controls<br>⭕ Circle = YES<br>❌ X = NO</p>
     <canvas id="gestureCanvas" width="1200" height="640" aria-label="gesture-input-canvas"></canvas>
     <p id="hint" class="hint strong">Draw a gesture on the black glass.</p>
     <div class="actions debug-only" id="debug-controls">
@@ -102,7 +102,7 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
     <input id="decision-topic" class="debug-only" type="text" placeholder="e.g. Should I move to another city?" style="width:100%;margin:6px 0 8px;padding:10px 12px;border-radius:10px;border:1px solid #334; background:#0f141c; color:#e9f0ff;" />
     <p id="topic-help" class="topic-help debug-only">Debug fallback controls (hidden by default).</p>
   </section>
-  <section class="card">
+  <section class="card debug-only" id="summary-panel">
     <div class="meta"><h2>Final Summary</h2><span id="status" class="badge">idle</span></div>
     <div id="result-chips"></div>
     <div id="summary" class="kv"><div class="k">state</div><div>Start a session to generate a decision summary.</div></div>
@@ -112,7 +112,7 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
       <button id="copy-summary" class="ghost">Copy Summary</button>
     </div>
   </section>
-  <section class="card">
+  <section class="card debug-only" id="history-panel">
     <div class="meta"><h2>Session History (current browser)</h2><span class="badge">local only</span></div>
     <pre id="history">(no completed sessions yet)</pre>
   </section>
@@ -266,7 +266,7 @@ async function startSession(){
   const out=await response.json();
   if(!response.ok) throw new Error(out.error||('HTTP '+response.status));
   sessionId=out.session_id;
-  questionEl.textContent=out.question;
+  questionEl.textContent='Is there something you want right now?';
   questionCount=1;
   updateProgress();
   setAnswerButtons(true);
