@@ -74,6 +74,11 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
 .summary-checklist{margin:0 0 10px;padding-left:18px;color:#dfe7f2;line-height:1.5}
 .summary-checklist li{margin:2px 0}
 .summary-value{font-weight:700}
+.black-glass{background:#000 !important;border-color:#111 !important}
+#gesture-canvas{width:100%;height:320px;background:#000;border:1px solid #1a1a1a;border-radius:12px;touch-action:none;display:block;margin:10px 0 12px}
+.gesture-prompt{font-size:1.05rem;line-height:1.5;margin:8px 0 2px;color:#f5f5f5}
+.covenant-line{color:#8d99a6;font-size:.82rem;margin-bottom:8px}
+.debug-only{display:none}
 </style>
 </head>
 <body>
@@ -126,6 +131,10 @@ const hintEl=document.getElementById('hint');
 const stateStripEl=document.getElementById('state-strip');
 const decisionTopicEl=document.getElementById('decision-topic');
 const topicHelpEl=document.getElementById('topic-help');
+const gestureCanvas=document.getElementById('gesture-canvas');
+const debugControls=document.getElementById('debug-controls');
+const debugMode = new URLSearchParams(window.location.search).get('debug') === '1';
+if(debugMode){ document.querySelectorAll('.debug-only').forEach((el)=>{ el.style.display = ''; }); }
 
 let sessionId=null;
 let questionCount=0;
@@ -304,11 +313,17 @@ async function answer(value){
 }
 
 startBtn.addEventListener('click',()=>startSession().catch((err)=>{setBusy(false);setAnswerButtons(false); if(decisionTopicEl) decisionTopicEl.removeAttribute('disabled'); renderError('Failed to start session: '+(err&&err.message?err.message:String(err)));}));
+
+// Phase 2 scaffold: auto-start session on load (single-session, gesture-first surface)
+startSession().catch((err)=>{ setBusy(false); setAnswerButtons(false); renderError('Failed to start session: '+(err&&err.message?err.message:String(err))); });
 yesBtn.addEventListener('click',()=>answer('yes').catch((err)=>renderError('Failed to submit answer: '+(err&&err.message?err.message:String(err)))));
 noBtn.addEventListener('click',()=>answer('no').catch((err)=>renderError('Failed to submit answer: '+(err&&err.message?err.message:String(err)))));
 
 
 restartBtn.addEventListener('click',()=>startSession().catch((err)=>{setBusy(false);setAnswerButtons(false); if(decisionTopicEl) decisionTopicEl.removeAttribute('disabled'); renderError('Failed to start session: '+(err&&err.message?err.message:String(err)));}));
+
+// Phase 2 scaffold: auto-start session on load (single-session, gesture-first surface)
+startSession().catch((err)=>{ setBusy(false); setAnswerButtons(false); renderError('Failed to start session: '+(err&&err.message?err.message:String(err))); });
 demoAltBtn.addEventListener('click',async ()=>{
   try{
     await startSession();
@@ -338,6 +353,28 @@ copySummaryBtn.addEventListener('click', async ()=>{
     hintEl.textContent='Unable to copy summary right now.';
   }
 });
+
+
+// Phase 2 scaffold: trace capture only (no gesture classification/submission yet)
+if(gestureCanvas && gestureCanvas.getContext){
+  const ctx=gestureCanvas.getContext('2d');
+  let drawing=false;
+  let points=[];
+  const drawPoint=(x,y)=>{ if(!ctx) return; ctx.fillStyle='#f2f5f8'; ctx.fillRect(x,y,2,2); };
+  const pos=(ev)=>{
+    const r=gestureCanvas.getBoundingClientRect();
+    return { x: (ev.clientX-r.left)*(gestureCanvas.width/r.width), y: (ev.clientY-r.top)*(gestureCanvas.height/r.height) };
+  };
+  const clearCanvas=()=>{ if(!ctx) return; ctx.fillStyle='#000'; ctx.fillRect(0,0,gestureCanvas.width,gestureCanvas.height); };
+  clearCanvas();
+  const begin=(ev)=>{ drawing=true; points=[]; clearCanvas(); const p=pos(ev); points.push(p); drawPoint(p.x,p.y); if(hintEl) hintEl.textContent='Tracing gesture...'; };
+  const move=(ev)=>{ if(!drawing) return; const p=pos(ev); points.push(p); drawPoint(p.x,p.y); };
+  const end=()=>{ if(!drawing) return; drawing=false; if(hintEl) hintEl.textContent='Trace captured. Classification is enabled in next phase.'; console.log(JSON.stringify({event:'gesture_trace_captured', points: points.length})); };
+  gestureCanvas.addEventListener('pointerdown', begin);
+  gestureCanvas.addEventListener('pointermove', move);
+  gestureCanvas.addEventListener('pointerup', end);
+  gestureCanvas.addEventListener('pointerleave', end);
+}
 
 document.addEventListener('keydown',(event)=>{
   if(event.repeat) return;
