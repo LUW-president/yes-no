@@ -48,7 +48,8 @@
     "validation:summary": "tsx ops/validation/validationSummary.ts",
     "validation:synthetic": "node ops/validation/synthetic-persona-runner.js",
     "test:all": "npm run test:v1-summary && npm run test:v1-cli && npm run test:v1-e2e && npm run test:orchestrator && npm run test:web-v1-smoke",
-    "telemetry:gesture": "tsx ops/telemetry/gesture-rollup.ts"
+    "telemetry:gesture": "tsx ops/telemetry/gesture-rollup.ts",
+    "test:web-v1-gesture": "tsx apps/web-v1/__tests__/gestureClassifier.test.ts"
   },
   "devDependencies": {
     "tsx": "^4.19.2",
