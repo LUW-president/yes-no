@@ -154,3 +154,6 @@ New contributors can start with these issues:
 - `docs/product/intent-buckets-v1.md`
 - `docs/product/action-templates-v1.md`
 - `docs/product/action-examples-v1.md`
+
+## Phase 6 Engagement Packs
+- `docs/product/phase6-engagement-question-pack-v1.md`
