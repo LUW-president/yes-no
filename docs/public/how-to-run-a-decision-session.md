@@ -2,14 +2,16 @@
 
 ## What YES/NO does
 YES/NO helps you clarify **one decision per session** using short binary prompts.
-It does not decide for you. It helps you reveal your own signal.
+It does not decide for you. It helps you reveal your own signal in a structured way.
 
-## Start a decision session
+## First-time quick start
 1. Open the app.
-2. (Optional) enter a decision topic.
+2. (Optional) enter a decision topic in plain language.
 3. Click **Start Session**.
 4. Answer each prompt with **Yes** or **No**.
-5. Review your final summary.
+5. Review the final summary before taking action.
+
+If you skip the decision topic, the system still runs one complete session and returns a summary.
 
 ## Example decisions
 - Should I accept this offer?
@@ -17,10 +19,10 @@ It does not decide for you. It helps you reveal your own signal.
 - Should I move to another city?
 - Should I commit to this project now?
 
-## Result meanings
-- **GO**: proceed with confidence.
-- **REVIEW**: pause and clarify before committing.
-- **NO_GO**: hold and reduce uncertainty first.
+## How to interpret results
+- **GO**: current signal is strong enough to proceed now.
+- **REVIEW**: do not force a final commitment yet; review assumptions and clarify uncertainty.
+- **NO_GO**: do not proceed now; reduce uncertainty before reconsidering.
 
 ## Expected session flow
 - Start session

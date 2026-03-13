@@ -81,6 +81,10 @@ Core Engines
 
 ## Ops Checklists
 - `docs/ops/v1-prototype-stability-checklist-v0.md`
+- `docs/ops/first-public-deployment-checklist-v1.md`
+
+## Public Guides
+- `docs/public/how-to-run-a-decision-session.md`
 
 ## V1 Operations
 - `docs/ops/v1-weekly-usage-loop-v0.md`
