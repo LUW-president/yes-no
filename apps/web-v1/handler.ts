@@ -86,13 +86,13 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
 <body>
 <main class="app">
   <section class="card black-glass">
-    <div class="meta"><h1>YES/NO V1 Prototype</h1><span class="badge">Prototype • Single Session • Deterministic</span></div>
+    <div class="meta debug-only" id="prototype-header"><h1>YES/NO V1 Prototype</h1><span class="badge">Prototype • Single Session • Deterministic</span></div>
     <p id="state-strip" class="hint">state: initializing | step: 0</p>
     <div class="progress-track debug-only" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
     <p id="question" class="gesture-prompt">Preparing your decision session...</p>
-    <p class="covenant-line">Gesture controls<br>⭕ Circle = YES<br>❌ X = NO</p>
+    <p class="covenant-line debug-only">Gesture controls<br>⭕ Circle = YES<br>❌ X = NO</p>
     <canvas id="gestureCanvas" width="1200" height="640" aria-label="gesture-input-canvas"></canvas>
-    <p id="hint" class="hint strong">Draw a gesture on the black glass.</p>
+    <p id="hint" class="hint strong debug-only">Draw a gesture on the black glass.</p>
     <div class="actions debug-only" id="debug-controls">
       <button id="start" class="primary">Start Session</button>
       <button id="yes" class="yes" disabled>Yes</button>
@@ -103,10 +103,10 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
     <p id="topic-help" class="topic-help debug-only">Debug fallback controls (hidden by default).</p>
   </section>
   <section class="card debug-only" id="summary-panel">
-    <div class="meta"><h2>Final Summary</h2><span id="status" class="badge">idle</span></div>
-    <div id="result-chips"></div>
-    <div id="summary" class="kv"><div class="k">state</div><div>Start a session to generate a decision summary.</div></div>
-    <div class="actions-secondary">
+    <div class="meta debug-only"><h2>Final Summary</h2><span id="status" class="badge">idle</span></div>
+    <div id="result-chips" class="debug-only"></div>
+    <div id="summary" class="kv debug-only"><div class="k">state</div><div>Start a session to generate a decision summary.</div></div>
+    <div class="actions-secondary debug-only">
       <button id="restart" class="ghost">Start New Session</button>
       <button id="demo-alt" class="ghost">Try Alternate Path</button>
       <button id="copy-summary" class="ghost">Copy Summary</button>
