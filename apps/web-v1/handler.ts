@@ -216,6 +216,21 @@ function summaryTextForClipboard(){
 }
 
 
+
+function inferProposalIcon(text=''){
+  const t=(text||'').toLowerCase();
+  if(t.includes('order')||t.includes('food')||t.includes('ubereats')||t.includes('drink')) return '🍽️';
+  if(t.includes('music')||t.includes('song')||t.includes('playlist')) return '🎵';
+  if(t.includes('podcast')) return '🎧';
+  if(t.includes('book')||t.includes('massage')||t.includes('spa')||t.includes('hair')) return '💆';
+  if(t.includes('doctor')||t.includes('care team')||t.includes('hospital')) return '🏥';
+  if(t.includes('fix')||t.includes('taskrabbit')||t.includes('service')||t.includes('handyman')) return '🛠️';
+  if(t.includes('light')||t.includes('home')||t.includes('environment')) return '🏠';
+  if(t.includes('call 911')||t.includes('emergency')) return '🚨';
+  if(t.includes('contact')||t.includes('friend')||t.includes('person')) return '👥';
+  return '✨';
+}
+
 function triggerArtifactFeedback(){
   const card = document.getElementById('summary-panel') || summaryEl?.closest('.card');
   if(card){
@@ -244,6 +259,7 @@ function renderSummaryCard(summary, topic){
     : (summary.gate_result==='REVIEW')
       ? 'Pause and clarify before committing.'
       : 'Hold this decision and reduce uncertainty first.';
+  const proposalIcon = inferProposalIcon(summary.expected_effect||summary.primary_reason||'');
   const intentLine=(summary.gate_result==='GO')
     ? 'Intent signal: action-ready. You likely know what you want now.'
     : (summary.gate_result==='REVIEW')
@@ -256,7 +272,8 @@ function renderSummaryCard(summary, topic){
     +'<li><span class="summary-value">What this means:</span> '+meaning+'</li>'
     +'<li><span class="summary-value">Intent insight:</span> '+intentLine+'</li>'
     +'<li><span class="summary-value">Primary reason:</span> '+summary.primary_reason+'</li>'
-    +'<li><span class="summary-value">Expected effect:</span> '+summary.expected_effect+'</li>'
+    +'<li><span class=\"summary-value\">Expected effect:</span> '+summary.expected_effect+'</li>'
+    +'<li><span class=\"summary-value\">Proposal category:</span> '+proposalIcon+' inferred from current intent</li>'
     +'</ul>'
     +'<div class="k">gate result</div><div>'+summary.gate_result+'</div>'
     +'<div class="k">guard status</div><div>'+summary.guard_status+'</div>'
