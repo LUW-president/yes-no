@@ -63,11 +63,29 @@ export const gestureCanvasClientJs = String.raw`
       currentStroke.push(p);
       const prev=currentStroke[currentStroke.length-2];
       if(prev){
-        ctx.strokeStyle='#dbeafe';
-        ctx.lineWidth=3;
+        const segLen = Math.hypot(p.x - prev.x, p.y - prev.y);
+        const speed = Math.min(1, segLen / 14);
+        const dynamicWidth = 8 - (speed * 2.2);
+
+        // soft ink plume layer
+        ctx.strokeStyle='rgba(219, 234, 254, 0.28)';
+        ctx.lineWidth=dynamicWidth + 2.8;
         ctx.lineCap='round';
-        ctx.shadowBlur=6;
-        ctx.shadowColor='#7aa2ff88';
+        ctx.lineJoin='round';
+        ctx.shadowBlur=14;
+        ctx.shadowColor='rgba(122, 162, 255, 0.42)';
+        ctx.beginPath();
+        ctx.moveTo(prev.x, prev.y);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+
+        // ink core layer
+        ctx.strokeStyle='rgba(241, 245, 249, 0.94)';
+        ctx.lineWidth=dynamicWidth;
+        ctx.lineCap='round';
+        ctx.lineJoin='round';
+        ctx.shadowBlur=4;
+        ctx.shadowColor='rgba(122, 162, 255, 0.25)';
         ctx.beginPath();
         ctx.moveTo(prev.x, prev.y);
         ctx.lineTo(p.x, p.y);
