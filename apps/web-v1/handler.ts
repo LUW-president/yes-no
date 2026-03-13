@@ -205,11 +205,17 @@ function renderSummaryCard(summary, topic){
     : (summary.gate_result==='REVIEW')
       ? 'Pause and clarify before committing.'
       : 'Hold this decision and reduce uncertainty first.';
+  const intentLine=(summary.gate_result==='GO')
+    ? 'Intent signal: action-ready. You likely know what you want now.'
+    : (summary.gate_result==='REVIEW')
+      ? 'Intent signal: mixed. You want movement, but need one more clarity pass.'
+      : 'Intent signal: protective. You may benefit from waiting before acting.';
   summaryEl.innerHTML=''
     +'<div class="summary-topic">Decision Topic: <span class="summary-value">'+(topic||'Not specified')+'</span></div>'
     +'<div class="summary-lede">Final Decision: <span class="summary-value">'+summary.gate_result+'</span> • Guard: <span class="summary-value">'+summary.guard_status+'</span> • Confidence: <span class="summary-value">'+confidence+'</span></div>'
     +'<ul class="summary-checklist">'
     +'<li><span class="summary-value">What this means:</span> '+meaning+'</li>'
+    +'<li><span class="summary-value">Intent insight:</span> '+intentLine+'</li>'
     +'<li><span class="summary-value">Primary reason:</span> '+summary.primary_reason+'</li>'
     +'<li><span class="summary-value">Expected effect:</span> '+summary.expected_effect+'</li>'
     +'</ul>'
