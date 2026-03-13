@@ -148,3 +148,9 @@ New contributors can start with these issues:
 
 ## Canonical System Context
 - `docs/architecture/system-context-canonical-v1.md`
+
+## Discovery / Intent / Action (Phase 6 prep)
+- `docs/product/discovery-question-set-v1.md`
+- `docs/product/intent-buckets-v1.md`
+- `docs/product/action-templates-v1.md`
+- `docs/product/action-examples-v1.md`
