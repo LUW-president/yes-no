@@ -322,8 +322,6 @@ noBtn.addEventListener('click',()=>answer('no').catch((err)=>renderError('Failed
 
 restartBtn.addEventListener('click',()=>startSession().catch((err)=>{setBusy(false);setAnswerButtons(false); if(decisionTopicEl) decisionTopicEl.removeAttribute('disabled'); renderError('Failed to start session: '+(err&&err.message?err.message:String(err)));}));
 
-// Phase 2 scaffold: auto-start session on load (single-session, gesture-first surface)
-startSession().catch((err)=>{ setBusy(false); setAnswerButtons(false); renderError('Failed to start session: '+(err&&err.message?err.message:String(err))); });
 demoAltBtn.addEventListener('click',async ()=>{
   try{
     await startSession();
@@ -355,21 +353,136 @@ copySummaryBtn.addEventListener('click', async ()=>{
 });
 
 
-// Phase 2 scaffold: trace capture only (no gesture classification/submission yet)
+// Phase 3: deterministic gesture classifier (circle=yes, cross=no, unknown=retry)
 if(gestureCanvas && gestureCanvas.getContext){
   const ctx=gestureCanvas.getContext('2d');
   let drawing=false;
-  let points=[];
-  const drawPoint=(x,y)=>{ if(!ctx) return; ctx.fillStyle='#f2f5f8'; ctx.fillRect(x,y,2,2); };
+  let currentStroke=[];
+  let strokes=[];
+  let classifyTimer=null;
+
+  const clearCanvas=()=>{ if(!ctx) return; ctx.fillStyle='#000'; ctx.fillRect(0,0,gestureCanvas.width,gestureCanvas.height); gestureCanvas.style.boxShadow='none'; };
   const pos=(ev)=>{
     const r=gestureCanvas.getBoundingClientRect();
-    return { x: (ev.clientX-r.left)*(gestureCanvas.width/r.width), y: (ev.clientY-r.top)*(gestureCanvas.height/r.height) };
+    return { x:(ev.clientX-r.left)*(gestureCanvas.width/r.width), y:(ev.clientY-r.top)*(gestureCanvas.height/r.height) };
   };
-  const clearCanvas=()=>{ if(!ctx) return; ctx.fillStyle='#000'; ctx.fillRect(0,0,gestureCanvas.width,gestureCanvas.height); };
+  const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+  const pathLength=(pts)=>{ let t=0; for(let i=1;i<pts.length;i++) t+=dist(pts[i-1],pts[i]); return t; };
+
+  const segmentIntersect=(a,b,c,d)=>{
+    const ccw=(p1,p2,p3)=> (p3.y-p1.y)*(p2.x-p1.x) > (p2.y-p1.y)*(p3.x-p1.x);
+    return ccw(a,c,d)!==ccw(b,c,d) && ccw(a,b,c)!==ccw(a,b,d);
+  };
+
+  const hasSelfIntersection=(pts)=>{
+    for(let i=0;i<pts.length-3;i++){
+      for(let j=i+2;j<pts.length-1;j++){
+        if(segmentIntersect(pts[i],pts[i+1],pts[j],pts[j+1])) return true;
+      }
+    }
+    return false;
+  };
+
+  const isCircle=(stroke)=>{
+    if(!stroke || stroke.length<20) return false;
+    const len=pathLength(stroke);
+    if(len<220) return false;
+    const close=dist(stroke[0], stroke[stroke.length-1]);
+    if(close>45) return false;
+    const cx=stroke.reduce((a,p)=>a+p.x,0)/stroke.length;
+    const cy=stroke.reduce((a,p)=>a+p.y,0)/stroke.length;
+    const radii=stroke.map((p)=>Math.hypot(p.x-cx,p.y-cy));
+    const rMean=radii.reduce((a,b)=>a+b,0)/radii.length;
+    if(rMean<20) return false;
+    const variance=radii.reduce((a,r)=>a+Math.pow(r-rMean,2),0)/radii.length;
+    const std=Math.sqrt(variance);
+    return (std/rMean) < 0.45;
+  };
+
+  const lineAngle=(stroke)=>{
+    const a=stroke[0], b=stroke[stroke.length-1];
+    return Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI;
+  };
+
+  const isCross=(allStrokes)=>{
+    if(allStrokes.length===2){
+      const s1=allStrokes[0], s2=allStrokes[1];
+      if(s1.length<3 || s2.length<3) return false;
+      const inter=segmentIntersect(s1[0], s1[s1.length-1], s2[0], s2[s2.length-1]);
+      const a1=lineAngle(s1), a2=lineAngle(s2);
+      let diff=Math.abs(a1-a2); if(diff>90) diff=180-diff;
+      return inter && diff>25;
+    }
+    if(allStrokes.length===1){
+      const s=allStrokes[0];
+      return s.length>18 && hasSelfIntersection(s);
+    }
+    return false;
+  };
+
+  const classifyGesture=()=>{
+    if(strokes.length===1 && isCircle(strokes[0])) return 'yes';
+    if(isCross(strokes)) return 'no';
+    return 'unknown';
+  };
+
+  const flash=(kind)=>{
+    if(kind==='yes') gestureCanvas.style.boxShadow='0 0 24px #33d17a88';
+    else if(kind==='no') gestureCanvas.style.boxShadow='0 0 24px #ff6b6b88';
+    else gestureCanvas.style.boxShadow='0 0 24px #7aa2ff66';
+    setTimeout(()=>{ gestureCanvas.style.boxShadow='none'; }, 280);
+  };
+
+  const finalizeGesture=async ()=>{
+    if(!strokes.length) return;
+    const result=classifyGesture();
+    flash(result);
+    console.log(JSON.stringify({event:'gesture_classified', result, strokes:strokes.length, points:strokes.reduce((a,s)=>a+s.length,0)}));
+    if(result==='unknown'){
+      if(hintEl) hintEl.textContent='Gesture not recognized. Draw a clear circle (YES) or cross (NO).';
+      setTimeout(clearCanvas, 220);
+      strokes=[];
+      return;
+    }
+    if(hintEl) hintEl.textContent = result==='yes' ? 'YES recognized.' : 'NO recognized.';
+    setTimeout(clearCanvas, 220);
+    strokes=[];
+    await answer(result);
+  };
+
   clearCanvas();
-  const begin=(ev)=>{ drawing=true; points=[]; clearCanvas(); const p=pos(ev); points.push(p); drawPoint(p.x,p.y); if(hintEl) hintEl.textContent='Tracing gesture...'; };
-  const move=(ev)=>{ if(!drawing) return; const p=pos(ev); points.push(p); drawPoint(p.x,p.y); };
-  const end=()=>{ if(!drawing) return; drawing=false; if(hintEl) hintEl.textContent='Trace captured. Classification is enabled in next phase.'; console.log(JSON.stringify({event:'gesture_trace_captured', points: points.length})); };
+  const begin=(ev)=>{
+    if(classifyTimer){ clearTimeout(classifyTimer); classifyTimer=null; }
+    drawing=true;
+    currentStroke=[];
+    const p=pos(ev);
+    currentStroke.push(p);
+    if(hintEl) hintEl.textContent='Tracing gesture...';
+  };
+  const move=(ev)=>{
+    if(!drawing || !ctx) return;
+    const p=pos(ev);
+    currentStroke.push(p);
+    const prev=currentStroke[currentStroke.length-2];
+    if(prev){
+      ctx.strokeStyle='#dbeafe';
+      ctx.lineWidth=3;
+      ctx.lineCap='round';
+      ctx.shadowBlur=6;
+      ctx.shadowColor='#7aa2ff88';
+      ctx.beginPath();
+      ctx.moveTo(prev.x, prev.y);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+    }
+  };
+  const end=()=>{
+    if(!drawing) return;
+    drawing=false;
+    if(currentStroke.length>2) strokes.push(currentStroke);
+    classifyTimer=setTimeout(()=>{ void finalizeGesture(); }, 240);
+  };
+
   gestureCanvas.addEventListener('pointerdown', begin);
   gestureCanvas.addEventListener('pointermove', move);
   gestureCanvas.addEventListener('pointerup', end);
