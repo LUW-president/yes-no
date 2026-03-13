@@ -94,7 +94,7 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
 .proposal-pulse{animation:proposalPulse .7s ease}
 @keyframes proposalPulse{0%{box-shadow:0 0 0 0 #e7b36b66}50%{box-shadow:0 0 0 12px #e7b36b11}100%{box-shadow:0 0 0 0 #e7b36b00}}
 body.artifact-proposed::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;background:radial-gradient(circle at center,#ff9f2a55 0%,#140d06 35%,#000 70%);opacity:1;transition:opacity .45s ease}\nbody.artifact-proposed::after{content:"Artefact or service proposed.";position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:9999;color:#ffbf73;font-size:1.08rem;letter-spacing:.3px;font-weight:600;text-shadow:0 0 18px #ff9f2a66}
-.proposal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#ff8f1f;color:#1c1108;font-size:1.16rem;font-weight:700;letter-spacing:.35px;z-index:10050;opacity:0;pointer-events:none;transition:opacity .22s ease}\.proposal-overlay.show{opacity:1}
+.proposal-overlay{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#ff8f1f;color:#1c1108;font-size:1.16rem;font-weight:700;letter-spacing:.35px;z-index:10050;opacity:0;pointer-events:none;transition:opacity .22s ease}.proposal-overlay.show{opacity:1}.proposal-overlay-title{font-size:1.18rem;font-weight:800}.proposal-overlay-examples{font-size:.95rem;font-weight:650;display:grid;gap:6px;text-align:center}
 body.flash-yes::before,body.flash-no::before,body.flash-unknown::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.28;transition:opacity .18s ease}
 body.flash-yes::before{background:#00ff66}
 body.flash-no::before{background:#ff3030}
@@ -102,7 +102,7 @@ body.flash-unknown::before{background:#ffffff}
 </style>
 </head>
 <body>
-  <div id="proposal-overlay" class="proposal-overlay" aria-hidden="true">Artefact or service proposed.</div>
+  <div id="proposal-overlay" class="proposal-overlay" aria-hidden="true"><div class="proposal-overlay-title">Artefact or service proposed.</div><div id="proposal-overlay-examples" class="proposal-overlay-examples"></div></div>
 <main class="app">
   <section class="card black-glass">
     <div class="meta debug-only" id="prototype-header"><h1>YES/NO V1 Prototype</h1><span class="badge">Prototype • Single Session • Deterministic</span></div>
@@ -170,6 +170,7 @@ const gestureCanvas=document.getElementById('gestureCanvas');
 const debugControls=document.getElementById('debug-controls');
 const candidateLineEl=document.getElementById('candidate-line');
 const proposalOverlayEl=document.getElementById('proposal-overlay');
+const proposalOverlayExamplesEl=document.getElementById('proposal-overlay-examples');
 const tutorialEl=document.getElementById('mvp-tutorial');
 const tutorialDismissBtn=document.getElementById('tutorial-dismiss');
 const debugMode = new URLSearchParams(window.location.search).get('debug') === '1';
@@ -258,7 +259,16 @@ function inferProposalIcon(text=''){
   return '✨';
 }
 
-function triggerArtifactFeedback(){
+function inferProposalExamples(text=''){
+  const t=(text||'').toLowerCase();
+  if(t.includes('order')||t.includes('food')||t.includes('ubereats')||t.includes('drink')) return ['🍽️ order_food','🎧 play_audio','💆 book_massage'];
+  if(t.includes('music')||t.includes('song')||t.includes('playlist')) return ['🎵 play_audio','🍽️ order_food','🧹 cleanup_emails'];
+  if(t.includes('podcast')) return ['🎧 play_audio','🧹 cleanup_emails','💆 book_massage'];
+  if(t.includes('massage')||t.includes('spa')||t.includes('book')) return ['💆 book_massage','🍽️ order_food','🧹 cleanup_emails'];
+  return ['🎧 play_audio','🍽️ order_food','💆 book_massage','🧹 cleanup_emails'];
+}
+
+function triggerArtifactFeedback(summary){
   const card = document.getElementById('summary-panel') || summaryEl?.closest('.card');
   if(card){
     card.classList.remove('proposal-pulse');
@@ -270,12 +280,14 @@ function triggerArtifactFeedback(){
   void document.body.offsetWidth;
   document.body.classList.add('artifact-proposed');
   if(proposalOverlayEl){
+    const examples = inferProposalExamples((summary&&summary.expected_effect)||'');
+    if(proposalOverlayExamplesEl){ proposalOverlayExamplesEl.innerHTML = examples.map((x)=>'<div>'+x+'</div>').join(''); }
     proposalOverlayEl.classList.remove('show');
     void proposalOverlayEl.offsetWidth;
     proposalOverlayEl.classList.add('show');
-    setTimeout(()=>proposalOverlayEl.classList.remove('show'), 1500);
+    setTimeout(()=>proposalOverlayEl.classList.remove('show'), 1700);
   }
-  setTimeout(()=>document.body.classList.remove('artifact-proposed'), 1500);
+  setTimeout(()=>document.body.classList.remove('artifact-proposed'), 1700);
 }
 
 function renderSummaryCard(summary, topic){
