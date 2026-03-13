@@ -21,8 +21,8 @@ export const gestureCanvasClientJs = String.raw`
       return { x:(ev.clientX-r.left)*(canvas.width/r.width), y:(ev.clientY-r.top)*(canvas.height/r.height) };
     }
     function flash(kind){
-      if(kind==='yes') canvas.style.boxShadow='0 0 24px #33d17a88';
-      else if(kind==='no') canvas.style.boxShadow='0 0 24px #ff6b6b88';
+      if(kind==='yes') canvas.style.boxShadow='0 0 26px #3be98799';
+      else if(kind==='no') canvas.style.boxShadow='0 0 26px #ff767699';
       else canvas.style.boxShadow='0 0 24px #7aa2ff66';
       setTimeout(()=>{ canvas.style.boxShadow='none'; }, 280);
     }
