@@ -90,7 +90,7 @@ pre{white-space:pre-wrap;background:#0b0e12;border:1px solid #222b37;border-radi
 .proposal-pulse{animation:proposalPulse .7s ease}
 @keyframes proposalPulse{0%{box-shadow:0 0 0 0 #e7b36b66}50%{box-shadow:0 0 0 12px #e7b36b11}100%{box-shadow:0 0 0 0 #e7b36b00}}
 body.artifact-proposed::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;background:radial-gradient(circle at center,#ff9f2a55 0%,#140d06 35%,#000 70%);opacity:1;transition:opacity .45s ease}\nbody.artifact-proposed::after{content:"Artefact or service proposed.";position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:9999;color:#ffbf73;font-size:1.08rem;letter-spacing:.3px;font-weight:600;text-shadow:0 0 18px #ff9f2a66}
-.proposal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at center,#ff9f2a66 0%,#140d06 35%,#000 72%);color:#ffd09b;font-size:1.14rem;font-weight:700;letter-spacing:.35px;z-index:10050;opacity:0;pointer-events:none;transition:opacity .22s ease}\.proposal-overlay.show{opacity:1}
+.proposal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#ff8f1f;color:#1c1108;font-size:1.16rem;font-weight:700;letter-spacing:.35px;z-index:10050;opacity:0;pointer-events:none;transition:opacity .22s ease}\.proposal-overlay.show{opacity:1}
 body.flash-yes::before,body.flash-no::before,body.flash-unknown::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.28;transition:opacity .18s ease}
 body.flash-yes::before{background:#00ff66}
 body.flash-no::before{background:#ff3030}
@@ -231,9 +231,9 @@ function triggerArtifactFeedback(){
     proposalOverlayEl.classList.remove('show');
     void proposalOverlayEl.offsetWidth;
     proposalOverlayEl.classList.add('show');
-    setTimeout(()=>proposalOverlayEl.classList.remove('show'), 1300);
+    setTimeout(()=>proposalOverlayEl.classList.remove('show'), 1500);
   }
-  setTimeout(()=>document.body.classList.remove('artifact-proposed'), 1300);
+  setTimeout(()=>document.body.classList.remove('artifact-proposed'), 1500);
 }
 
 function renderSummaryCard(summary, topic){
