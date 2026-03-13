@@ -116,8 +116,9 @@ body.flash-unknown::before{background:#ffffff}
       <div>How it works:</div>
       <div class="tiny">1) Read the question</div>
       <div class="tiny">2) Draw <span class="instr-yes">O = YES</span> or <span class="instr-no">X = NO</span></div>
-      <div class="tiny">3) The system asks the next question until clarity is reached</div>
-      <div class="tiny">4) You receive a final decision summary</div>
+      <div class="tiny">3) Unknown gesture = retry (no penalty)</div>
+      <div class="tiny">4) The system asks the next question until clarity is reached</div>
+      <div class="tiny">5) You receive a final decision summary</div>
       <button id="tutorial-dismiss" class="tutorial-dismiss">Got it</button>
     </div>
     <canvas id="gestureCanvas" width="1200" height="640" aria-label="gesture-input-canvas"></canvas>
@@ -367,7 +368,7 @@ async function startSession(){
   setAnswerButtons(true);
   statusEl.textContent='in progress';
   renderStateStrip('in-progress');
-  hintEl.textContent='Question ready. Keep answers binary to finish this session fast (Yes/No).';
+  hintEl.textContent='Question ready. Keep answers binary (O=YES, X=NO). Unknown just retries.';
   if(topicHelpEl) topicHelpEl.textContent='Session active for: '+decisionTopic;
   hintEl.classList.remove('busy');
   setBusy(false);
@@ -391,7 +392,7 @@ async function answer(value){
     questionEl.textContent=out.next_question;
     statusEl.textContent='in progress';
     renderStateStrip('in-progress');
-    hintEl.textContent='Next question ready. Keep going with Yes / No (or Y / N).';
+    hintEl.textContent='Next question ready. Keep going with Yes / No (or Y / N). Unknown gesture = retry.';
     hintEl.classList.remove('busy');
     setAnswerButtons(true);
     return;

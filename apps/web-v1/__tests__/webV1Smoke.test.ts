@@ -72,6 +72,7 @@ async function run() {
     assert(html.includes('id="gestureCanvas"'), 'gesture canvas id should be gestureCanvas');
     assert(html.includes('gestureCanvas'), 'gesture canvas should be present');
     assert(html.includes('Do you understand the MVP? YES or NO'), 'tutorial prompt should be present');
+    assert(html.includes('Unknown gesture = retry (no penalty)'), 'tutorial retry rule should be present');
     assert(html.includes('Candidate: —'), 'candidate line should be present');
     assert(html.includes('Decision Topic (optional)'), 'debug fallback topic control should still exist in source');
 
