@@ -27,9 +27,29 @@ function hasSelfIntersection(points: Stroke): boolean {
 }
 
 function lineAngle(stroke: Stroke): number {
-  const a = stroke[0];
-  const b = stroke[stroke.length - 1];
+  let a = stroke[0];
+  let b = stroke[stroke.length - 1];
+  let maxD = -1;
+  for (let i = 0; i < stroke.length - 1; i += 1) {
+    for (let j = i + 1; j < stroke.length; j += 1) {
+      const d = dist(stroke[i], stroke[j]);
+      if (d > maxD) {
+        maxD = d;
+        a = stroke[i];
+        b = stroke[j];
+      }
+    }
+  }
   return (Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI;
+}
+
+function strokesIntersect(a: Stroke, b: Stroke): boolean {
+  for (let i = 0; i < a.length - 1; i += 1) {
+    for (let j = 0; j < b.length - 1; j += 1) {
+      if (segmentIntersect(a[i], a[i + 1], b[j], b[j + 1])) return true;
+    }
+  }
+  return false;
 }
 
 export function isCircle(stroke: Stroke): boolean {
@@ -54,12 +74,13 @@ export function isCross(strokes: Stroke[]): boolean {
     const s1 = strokes[0];
     const s2 = strokes[1];
     if (s1.length < 3 || s2.length < 3) return false;
-    const inter = segmentIntersect(s1[0], s1[s1.length - 1], s2[0], s2[s2.length - 1]);
+    if (pathLength(s1) < 40 || pathLength(s2) < 40) return false;
+    const inter = strokesIntersect(s1, s2);
     const a1 = lineAngle(s1);
     const a2 = lineAngle(s2);
     let diff = Math.abs(a1 - a2);
     if (diff > 90) diff = 180 - diff;
-    return inter && diff > 25;
+    return inter && diff > 20;
   }
 
   if (strokes.length === 1) {
@@ -92,7 +113,24 @@ export const gestureClassifierClientJs = String.raw`
     }
     return false;
   }
-  function lineAngle(stroke){ const a=stroke[0], b=stroke[stroke.length-1]; return Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI; }
+  function lineAngle(stroke){
+    let a=stroke[0], b=stroke[stroke.length-1], maxD=-1;
+    for(let i=0;i<stroke.length-1;i++){
+      for(let j=i+1;j<stroke.length;j++){
+        const d=dist(stroke[i], stroke[j]);
+        if(d>maxD){ maxD=d; a=stroke[i]; b=stroke[j]; }
+      }
+    }
+    return Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI;
+  }
+  function strokesIntersect(a,b){
+    for(let i=0;i<a.length-1;i++){
+      for(let j=0;j<b.length-1;j++){
+        if(segmentIntersect(a[i],a[i+1],b[j],b[j+1])) return true;
+      }
+    }
+    return false;
+  }
   function isCircle(stroke){
     if(!stroke || stroke.length<20) return false;
     const len=pathLength(stroke); if(len<220) return false;
@@ -110,10 +148,11 @@ export const gestureClassifierClientJs = String.raw`
     if(strokes.length===2){
       const s1=strokes[0], s2=strokes[1];
       if(s1.length<3 || s2.length<3) return false;
-      const inter=segmentIntersect(s1[0], s1[s1.length-1], s2[0], s2[s2.length-1]);
+      if(pathLength(s1)<40 || pathLength(s2)<40) return false;
+      const inter=strokesIntersect(s1,s2);
       const a1=lineAngle(s1), a2=lineAngle(s2);
       let diff=Math.abs(a1-a2); if(diff>90) diff=180-diff;
-      return inter && diff>25;
+      return inter && diff>20;
     }
     if(strokes.length===1){ const s=strokes[0]; return s.length>18 && hasSelfIntersection(s); }
     return false;
