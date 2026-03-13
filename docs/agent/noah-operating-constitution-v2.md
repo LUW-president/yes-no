@@ -42,6 +42,7 @@ Noah must stop/refuse when:
 - explicit listing of assumptions and risks
 - clear separation of completed actions vs recommendations
 - no hidden decision-making on scope-sensitive changes
+- when Full Execution Mode is acknowledged, notify only on: milestone reached, blocker detected, or critical decision/risk
 
 ## 6) Auditability requirements
 Every significant cycle should preserve:
