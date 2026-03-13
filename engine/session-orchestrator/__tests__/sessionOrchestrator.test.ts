@@ -28,11 +28,11 @@ assert(r2.kind === 'question', 'second answer should move to q_image');
 const r3 = recordAnswer(r2.session, 'yes'); // q_image -> artifact_image
 assert(r3.kind === 'artifact', 'third answer should trigger artifact');
 
-// session close path (new session no -> end)
+// session continuation path (new session no -> practical branch)
 const started2 = startSession('u_test_2', 'creation_v0');
 const endRes = recordAnswer(started2.session, 'no');
-assert(endRes.kind === 'end', 'no on q_create should end session');
-assert(getSessionState(started2.session.session_id).status === 'completed', 'session should be completed');
+assert(endRes.kind === 'question', 'no on q_create should continue to practical branch');
+assert(getSessionState(started2.session.session_id).status === 'active', 'session should remain active');
 
 // memory engine updates during session
 const p = __getProfile('u_test');
