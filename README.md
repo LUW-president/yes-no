@@ -157,3 +157,6 @@ New contributors can start with these issues:
 
 ## Phase 6 Engagement Packs
 - `docs/product/phase6-engagement-question-pack-v1.md`
+
+## Discovery Architecture (Preparation)
+- `docs/architecture/discovery-questionnode-architecture-v1.md`
