@@ -1,6 +1,7 @@
 export type Point = { x: number; y: number };
 export type Stroke = Point[];
 export type GestureResult = 'yes' | 'no' | 'unknown';
+export type GestureIntentCandidate = 'yes' | 'no' | 'unknown';
 
 function dist(a: Point, b: Point): number {
   return Math.hypot(a.x - b.x, a.y - b.y);
@@ -50,6 +51,47 @@ function strokesIntersect(a: Stroke, b: Stroke): boolean {
     }
   }
   return false;
+}
+
+
+export function earlyStrokeIntent(stroke: Stroke): GestureIntentCandidate {
+  if (!stroke || stroke.length < 8) return 'unknown';
+
+  const takeN = Math.max(8, Math.floor(stroke.length * 0.3));
+  const early = stroke.slice(0, Math.min(stroke.length, takeN));
+  if (early.length < 8) return 'unknown';
+
+  const len = pathLength(early);
+  if (len < 40) return 'unknown';
+
+  const direct = dist(early[0], early[early.length - 1]);
+  const straightness = direct / Math.max(len, 1);
+
+  let turnSum = 0;
+  let turnCount = 0;
+  for (let i = 2; i < early.length; i += 1) {
+    const a = early[i - 2];
+    const b = early[i - 1];
+    const c = early[i];
+    const v1x = b.x - a.x;
+    const v1y = b.y - a.y;
+    const v2x = c.x - b.x;
+    const v2y = c.y - b.y;
+    const n1 = Math.hypot(v1x, v1y);
+    const n2 = Math.hypot(v2x, v2y);
+    if (n1 < 1e-6 || n2 < 1e-6) continue;
+    const dot = (v1x * v2x + v1y * v2y) / (n1 * n2);
+    const clamped = Math.max(-1, Math.min(1, dot));
+    const ang = Math.acos(clamped);
+    turnSum += ang;
+    turnCount += 1;
+  }
+
+  const avgTurn = turnCount > 0 ? turnSum / turnCount : 0;
+
+  if (straightness >= 0.9 && avgTurn <= 0.22) return 'no';
+  if (straightness <= 0.82 || avgTurn >= 0.35) return 'yes';
+  return 'unknown';
 }
 
 export function isCircle(stroke: Stroke): boolean {
@@ -131,6 +173,34 @@ export const gestureClassifierClientJs = String.raw`
     }
     return false;
   }
+
+  function earlyStrokeIntent(stroke){
+    if(!stroke || stroke.length<8) return 'unknown';
+    const takeN=Math.max(8, Math.floor(stroke.length*0.3));
+    const early=stroke.slice(0, Math.min(stroke.length, takeN));
+    if(early.length<8) return 'unknown';
+    const len=pathLength(early);
+    if(len<40) return 'unknown';
+    const direct=dist(early[0], early[early.length-1]);
+    const straightness=direct/Math.max(len,1);
+    let turnSum=0, turnCount=0;
+    for(let i=2;i<early.length;i++){
+      const a=early[i-2], b=early[i-1], c=early[i];
+      const v1x=b.x-a.x, v1y=b.y-a.y;
+      const v2x=c.x-b.x, v2y=c.y-b.y;
+      const n1=Math.hypot(v1x,v1y), n2=Math.hypot(v2x,v2y);
+      if(n1<1e-6 || n2<1e-6) continue;
+      const dot=(v1x*v2x+v1y*v2y)/(n1*n2);
+      const clamped=Math.max(-1, Math.min(1, dot));
+      const ang=Math.acos(clamped);
+      turnSum+=ang; turnCount+=1;
+    }
+    const avgTurn=turnCount>0 ? turnSum/turnCount : 0;
+    if(straightness>=0.9 && avgTurn<=0.22) return 'no';
+    if(straightness<=0.82 || avgTurn>=0.35) return 'yes';
+    return 'unknown';
+  }
+
   function isCircle(stroke){
     if(!stroke || stroke.length<20) return false;
     const len=pathLength(stroke); if(len<220) return false;
@@ -162,6 +232,6 @@ export const gestureClassifierClientJs = String.raw`
     if(isCross(strokes)) return 'no';
     return 'unknown';
   }
-  window.__gestureClassifier = { classifyGesture };
+  window.__gestureClassifier = { classifyGesture, earlyStrokeIntent };
 })();
 `;

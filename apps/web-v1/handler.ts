@@ -366,6 +366,7 @@ if(gestureCanvas && window.__gestureClassifier && window.__mountGestureCanvas){
     canvas: gestureCanvas,
     hintEl,
     classifyGesture: window.__gestureClassifier.classifyGesture,
+    earlyStrokeIntent: window.__gestureClassifier.earlyStrokeIntent,
     onSubmit: async (normalized)=>{
       if (normalized === 'yes' || normalized === 'no') {
         console.log(JSON.stringify({ event: 'gesture_submitted', normalized_answer: normalized }));

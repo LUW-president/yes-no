@@ -1,4 +1,4 @@
-import { classifyGesture, isCross, type Stroke } from '../gestureClassifier';
+import { classifyGesture, isCross, earlyStrokeIntent, type Stroke } from '../gestureClassifier';
 
 function assert(cond: boolean, msg: string) {
   if (!cond) throw new Error(msg);
@@ -44,3 +44,34 @@ assert(classifyGesture([crossStrokeA, crossStrokeBWithEndpointDrift]) === 'no', 
 assert(classifyGesture([tooShortA, tooShortB]) === 'unknown', 'very short strokes should not classify as no');
 
 console.log('gesture classifier test passed');
+
+const straightStrokeForEarlyNo: Stroke = [
+  { x: 20, y: 20 },
+  { x: 35, y: 35 },
+  { x: 50, y: 50 },
+  { x: 65, y: 65 },
+  { x: 80, y: 80 },
+  { x: 95, y: 95 },
+  { x: 110, y: 110 },
+  { x: 125, y: 125 },
+  { x: 140, y: 140 },
+  { x: 155, y: 155 },
+];
+
+const curvedStrokeForEarlyYes: Stroke = [
+  { x: 150, y: 100 },
+  { x: 162, y: 95 },
+  { x: 175, y: 98 },
+  { x: 185, y: 108 },
+  { x: 192, y: 123 },
+  { x: 192, y: 140 },
+  { x: 185, y: 156 },
+  { x: 172, y: 169 },
+  { x: 156, y: 176 },
+  { x: 138, y: 176 },
+  { x: 121, y: 170 },
+  { x: 108, y: 158 },
+];
+
+assert(earlyStrokeIntent(straightStrokeForEarlyNo) === 'no', 'early straight stroke should predict no candidate');
+assert(earlyStrokeIntent(curvedStrokeForEarlyYes) === 'yes', 'early curved stroke should predict yes candidate');
