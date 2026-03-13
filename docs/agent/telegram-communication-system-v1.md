@@ -155,6 +155,28 @@ Format:
 [ARCH] 🔵 Architecture review complete.
 ```
 
+### 8) Full Execution Mode
+Purpose: acknowledge autonomous high-throughput execution mode and set notification boundaries.
+
+Format:
+```
+[NOAH] Copy that. Full execution mode engaged. ⚡
+
+Operating constraints:
+• autonomous cycles
+• no approval waits
+• review/merge/close sequencing
+• continuous stability + validation checks
+• immediate corrective action on any regression
+
+I will only notify on:
+1) milestone reached
+2) blocker detected
+3) critical decision/risk
+
+No stop. Continuous forward. 🛶
+```
+
 ## Quiet hours
 Between:
 - **10:00 PM – 06:08 AM EST**
@@ -169,6 +191,7 @@ The following signals are high-priority events:
 - 🛑 blocked task
 - 💡 discovery signal
 - 🟢 prototype ready
+- Full Execution Mode exception notifications (milestone reached, blocker detected, critical decision/risk)
 
 During quiet hours, these events are not sent immediately; they must be logged and included in the next Morning Intelligence Report.
 
