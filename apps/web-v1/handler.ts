@@ -1,6 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'node:http';
-import { gestureClassifierClientJs } from './gestureClassifier.ts';
-import { gestureCanvasClientJs } from './gestureCanvas.ts';
+import { gestureClassifierClientJs } from './gestureClassifier.js';
+import { gestureCanvasClientJs } from './gestureCanvas.js';
 import {
   getSessionSummaryController,
   startSessionController,
