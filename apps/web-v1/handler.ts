@@ -109,13 +109,13 @@ body.flash-unknown::before{background:#ffffff}
     <p id="state-strip" class="hint debug-only">state: initializing | step: 0</p>
     <div class="progress-track debug-only" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
     <p id="question" class="gesture-prompt">Preparing your decision session...</p>
-    <p class="covenant-line">Gesture controls<br><span class="instr-yes">O = YES</span><br><span class="instr-no">X = NO</span></p>
+    <p class="covenant-line">Gesture controls<br><span class="instr-yes">O = YES</span><br><span class="instr-no">X / \\ / | / I = NO</span></p>
     <p id="candidate-line" class="candidate-line">Candidate: —</p>
     <div id="mvp-tutorial" class="tutorial-card">
       <h3>Do you understand the MVP? YES or NO</h3>
       <div>How it works:</div>
       <div class="tiny">1) Read the question</div>
-      <div class="tiny">2) Draw <span class="instr-yes">O = YES</span> or <span class="instr-no">X = NO</span></div>
+      <div class="tiny">2) Draw <span class="instr-yes">O = YES</span> or <span class="instr-no">X / \\ / | / I = NO</span></div>
       <div class="tiny">3) Unknown gesture = retry (no penalty)</div>
       <div class="tiny">4) The system asks the next question until clarity is reached</div>
       <div class="tiny">5) You receive a final decision summary</div>

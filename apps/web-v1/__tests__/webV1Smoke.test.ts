@@ -68,7 +68,7 @@ async function run() {
     assert(html.includes('Is there something you want right now?') || html.includes('Preparing your decision session...'), 'question copy should be present in source');
     assert(html.includes('Gesture controls'), 'gesture controls header should be visible');
     assert(html.includes('O = YES'), 'yes instruction should be visible');
-    assert(html.includes('X = NO'), 'no instruction should be visible');
+    assert(html.includes('X / \\ / | / I = NO'), 'no instruction aliases should be visible');
     assert(html.includes('id="gestureCanvas"'), 'gesture canvas id should be gestureCanvas');
     assert(html.includes('gestureCanvas'), 'gesture canvas should be present');
     assert(html.includes('Do you understand the MVP? YES or NO'), 'tutorial prompt should be present');

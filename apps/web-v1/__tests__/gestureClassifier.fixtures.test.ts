@@ -67,4 +67,36 @@ const shortCrossA: Stroke = [{ x: 100, y: 100 }, { x: 110, y: 110 }, { x: 120, y
 const shortCrossB: Stroke = [{ x: 120, y: 100 }, { x: 110, y: 110 }, { x: 100, y: 120 }];
 assert(classifyGesture([shortCrossA, shortCrossB]) === 'unknown', 'short cross should remain unknown');
 
+// no aliases: /, \, |, I as single-stroke no
+const slashNo: Stroke = [
+  { x: 90, y: 250 },
+  { x: 120, y: 220 },
+  { x: 150, y: 190 },
+  { x: 180, y: 160 },
+  { x: 210, y: 130 },
+  { x: 240, y: 100 },
+];
+assert(classifyGesture([slashNo]) === 'no', 'single slash should classify no');
+
+const backslashNo: Stroke = [
+  { x: 90, y: 100 },
+  { x: 120, y: 130 },
+  { x: 150, y: 160 },
+  { x: 180, y: 190 },
+  { x: 210, y: 220 },
+  { x: 240, y: 250 },
+];
+assert(classifyGesture([backslashNo]) === 'no', 'single backslash should classify no');
+
+const verticalNo: Stroke = [
+  { x: 180, y: 80 },
+  { x: 179, y: 110 },
+  { x: 181, y: 140 },
+  { x: 180, y: 170 },
+  { x: 179, y: 200 },
+  { x: 180, y: 230 },
+  { x: 181, y: 260 },
+];
+assert(classifyGesture([verticalNo]) === 'no', 'single vertical line should classify no');
+
 console.log('gesture classifier fixtures v2 passed');

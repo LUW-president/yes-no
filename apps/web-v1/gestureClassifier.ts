@@ -75,6 +75,42 @@ function strokesIntersect(a: Stroke, b: Stroke): boolean {
   return false;
 }
 
+function boundingBox(stroke: Stroke): { minX: number; maxX: number; minY: number; maxY: number; width: number; height: number } {
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  let maxY = -Infinity;
+  for (const pt of stroke) {
+    if (pt.x < minX) minX = pt.x;
+    if (pt.x > maxX) maxX = pt.x;
+    if (pt.y < minY) minY = pt.y;
+    if (pt.y > maxY) maxY = pt.y;
+  }
+  return { minX, maxX, minY, maxY, width: Math.max(0, maxX - minX), height: Math.max(0, maxY - minY) };
+}
+
+function isNoLine(stroke: Stroke): boolean {
+  if (!stroke || stroke.length < 6) return false;
+  const len = pathLength(stroke);
+  if (len < 60) return false;
+  const direct = dist(stroke[0], stroke[stroke.length - 1]);
+  const straightness = direct / Math.max(len, 1);
+  if (straightness < 0.92) return false;
+  if (hasSelfIntersection(stroke)) return false;
+
+  const box = boundingBox(stroke);
+  const diag = Math.hypot(box.width, box.height);
+  if (diag < 55) return false;
+
+  const ang = lineAngle(stroke);
+  const absToVertical = Math.abs(90 - Math.abs(ang));
+  const absToDiag45 = Math.min(Math.abs(ang - 45), Math.abs(ang + 45));
+
+  const verticalLike = absToVertical <= 16 && box.height >= box.width * 1.25;
+  const diagonalLike = absToDiag45 <= 18;
+
+  return verticalLike || diagonalLike;
+}
 
 export function earlyStrokeIntent(stroke: Stroke): GestureIntentCandidate {
   if (!stroke || stroke.length < 8) return 'unknown';
@@ -158,6 +194,7 @@ export function isCross(strokes: Stroke[]): boolean {
 export function classifyGesture(strokes: Stroke[]): GestureResult {
   if (strokes.length === 1 && isCircle(strokes[0])) return 'yes';
   if (isCross(strokes)) return 'no';
+  if (strokes.length === 1 && isNoLine(strokes[0])) return 'no';
   return 'unknown';
 }
 
@@ -211,6 +248,34 @@ export const gestureClassifierClientJs = String.raw`
       }
     }
     return false;
+  }
+  function boundingBox(stroke){
+    let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+    for(const pt of stroke){
+      if(pt.x<minX) minX=pt.x;
+      if(pt.x>maxX) maxX=pt.x;
+      if(pt.y<minY) minY=pt.y;
+      if(pt.y>maxY) maxY=pt.y;
+    }
+    return { minX,maxX,minY,maxY,width:Math.max(0,maxX-minX),height:Math.max(0,maxY-minY) };
+  }
+  function isNoLine(stroke){
+    if(!stroke || stroke.length<6) return false;
+    const len=pathLength(stroke);
+    if(len<60) return false;
+    const direct=dist(stroke[0], stroke[stroke.length-1]);
+    const straightness=direct/Math.max(len,1);
+    if(straightness<0.92) return false;
+    if(hasSelfIntersection(stroke)) return false;
+    const box=boundingBox(stroke);
+    const diag=Math.hypot(box.width, box.height);
+    if(diag<55) return false;
+    const ang=lineAngle(stroke);
+    const absToVertical=Math.abs(90-Math.abs(ang));
+    const absToDiag45=Math.min(Math.abs(ang-45), Math.abs(ang+45));
+    const verticalLike=absToVertical<=16 && box.height>=box.width*1.25;
+    const diagonalLike=absToDiag45<=18;
+    return verticalLike || diagonalLike;
   }
 
   function earlyStrokeIntent(stroke){
@@ -269,6 +334,7 @@ export const gestureClassifierClientJs = String.raw`
   function classifyGesture(strokes){
     if(strokes.length===1 && isCircle(strokes[0])) return 'yes';
     if(isCross(strokes)) return 'no';
+    if(strokes.length===1 && isNoLine(strokes[0])) return 'no';
     return 'unknown';
   }
   window.__gestureClassifier = { classifyGesture, earlyStrokeIntent };
